@@ -1,8 +1,9 @@
-import worldcupRaw from './worldcup.json';
 import teamsMetaRaw from './teams_meta.json';
+import { supabase } from './supabase';
 
 export type Match = {
     id: string;
+    round: string;
     home_team: string;
     away_team: string;
     kickoff_time: string;
@@ -15,40 +16,51 @@ export type Match = {
     stadium: string;
 };
 
-type MatchJson = { team1: string; team2: string; time: string; date: string;[key: string]: unknown };
 type TeamJson = { name: string; flag_icon: string;[key: string]: unknown };
 
-// Filter out placeholder match IDs like "2A", "W74", etc., to only show group stages that have known teams.
-export const MOCK_MATCHES: Match[] = (worldcupRaw.matches as MatchJson[])
-    .filter((m) => m.team1.length > 2 && !m.team1.startsWith("W") && !m.team1.startsWith("L"))
-    .map((m, index: number) => {
-        const homeTeamInfo = (teamsMetaRaw as TeamJson[]).find((t) => t.name === m.team1) || { flag_icon: "🚩" };
-        const awayTeamInfo = (teamsMetaRaw as TeamJson[]).find((t) => t.name === m.team2) || { flag_icon: "🚩" };
+// Simple in-memory cache — avoids hitting Supabase on every page navigation
+let matchCache: { data: Match[]; timestamp: number } | null = null;
+const CACHE_TTL_MS = 60_000; // 60 seconds
 
-        // Parse time into ISO format "YYYY-MM-DDTHH:mm:00-00:00"
-        let tzOffsetRaw = m.time.split(' ')[1]?.replace('UTC', '') || "+0";
-        if (tzOffsetRaw === "") tzOffsetRaw = "+0"; // Handle raw "UTC"
+export async function fetchMatches(): Promise<Match[]> {
+    // Return cached data if still fresh
+    if (matchCache && Date.now() - matchCache.timestamp < CACHE_TTL_MS) {
+        return matchCache.data;
+    }
 
-        const timeRaw = m.time.split(' ')[0];
-        const sign = tzOffsetRaw.startsWith('-') ? '-' : '+';
-        let hoursStr = tzOffsetRaw.replace('-', '').replace('+', '');
-        if (hoursStr.length === 1) hoursStr = "0" + hoursStr;
-        const isoString = `${m.date}T${timeRaw}:00${sign}${hoursStr}:00`;
+    const { data: dbMatches, error } = await supabase.from('matches').select('*').order('kickoff_time', { ascending: true });
+    if (error) {
+        console.error("Error fetching matches:", error);
+        return matchCache?.data ?? []; // return stale cache on error rather than empty
+    }
 
+    const mapped = dbMatches.map((m: { id: string, round: string, home_team: string, away_team: string, kickoff_time: string, status: 'upcoming' | 'live' | 'finished', home_score: number | null, away_score: number | null, group_name?: string, stadium?: string, [key: string]: unknown }) => {
+        const homeTeamInfo = TEAMS.find((t) => t.name === m.home_team);
+        const awayTeamInfo = TEAMS.find((t) => t.name === m.away_team);
         return {
-            id: `m_${index}`,
-            home_team: m.team1,
-            away_team: m.team2,
-            kickoff_time: isoString,
-            status: 'upcoming',
-            home_score: null,
-            away_score: null,
-            home_flag: homeTeamInfo.flag_icon,
-            away_flag: awayTeamInfo.flag_icon,
-            group: (m.group as string) || '',
-            stadium: (m.ground as string) || '',
+            id: m.id,
+            round: m.round,
+            home_team: m.home_team,
+            away_team: m.away_team,
+            kickoff_time: m.kickoff_time,
+            status: m.status,
+            home_score: m.home_score,
+            away_score: m.away_score,
+            home_flag: homeTeamInfo?.flag_icon || "🚩",
+            away_flag: awayTeamInfo?.flag_icon || "🚩",
+            group: m.group_name || homeTeamInfo?.group || "Unknown",
+            stadium: m.stadium || "Unknown",
         };
     });
+
+    matchCache = { data: mapped, timestamp: Date.now() };
+    return mapped;
+}
+
+// Call this after admin updates a match result so cache invalidates immediately
+export function invalidateMatchCache() {
+    matchCache = null;
+}
 
 export type Team = {
     name: string;

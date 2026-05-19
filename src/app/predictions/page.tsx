@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { MOCK_MATCHES, FUNNY_PREDICTION_OPTIONS } from "@/lib/data";
+import { fetchMatches, FUNNY_PREDICTION_OPTIONS, type Match } from "@/lib/data";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,21 +19,100 @@ export default function PredictionsPage() {
     const [predictions, setPredictions] = useState<Record<string, { homeScore: number; awayScore: number; funnyPrediction: string }>>({});
     const [searchCountry, setSearchCountry] = useState("");
     const [filterGroup, setFilterGroup] = useState("All");
+    const [matches, setMatches] = useState<Match[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const groups = ["All", ...Array.from(new Set(MOCK_MATCHES.map(m => m.group))).filter(Boolean).sort()];
+    const { user } = useAuth();
+    const [now, setNow] = useState(() => new Date());
 
-    const filteredMatches = MOCK_MATCHES.filter((match) => {
+    // Tick every 30s so lock state stays live
+    useEffect(() => {
+        const timer = setInterval(() => setNow(new Date()), 30_000);
+        return () => clearInterval(timer);
+    }, []);
+
+    // Locked if DB says live/finished OR kickoff time has passed
+    const isPredictionLocked = (match: Match): boolean => {
+        if (match.status === 'live' || match.status === 'finished') return true;
+        return new Date(match.kickoff_time) <= now;
+    };
+
+    useEffect(() => {
+        async function load() {
+            const data = await fetchMatches();
+            setMatches(data);
+
+            if (user) {
+                const { data: userPredictions } = await supabase
+                    .from('predictions')
+                    .select('*')
+                    .eq('user_id', user.id);
+
+                if (userPredictions) {
+                    const loadedPredictions: Record<string, { homeScore: number; awayScore: number; funnyPrediction: string }> = {};
+                    userPredictions.forEach(p => {
+                        loadedPredictions[p.match_id] = {
+                            homeScore: p.predicted_home_score,
+                            awayScore: p.predicted_away_score,
+                            funnyPrediction: p.funny_prediction
+                        };
+                    });
+                    setPredictions(loadedPredictions);
+                }
+            }
+
+            setIsLoading(false);
+        }
+        load();
+    }, [user]);
+
+    const groups = ["All", ...Array.from(new Set(matches.map(m => m.group))).filter(Boolean).sort()];
+
+    const filteredMatches = matches.filter((match) => {
         const matchesSearch = searchCountry === "" || match.home_team.toLowerCase().includes(searchCountry.toLowerCase()) || match.away_team.toLowerCase().includes(searchCountry.toLowerCase());
         const matchesGroup = filterGroup === "All" || match.group === filterGroup;
         return matchesSearch && matchesGroup;
     });
 
 
-    const handlePredict = (matchId: string, data: { homeScore: number; awayScore: number; funnyPrediction: string }) => {
-        setPredictions((prev) => ({ ...prev, [matchId]: data }));
-        toast.success("Prediction locked in!", {
-            description: "If you get this wrong, we will judge you.",
-        });
+    const handlePredict = async (matchId: string, data: { homeScore: number; awayScore: number; funnyPrediction: string }) => {
+        if (!user) {
+            toast.error("You must be signed in to make a prediction");
+            return;
+        }
+
+        try {
+            // Check if existing prediction exists
+            const { data: existing } = await supabase
+                .from('predictions')
+                .select('id')
+                .eq('user_id', user.id)
+                .eq('match_id', matchId)
+                .single();
+
+            if (existing) {
+                await supabase.from('predictions').update({
+                    predicted_home_score: data.homeScore,
+                    predicted_away_score: data.awayScore,
+                    funny_prediction: data.funnyPrediction
+                }).eq('id', existing.id);
+            } else {
+                await supabase.from('predictions').insert([{
+                    user_id: user.id,
+                    match_id: matchId,
+                    predicted_home_score: data.homeScore,
+                    predicted_away_score: data.awayScore,
+                    funny_prediction: data.funnyPrediction
+                }]);
+            }
+
+            setPredictions((prev) => ({ ...prev, [matchId]: data }));
+            toast.success("Prediction locked in!", {
+                description: "If you get this wrong, we will judge you.",
+            });
+        } catch (error: unknown) {
+            toast.error("Failed to save prediction: " + (error instanceof Error ? error.message : String(error)));
+        }
     };
 
     return (
@@ -68,7 +149,12 @@ export default function PredictionsPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredMatches.length === 0 && (
+                {isLoading && (
+                    <div className="col-span-1 md:col-span-2 text-center py-12 text-muted-foreground animate-pulse">
+                        Loading match data...
+                    </div>
+                )}
+                {!isLoading && filteredMatches.length === 0 && (
                     <div className="col-span-1 md:col-span-2 text-center py-12 text-muted-foreground">
                         No matches found.
                     </div>
@@ -88,8 +174,21 @@ export default function PredictionsPage() {
                                         <span suppressHydrationWarning>{format(new Date(match.kickoff_time), "h:mm a")} <span className="text-xs opacity-75 ml-1">Local</span></span>
                                     </div>
                                 </div>
-                                <Badge variant={match.status === 'finished' ? "secondary" : "default"} className="w-fit">
-                                    {match.status.toUpperCase()}
+                                <Badge
+                                    variant="secondary"
+                                    className={`w-fit font-bold ${match.status === 'live'
+                                            ? 'bg-green-500/20 text-green-400 animate-pulse border-green-500/30'
+                                            : match.status === 'finished'
+                                                ? 'bg-muted text-muted-foreground'
+                                                : isPredictionLocked(match)
+                                                    ? 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+                                                    : 'bg-primary/20 text-primary border-primary/30'
+                                        }`}
+                                >
+                                    {match.status === 'live' ? '🟢 LIVE'
+                                        : match.status === 'finished' ? '✅ FINISHED'
+                                            : isPredictionLocked(match) ? '🔒 LOCKED'
+                                                : '🕐 UPCOMING'}
                                 </Badge>
                             </div>
                             <div className="flex items-center justify-between text-xs text-muted-foreground font-semibold uppercase tracking-wider">
@@ -105,13 +204,16 @@ export default function PredictionsPage() {
                                 </div>
 
                                 <div className="flex flex-col items-center justify-center w-1/3">
-                                    {match.status === 'finished' ? (
-                                        <div className="bg-secondary px-4 py-2 rounded-xl text-2xl font-black">
+                                    {(match.status === 'finished' || match.status === 'live') && match.home_score !== null ? (
+                                        <div className={`px-4 py-2 rounded-xl text-2xl font-black ${match.status === 'live'
+                                                ? 'bg-green-500/20 text-green-300 ring-2 ring-green-500/40 animate-pulse'
+                                                : 'bg-secondary'
+                                            }`}>
                                             {match.home_score} - {match.away_score}
                                         </div>
                                     ) : (
                                         <div className="bg-muted px-4 py-2 rounded-xl text-xl font-bold text-muted-foreground">
-                                            VS
+                                            {isPredictionLocked(match) ? '⏸' : 'VS'}
                                         </div>
                                     )}
                                 </div>
@@ -141,23 +243,36 @@ export default function PredictionsPage() {
                         </CardContent>
 
                         <CardFooter className="bg-muted/10 pt-4">
-                            <Dialog>
-                                <DialogTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 w-full font-bold">
-                                    {predictions[match.id] ? "Update Prediction" : "Make Prediction"}
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-md">
-                                    <DialogHeader>
-                                        <DialogTitle>Predict {match.home_team} vs {match.away_team}</DialogTitle>
-                                        <DialogDescription>
-                                            Enter your score prediction and choose a chaotic moment.
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    <PredictionForm
-                                        current={predictions[match.id]}
-                                        onSave={(data) => handlePredict(match.id, data)}
-                                    />
-                                </DialogContent>
-                            </Dialog>
+                            {isPredictionLocked(match) ? (
+                                <div className={`w-full text-center text-sm font-semibold py-2 rounded-md ${match.status === 'live'
+                                        ? 'bg-green-500/10 text-green-400'
+                                        : match.status === 'finished'
+                                            ? 'bg-muted text-muted-foreground'
+                                            : 'bg-orange-500/10 text-orange-400'
+                                    }`}>
+                                    {match.status === 'live' && '🟢 Match in progress — predictions locked'}
+                                    {match.status === 'finished' && '✅ Match finished — no more predictions'}
+                                    {match.status === 'upcoming' && '🔒 Kickoff passed — predictions locked'}
+                                </div>
+                            ) : (
+                                <Dialog>
+                                    <DialogTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 w-full font-bold">
+                                        {predictions[match.id] ? "Update Prediction" : "Make Prediction"}
+                                    </DialogTrigger>
+                                    <DialogContent className="sm:max-w-md">
+                                        <DialogHeader>
+                                            <DialogTitle>Predict {match.home_team} vs {match.away_team}</DialogTitle>
+                                            <DialogDescription>
+                                                Enter your score prediction and choose a chaotic moment.
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        <PredictionForm
+                                            current={predictions[match.id]}
+                                            onSave={(data) => handlePredict(match.id, data)}
+                                        />
+                                    </DialogContent>
+                                </Dialog>
+                            )}
                         </CardFooter>
                     </Card>
                 ))}

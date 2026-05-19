@@ -6,7 +6,7 @@ export function Footer() {
                     Built for laughs. This app handles football banter, but cannot fix your favorite team&apos;s defense.
                     Expect VAR delays here too.
                 </p>
-                <p className="text-sm text-muted-foreground font-medium">
+                <p className="text-sm text-muted-foreground font-medium" suppressHydrationWarning>
                     ⚽ Football Chaos © {new Date().getFullYear()}
                 </p>
             </div>

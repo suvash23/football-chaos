@@ -1,13 +1,20 @@
+"use client";
+
 import Link from 'next/link';
-import { Globe, Trophy, Home, ClipboardList, MonitorPlay, MessageSquareText, Grid3X3, User } from 'lucide-react';
+import { Globe, Trophy, Home, ClipboardList, MonitorPlay, MessageSquareText, Grid3X3, User, Network } from 'lucide-react';
 import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from './ui/sheet';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/hooks/use-auth';
 
 export function Navbar() {
+    const { user, profile } = useAuth();
+
     const navLinks = [
         { href: '/', label: 'Home', icon: Home },
         { href: '/groups', label: 'Groups', icon: Globe },
         { href: '/predictions', label: 'Predictions', icon: ClipboardList },
+        { href: '/bracket', label: 'Bracket', icon: Network },
         { href: '/var-simulator', label: 'VAR Sim', icon: MonitorPlay },
         { href: '/excuses', label: 'Excuses', icon: MessageSquareText },
         { href: '/bingo', label: 'Bingo', icon: Grid3X3 },
@@ -66,19 +73,37 @@ export function Navbar() {
                                             {link.label}
                                         </Link>
                                     ))}
-                                    <div className="flex items-center gap-2 text-lg font-semibold bg-secondary px-4 py-2 rounded-lg mt-4 w-max">
-                                        <Trophy className="h-5 w-5 text-yellow-500" />
-                                        <span>0 pts</span>
-                                    </div>
+                                    {user && (
+                                        <div className="flex items-center gap-2 text-lg font-semibold bg-secondary px-4 py-2 rounded-lg mt-4 w-max">
+                                            <Trophy className="h-5 w-5 text-yellow-500" />
+                                            <span>0 pts</span>
+                                        </div>
+                                    )}
                                 </div>
                             </SheetContent>
                         </Sheet>
                     </div>
 
-                    <Button variant="secondary" size="icon" className="rounded-full hidden md:flex">
-                        <User className="h-5 w-5" />
-                        <span className="sr-only">Profile</span>
-                    </Button>
+                    <div className="hidden md:flex items-center gap-4">
+                        {profile?.favorite_team && (
+                            <div className="flex items-center gap-2 bg-secondary px-3 py-1 rounded-full whitespace-nowrap">
+                                <span className="text-xl">{profile.avatar_url || "⚽"}</span>
+                                <span className="font-bold text-sm hidden lg:inline">{profile.favorite_team}</span>
+                            </div>
+                        )}
+                        {user ? (
+                            <Link href="/profile">
+                                <Button variant="secondary" size="icon" className="rounded-full relative">
+                                    <User className="h-5 w-5" />
+                                    <span className="sr-only">Profile</span>
+                                </Button>
+                            </Link>
+                        ) : (
+                            <Link href="/auth">
+                                <Button variant="default" className="font-bold">Sign In</Button>
+                            </Link>
+                        )}
+                    </div>
                 </div>
             </div>
         </nav>
