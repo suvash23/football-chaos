@@ -17,7 +17,7 @@ export function Navbar() {
         { href: '/bracket', label: 'Bracket', icon: Network },
         { href: '/var-simulator', label: 'VAR Sim', icon: MonitorPlay },
         { href: '/excuses', label: 'Excuses', icon: MessageSquareText },
-        { href: '/bingo', label: 'Bingo', icon: Grid3X3 },
+        // { href: '/bingo', label: 'Bingo', icon: Grid3X3 },
         { href: '/leaderboard', label: 'Rankings', icon: Trophy },
     ];
 

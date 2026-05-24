@@ -33,6 +33,7 @@ export default function Home() {
       href: "/excuses",
       color: "text-green-400"
     },
+    /*
     {
       title: "Chaos Bingo",
       description: "Watch the match and tick off 'Player dives' or 'VAR takes forever'. First to Bingo wins bragging rights.",
@@ -40,6 +41,7 @@ export default function Home() {
       href: "/bingo",
       color: "text-yellow-400"
     },
+    */
     {
       title: "Fan Leaderboard",
       description: "Climb the ranks from 'Certified Couch Coach' to 'Football Prophet' and claim glory.",
