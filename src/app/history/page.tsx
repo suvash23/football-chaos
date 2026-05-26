@@ -75,8 +75,10 @@ export default function HistoryPage() {
     const semi = data?.matches?.filter(m => m.round.includes("Semi"));
     const final = data?.matches?.filter(m => m.round === "Final");
 
-    const groupNames = Array.from(new Set(groupMatches?.map(m => m.group).filter(Boolean))) as string[];
-    const visibleGroups = selectedGroup === "All" ? groupMatches : groupMatches?.filter(m => m.group === selectedGroup);
+    const groupNames = Array.from(new Set(groupMatches?.map(m => m.group).filter(Boolean))).sort() as string[];
+    const visibleGroups = (selectedGroup === "All" ? groupMatches : groupMatches?.filter(m => m.group === selectedGroup))
+        ?.slice()
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
     const renderMatchKnockout = (m: Match, i: number) => {
         const t1Score = m.score?.ft?.[0] ?? "-";
