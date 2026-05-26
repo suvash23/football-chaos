@@ -41,8 +41,24 @@ const getFlag = (teamName: string) => {
         "Romania": "🇷🇴", "Russia": "🇷🇺", "Soviet Union": "🟥",
         "Yugoslavia": "🟦", "West Germany": "🇩🇪", "East Germany": "🇩🇪",
         "Czechoslovakia": "🇨🇿", "Bolivia": "🇧🇴", "Bulgaria": "🇧🇬",
-        "Cameroon": "🇨🇲", "Nigeria": "🇳🇬", "Greece": "🇬🇷", "Ireland": "🇮🇪",
-        "Northern Ireland": "🇬🇧", "Wales": "🏴󠁧󠁢󠁷󠁬󠁳󠁿", "Serbia": "🇷🇸"
+        "Cameroon": "🇨🇲", "Nigeria": "🇳🇬", "Greece": "🇬🇷", "Republic of Ireland": "🇮🇪",
+        "Northern Ireland": "🇬🇧", "Wales": "🏴󠁧󠁢󠁷󠁬󠁳󠁿", "Serbia": "🇷🇸",
+        "China": "🇨🇳", "China PR": "🇨🇳", "Costa Rica": "🇨🇷", "Japan": "🇯🇵",
+        "South Korea": "🇰🇷", "North Korea": "🇰🇵", "Honduras": "🇭🇳", "El Salvador": "🇸🇻",
+        "Trinidad and Tobago": "🇹🇹", "Jamaica": "🇯🇲", "Cuba": "🇨🇺", "Haiti": "🇭🇹",
+        "Kuwait": "🇰🇼", "Iraq": "🇮🇶", "United Arab Emirates": "🇦🇪", "New Zealand": "🇳🇿",
+        "Algeria": "🇩🇿", "Egypt": "🇪🇬", "Morocco": "🇲🇦", "Ivory Coast": "🇨🇮", "Cote d'Ivoire": "🇨🇮",
+        "Senegal": "🇸🇳", "Ghana": "🇬🇭", "South Africa": "🇿🇦", "Angola": "🇦🇴",
+        "Togo": "🇹🇬", "Zaire": "🇨🇩", "Ecuador": "🇪🇨", "Venezuela": "🇻🇪",
+        "Austria": "🇦🇹", "Belgium": "🇧🇪", "Croatia": "🇭🇷", "Denmark": "🇩🇰",
+        "France": "🇫🇷", "Germany": "🇩🇪", "Iceland": "🇮🇸", "Israel": "🇮🇱",
+        "Netherlands": "🇳🇱", "Norway": "🇳🇴", "Poland": "🇵🇱", "Portugal": "🇵🇹",
+        "Scotland": "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Slovakia": "🇸🇰", "Slovenia": "🇸🇮", "Spain": "🇪🇸",
+        "Sweden": "🇸🇪", "Switzerland": "🇨🇭", "Turkey": "🇹🇷", "Ukraine": "🇺🇦",
+        "Bosnia and Herzegovina": "🇧🇦", "Bosnia-Herzegovina": "🇧🇦", "Iran": "🇮🇷", "IR Iran": "🇮🇷",
+        "Saudi Arabia": "🇸🇦", "Argentina": "🇦🇷", "Brazil": "🇧🇷", "Uruguay": "🇺🇾", "Colombia": "🇨🇴",
+        "Tunisia": "🇹🇳", "Australia": "🇦🇺", "Paraguay": "🇵🇾", "USA": "🇺🇸", "United States": "🇺🇸",
+        "England": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Mexico": "🇲🇽", "Canada": "🇨🇦", "Congo DR": "🇨🇩"
     };
     if (historicalFlags[teamName]) return historicalFlags[teamName];
     // @ts-ignore
