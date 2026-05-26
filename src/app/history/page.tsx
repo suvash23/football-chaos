@@ -93,7 +93,7 @@ export default function HistoryPage() {
                 World Cup History
             </h1>
 
-            <div className="w-full max-w-sm mb-12">
+            <div className="w-full max-w-sm mb-6">
                 <Select value={year} onValueChange={setYear}>
                     <SelectTrigger className="w-full h-14 text-xl font-bold bg-background/50 backdrop-blur rounded-2xl border-2 border-primary/30">
                         <SelectValue placeholder="Select Year" />
@@ -107,16 +107,16 @@ export default function HistoryPage() {
             </div>
 
             {loading ? (
-                <div className="animate-pulse flex flex-col items-center gap-4">
+                <div className="animate-pulse flex flex-col items-center gap-4 mt-8">
                     <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
                     <p className="text-xl font-bold text-muted-foreground">Loading {year} Data...</p>
                 </div>
             ) : (
-                <div className="w-full flex-1 animate-in fade-in slide-in-from-bottom-8 duration-500">
-                    <Tabs defaultValue={ro16?.length ? "knockout" : "groups"} className="w-full">
-                        <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto mb-8 h-12 rounded-full p-1 bg-muted/50 backdrop-blur border border-border/50">
-                            <TabsTrigger value="knockout" className="rounded-full text-base font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Knockouts</TabsTrigger>
-                            <TabsTrigger value="groups" className="rounded-full text-base font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Group Stages</TabsTrigger>
+                <div className="w-full flex-1 animate-in fade-in slide-in-from-bottom-8 duration-500 flex flex-col items-center pb-12">
+                    <Tabs defaultValue={ro16?.length ? "knockout" : "groups"} className="w-full flex flex-col items-center">
+                        <TabsList className="inline-flex flex-wrap justify-center gap-3 mb-12 bg-transparent p-0 border-none h-auto">
+                            <TabsTrigger value="knockout" className="rounded-full px-6 py-2.5 text-sm font-black uppercase tracking-wider border-2 border-primary/20 data-[state=active]:border-primary data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/30 transition-all hover:bg-primary/10">Knockout Stage</TabsTrigger>
+                            <TabsTrigger value="groups" className="rounded-full px-6 py-2.5 text-sm font-black uppercase tracking-wider border-2 border-primary/20 data-[state=active]:border-primary data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg data-[state=active]:shadow-primary/30 transition-all hover:bg-primary/10">Group Stage</TabsTrigger>
                         </TabsList>
 
                         <TabsContent value="knockout" className="w-full">
