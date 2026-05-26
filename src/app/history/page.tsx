@@ -7,6 +7,7 @@ import { Calendar, Trophy } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import teamsMetaRaw from '@/lib/teams_meta.json';
 
 type Goal = {
     name: string;
@@ -34,10 +35,25 @@ type WorldCupData = {
 
 const YEARS = ["2022", "2018", "2014", "2010", "2006", "2002", "1998", "1994", "1990", "1986", "1982", "1978", "1974", "1970", "1966", "1962", "1958", "1954", "1950", "1938", "1934", "1930"];
 
+const getFlag = (teamName: string) => {
+    const historicalFlags: Record<string, string> = {
+        "Italy": "🇮🇹", "Chile": "🇨🇱", "Peru": "🇵🇪", "Hungary": "🇭🇺",
+        "Romania": "🇷🇴", "Russia": "🇷🇺", "Soviet Union": "🟥",
+        "Yugoslavia": "🟦", "West Germany": "🇩🇪", "East Germany": "🇩🇪",
+        "Czechoslovakia": "🇨🇿", "Bolivia": "🇧🇴", "Bulgaria": "🇧🇬",
+        "Cameroon": "🇨🇲", "Nigeria": "🇳🇬", "Greece": "🇬🇷", "Ireland": "🇮🇪",
+        "Northern Ireland": "🇬🇧", "Wales": "🏴󠁧󠁢󠁷󠁬󠁳󠁿", "Serbia": "🇷🇸"
+    };
+    if (historicalFlags[teamName]) return historicalFlags[teamName];
+    // @ts-ignore
+    const team = teamsMetaRaw.find(t => t.name === teamName || t.name_normalised === teamName);
+    return team?.flag_icon || "🛡️";
+};
+
 const MatchBadge = ({ team, score, isWinner }: { team: string, score: number | string, isWinner?: boolean }) => (
     <div className={`flex items-center justify-between p-1.5 hover:bg-muted/50 rounded-md transition-colors ${isWinner ? 'text-primary' : ''}`}>
         <div className="flex items-center gap-2">
-            <span className="text-lg opacity-80">🛡️</span>
+            <span className="text-lg opacity-80">{getFlag(team)}</span>
             <span className={`text-xs truncate max-w-[120px] ${isWinner ? 'font-bold' : 'font-semibold text-foreground/80'}`}>{team || "TBA"}</span>
         </div>
         <span className={`font-black text-sm bg-secondary/50 px-2 py-0.5 rounded-md min-w-[24px] text-center ${isWinner ? 'bg-primary/20 text-primary' : ''}`}>
@@ -131,7 +147,7 @@ export default function HistoryPage() {
                     <div className="flex flex-col space-y-3">
                         <div className="flex justify-between items-start">
                             <div className="flex flex-col flex-1 truncate pr-2">
-                                <span className="font-bold text-sm sm:text-base">{m.team1 || "TBA"}</span>
+                                <span className="font-bold text-sm sm:text-base flex items-center gap-1.5"><span className="text-lg opacity-80">{getFlag(m.team1)}</span> {m.team1 || "TBA"}</span>
                                 {m.goals1 && m.goals1.length > 0 && (
                                     <div className="flex flex-wrap gap-1 mt-1">
                                         {m.goals1.map((g, gi) => (
@@ -147,7 +163,7 @@ export default function HistoryPage() {
 
                         <div className="flex justify-between items-start">
                             <div className="flex flex-col flex-1 truncate pr-2">
-                                <span className="font-bold text-sm sm:text-base">{m.team2 || "TBA"}</span>
+                                <span className="font-bold text-sm sm:text-base flex items-center gap-1.5"><span className="text-lg opacity-80">{getFlag(m.team2)}</span> {m.team2 || "TBA"}</span>
                                 {m.goals2 && m.goals2.length > 0 && (
                                     <div className="flex flex-wrap gap-1 mt-1">
                                         {m.goals2.map((g, gi) => (
