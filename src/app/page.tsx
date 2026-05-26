@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy, ClipboardList, MonitorPlay, MessageSquareText, Grid3X3, ArrowRight, Globe } from "lucide-react";
+import { Trophy, ClipboardList, MonitorPlay, MessageSquareText, Grid3X3, ArrowRight, Globe, History } from "lucide-react";
 
 export default function Home() {
   const features = [
@@ -33,15 +33,13 @@ export default function Home() {
       href: "/excuses",
       color: "text-green-400"
     },
-    /*
     {
-      title: "Chaos Bingo",
-      description: "Watch the match and tick off 'Player dives' or 'VAR takes forever'. First to Bingo wins bragging rights.",
-      icon: Grid3X3,
-      href: "/bingo",
+      title: "World Cup Vault",
+      description: "Travel back in time and view interactive brackets from every single World Cup dating back to 1930.",
+      icon: History,
+      href: "/history",
       color: "text-yellow-400"
     },
-    */
     {
       title: "Fan Leaderboard",
       description: "Climb the ranks from 'Certified Couch Coach' to 'Football Prophet' and claim glory.",

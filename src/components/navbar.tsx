@@ -18,6 +18,7 @@ export function Navbar() {
         { href: '/var-simulator', label: 'VAR Sim', icon: MonitorPlay },
         { href: '/excuses', label: 'Excuses', icon: MessageSquareText },
         // { href: '/bingo', label: 'Bingo', icon: Grid3X3 },
+        { href: '/history', label: 'Vault', icon: Trophy },
         { href: '/leaderboard', label: 'Rankings', icon: Trophy },
     ];
 
