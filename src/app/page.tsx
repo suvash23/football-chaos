@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy, ClipboardList, MonitorPlay, MessageSquareText, Grid3X3, ArrowRight, Globe, History } from "lucide-react";
+import { Trophy, ClipboardList, MonitorPlay, MessageSquareText, ArrowRight, Globe, History } from "lucide-react";
 
 export default function Home() {
   const features = [

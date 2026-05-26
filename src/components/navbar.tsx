@@ -1,10 +1,9 @@
 "use client";
 
 import Link from 'next/link';
-import { Globe, Trophy, Home, ClipboardList, MonitorPlay, MessageSquareText, Grid3X3, User, Network } from 'lucide-react';
+import { Globe, Trophy, Home, ClipboardList, MonitorPlay, MessageSquareText, User, Network } from 'lucide-react';
 import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from './ui/sheet';
-import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/use-auth';
 
 export function Navbar() {

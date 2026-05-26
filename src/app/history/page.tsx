@@ -61,8 +61,8 @@ const getFlag = (teamName: string) => {
         "England": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Mexico": "🇲🇽", "Canada": "🇨🇦", "Congo DR": "🇨🇩"
     };
     if (historicalFlags[teamName]) return historicalFlags[teamName];
-    // @ts-ignore
-    const team = teamsMetaRaw.find(t => t.name === teamName || t.name_normalised === teamName);
+    const team = (teamsMetaRaw as { name: string; name_normalised?: string; flag_icon: string }[])
+        .find(t => t.name === teamName || t.name_normalised === teamName);
     return team?.flag_icon || "🛡️";
 };
 
@@ -168,7 +168,7 @@ export default function HistoryPage() {
                                     <div className="flex flex-wrap gap-1 mt-1">
                                         {m.goals1.map((g, gi) => (
                                             <span key={gi} className="text-[9px] text-muted-foreground bg-muted/60 px-1.5 py-0.5 rounded flex items-center gap-0.5">
-                                                ⚽ {g.name} {g.minute}'{g.penalty ? '(P)' : ''}{g.owngoal ? '(OG)' : ''}
+                                                ⚽ {g.name} {g.minute}&apos;{g.penalty ? '(P)' : ''}{g.owngoal ? '(OG)' : ''}
                                             </span>
                                         ))}
                                     </div>
@@ -184,7 +184,7 @@ export default function HistoryPage() {
                                     <div className="flex flex-wrap gap-1 mt-1">
                                         {m.goals2.map((g, gi) => (
                                             <span key={gi} className="text-[9px] text-muted-foreground bg-muted/60 px-1.5 py-0.5 rounded flex items-center gap-0.5">
-                                                ⚽ {g.name} {g.minute}'{g.penalty ? '(P)' : ''}{g.owngoal ? '(OG)' : ''}
+                                                ⚽ {g.name} {g.minute}&apos;{g.penalty ? '(P)' : ''}{g.owngoal ? '(OG)' : ''}
                                             </span>
                                         ))}
                                     </div>
@@ -205,7 +205,7 @@ export default function HistoryPage() {
             </h1>
 
             <div className="w-full max-w-sm mb-6">
-                <Select value={year} onValueChange={setYear}>
+                <Select value={year} onValueChange={(v) => { if (v) setYear(v); }}>
                     <SelectTrigger className="w-full h-14 text-xl font-bold bg-background/50 backdrop-blur rounded-2xl border-2 border-primary/30">
                         <SelectValue placeholder="Select Year" />
                     </SelectTrigger>
