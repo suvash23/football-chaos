@@ -61,28 +61,44 @@
 }
 
 :root {
-  /* Default to a dark theme for a modern app feel */
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.6 0.118 265.865);
-  /* A vibrant purple/indigo for sports */
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --radius: 0.5rem;
+  /* FIFA Corporate Theme - Clean white and electric blue */
+  --background: oklch(0.99 0 0);
+  /* Pristine white background */
+  --foreground: oklch(0.20 0.03 260);
+  /* Deep navy for readable text */
+  --card: oklch(0.97 0.01 260);
+  /* Subtle light gray-blue for cards */
+  --card-foreground: oklch(0.20 0.03 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.20 0.03 260);
+
+  --primary: oklch(0.40 0.15 260);
+  /* FIFA Corporate Medium Electric Blue */
+  --primary-foreground: oklch(0.99 0 0);
+  /* White on primary elements */
+
+  --secondary: oklch(0.92 0.02 260);
+  /* Soft blue-gray for secondary elements */
+  --secondary-foreground: oklch(0.30 0.06 260);
+  /* Deeper navy blue secondary text */
+
+  --muted: oklch(0.94 0.01 260);
+  --muted-foreground: oklch(0.50 0.02 260);
+
+  --accent: oklch(0.85 0.15 85);
+  /* Event gold accent (e.g. Trophy color) */
+  --accent-foreground: oklch(0.20 0.03 260);
+
+  --destructive: oklch(0.52 0.2 25);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(0.90 0.02 260);
+  /* Clean light border */
+  --input: oklch(0.90 0.02 260);
+  --ring: oklch(0.40 0.15 260);
+  /* Electric blue focus ring */
+  --radius: 0.3rem;
+  /* Slightly sharper edges for a clean corporate look */
 }
 
 @layer base {

@@ -22,18 +22,18 @@ export function Navbar() {
     ];
 
     return (
-        <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <nav className="sticky top-0 z-50 w-full bg-[#182357] text-white shadow-md">
             <div className="container mx-auto flex h-16 items-center px-4 justify-between">
                 <div className="flex gap-6 md:gap-10">
                     <Link href="/" className="flex items-center space-x-2">
-                        <span className="text-2xl font-black italic text-primary">⚽ CHAOS</span>
+                        <span className="text-2xl font-black italic text-white tracking-widest">⚽ CHAOS</span>
                     </Link>
                     <div className="hidden md:flex gap-6">
                         {navLinks.slice(1).map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                                className="flex items-center text-sm font-semibold text-gray-200 transition-colors hover:text-white uppercase tracking-wide"
                             >
                                 <link.icon className="mr-2 h-4 w-4" />
                                 {link.label}
@@ -43,14 +43,14 @@ export function Navbar() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <div className="hidden md:flex items-center gap-2 text-sm font-semibold bg-secondary px-3 py-1.5 rounded-full">
-                        <Trophy className="h-4 w-4 text-yellow-500" />
-                        <span>0 pts</span>
+                    <div className="hidden md:flex items-center gap-2 text-sm font-semibold bg-[#20327A] px-3 py-1.5 rounded-full border border-blue-400/30">
+                        <Trophy className="h-4 w-4 text-[#FFD700]" />
+                        <span className="text-white">0 pts</span>
                     </div>
 
                     <div className="md:hidden flex items-center">
                         <Sheet>
-                            <SheetTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 w-9">
+                            <SheetTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent text-white hover:bg-[#20327A] h-9 w-9">
                                 <span className="sr-only">Toggle Menu</span>
                                 <div className="space-y-1">
                                     <span className="block h-0.5 w-4 bg-current"></span>
@@ -86,21 +86,21 @@ export function Navbar() {
 
                     <div className="hidden md:flex items-center gap-4">
                         {profile?.favorite_team && (
-                            <div className="flex items-center gap-2 bg-secondary px-3 py-1 rounded-full whitespace-nowrap">
+                            <div className="flex items-center gap-2 bg-[#20327A] px-3 py-1 rounded-full whitespace-nowrap border border-blue-400/30">
                                 <span className="text-xl">{profile.avatar_url || "⚽"}</span>
-                                <span className="font-bold text-sm hidden lg:inline">{profile.favorite_team}</span>
+                                <span className="font-bold text-sm hidden lg:inline text-white">{profile.favorite_team}</span>
                             </div>
                         )}
                         {user ? (
                             <Link href="/profile">
-                                <Button variant="secondary" size="icon" className="rounded-full relative">
+                                <Button variant="secondary" size="icon" className="rounded-full relative bg-white text-[#182357] hover:bg-gray-200">
                                     <User className="h-5 w-5" />
                                     <span className="sr-only">Profile</span>
                                 </Button>
                             </Link>
                         ) : (
                             <Link href="/auth">
-                                <Button variant="default" className="font-bold">Sign In</Button>
+                                <Button variant="default" className="font-bold bg-white text-[#182357] hover:bg-gray-200">Sign In</Button>
                             </Link>
                         )}
                     </div>
