@@ -31,7 +31,8 @@ CREATE TABLE matches (
   stadium TEXT,
   status TEXT DEFAULT 'upcoming', -- 'upcoming', 'live', 'finished'
   home_score INTEGER,
-  away_score INTEGER
+  away_score INTEGER,
+  actual_chaotic_event TEXT
 );
 
 -- Predictions Table

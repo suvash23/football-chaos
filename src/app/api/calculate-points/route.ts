@@ -19,12 +19,24 @@ function calculatePoints(
     awayScore: number,
     predictedHome: number,
     predictedAway: number,
+    actualChaoticEvent: string | null,
+    predictedChaoticEvent: string | null,
 ): number {
+    let pts = 0;
     // Exact score: 5 points
-    if (homeScore === predictedHome && awayScore === predictedAway) return 5;
-    // Correct result direction: 2 points
-    if (getMatchResult(homeScore, awayScore) === getMatchResult(predictedHome, predictedAway)) return 2;
-    return 0;
+    if (homeScore === predictedHome && awayScore === predictedAway) {
+        pts += 5;
+    } else if (getMatchResult(homeScore, awayScore) === getMatchResult(predictedHome, predictedAway)) {
+        // Correct result direction: 3 points
+        pts += 3;
+    }
+
+    // Chaotic Event Prediction: 2 points
+    if (actualChaoticEvent && actualChaoticEvent === predictedChaoticEvent) {
+        pts += 2;
+    }
+
+    return pts;
 }
 
 export async function POST(request: Request) {
@@ -49,7 +61,7 @@ export async function POST(request: Request) {
         // 1. Fetch all finished matches
         const { data: finishedMatches, error: matchError } = await admin
             .from('matches')
-            .select('id, home_score, away_score')
+            .select('id, home_score, away_score, actual_chaotic_event')
             .eq('status', 'finished')
             .not('home_score', 'is', null)
             .not('away_score', 'is', null);
@@ -64,7 +76,7 @@ export async function POST(request: Request) {
         // 2. Fetch all predictions for those matches
         const { data: predictions, error: predError } = await admin
             .from('predictions')
-            .select('id, user_id, match_id, predicted_home_score, predicted_away_score')
+            .select('id, user_id, match_id, predicted_home_score, predicted_away_score, funny_prediction')
             .in('match_id', matchIds);
 
         if (predError) throw predError;
@@ -73,8 +85,8 @@ export async function POST(request: Request) {
         }
 
         // 3. Calculate points for each prediction
-        type FinishedMatch = { id: string; home_score: number; away_score: number };
-        type Prediction = { id: string; user_id: string; match_id: string; predicted_home_score: number; predicted_away_score: number };
+        type FinishedMatch = { id: string; home_score: number; away_score: number; actual_chaotic_event: string | null; };
+        type Prediction = { id: string; user_id: string; match_id: string; predicted_home_score: number; predicted_away_score: number; funny_prediction: string | null; };
 
         const matchMap = new Map<string, FinishedMatch>(
             (finishedMatches as FinishedMatch[]).map(m => [m.id, m])
@@ -83,7 +95,14 @@ export async function POST(request: Request) {
         const updatedPredictions = (predictions as Prediction[]).map(p => {
             const match = matchMap.get(p.match_id);
             if (!match) return { id: p.id, user_id: p.user_id, points_awarded: 0 };
-            const pts = calculatePoints(match.home_score, match.away_score, p.predicted_home_score, p.predicted_away_score);
+            const pts = calculatePoints(
+                match.home_score,
+                match.away_score,
+                p.predicted_home_score,
+                p.predicted_away_score,
+                match.actual_chaotic_event,
+                p.funny_prediction
+            );
             return { id: p.id, user_id: p.user_id, points_awarded: pts };
         });
 
@@ -112,7 +131,7 @@ export async function POST(request: Request) {
             message: 'Points calculated and updated successfully!',
             processed: predictions.length,
             usersUpdated: userPoints.size,
-            scoring: { exact_score: 5, correct_result: 2 },
+            scoring: { exact_score: 5, correct_result: 3, chaotic_event: 2 },
         });
 
     } catch (error: unknown) {

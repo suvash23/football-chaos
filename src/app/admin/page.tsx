@@ -4,14 +4,15 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
-import { invalidateMatchCache } from "@/lib/data";
+import { invalidateMatchCache, FUNNY_PREDICTION_OPTIONS, TEAMS } from "@/lib/data";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Loader2, ShieldAlert, Save, RefreshCw, CheckCircle2, Clock, Zap } from "lucide-react";
+import { Loader2, ShieldAlert, Save, RefreshCw, CheckCircle2, Clock, Zap, RotateCcw } from "lucide-react";
 import { format } from "date-fns";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type DbMatch = {
     id: string;
@@ -23,11 +24,13 @@ type DbMatch = {
     away_score: number | null;
     group_name: string | null;
     round: string;
+    actual_chaotic_event: string | null;
 };
 
 type MatchRow = DbMatch & {
     editHome: string;
     editAway: string;
+    editChaoticEvent: string;
     saving: boolean;
 };
 
@@ -36,6 +39,9 @@ const statusColors: Record<string, string> = {
     live: "bg-green-500/20 text-green-400 animate-pulse",
     finished: "bg-muted text-muted-foreground",
 };
+
+let adminMatchCache: MatchRow[] | null = null;
+let adminMatchCacheTime = 0;
 
 export default function AdminPage() {
     const { user, profile, loading: authLoading } = useAuth();
@@ -47,24 +53,32 @@ export default function AdminPage() {
     const [calcResult, setCalcResult] = useState<string | null>(null);
     const [filterStatus, setFilterStatus] = useState<string>("all");
 
-    const loadMatches = useCallback(async () => {
+    const loadMatches = useCallback(async (force = false) => {
+        if (!force && adminMatchCache && Date.now() - adminMatchCacheTime < 30000) {
+            setMatches(adminMatchCache);
+            setIsLoading(false);
+            return;
+        }
+
         setIsLoading(true);
         const { data, error } = await supabase
             .from("matches")
-            .select("id, home_team, away_team, kickoff_time, status, home_score, away_score, group_name, round")
+            .select("id, home_team, away_team, kickoff_time, status, home_score, away_score, group_name, round, actual_chaotic_event")
             .order("kickoff_time", { ascending: true });
 
         if (error) {
             toast.error("Failed to load matches");
         } else {
-            setMatches(
-                (data || []).map((m: DbMatch) => ({
-                    ...m,
-                    editHome: m.home_score?.toString() ?? "",
-                    editAway: m.away_score?.toString() ?? "",
-                    saving: false,
-                }))
-            );
+            const mapped = (data || []).map((m: DbMatch) => ({
+                ...m,
+                editHome: m.home_score?.toString() ?? "",
+                editAway: m.away_score?.toString() ?? "",
+                editChaoticEvent: m.actual_chaotic_event ?? "",
+                saving: false,
+            }));
+            adminMatchCache = mapped;
+            adminMatchCacheTime = Date.now();
+            setMatches(mapped);
         }
         setIsLoading(false);
     }, []);
@@ -78,11 +92,12 @@ export default function AdminPage() {
         loadMatches();
     }, [user, profile, authLoading, router, loadMatches]);
 
-    const updateMatch = async (matchId: string, homeScore: string, awayScore: string, newStatus: string) => {
+    const updateMatch = async (matchId: string, homeScore: string, awayScore: string, newStatus: string, chaoticEvent: string) => {
         setMatches(prev => prev.map(m => m.id === matchId ? { ...m, saving: true } : m));
 
         const home = homeScore.trim() !== "" ? parseInt(homeScore) : null;
         const away = awayScore.trim() !== "" ? parseInt(awayScore) : null;
+        const actual_chaotic_event = chaoticEvent.trim() !== "" ? chaoticEvent : null;
 
         const { error } = await supabase
             .from("matches")
@@ -90,6 +105,7 @@ export default function AdminPage() {
                 home_score: home,
                 away_score: away,
                 status: newStatus,
+                actual_chaotic_event
             })
             .eq("id", matchId);
 
@@ -98,11 +114,15 @@ export default function AdminPage() {
         } else {
             toast.success("Match updated!");
             invalidateMatchCache(); // ensure predictions/bracket pages get fresh status
-            setMatches(prev => prev.map(m =>
-                m.id === matchId
-                    ? { ...m, home_score: home, away_score: away, status: newStatus, saving: false }
-                    : m
-            ));
+            setMatches(prev => {
+                const next = prev.map(m =>
+                    m.id === matchId
+                        ? { ...m, home_score: home, away_score: away, status: newStatus, actual_chaotic_event, saving: false }
+                        : m
+                );
+                adminMatchCache = next;
+                return next;
+            });
         }
     };
 
@@ -160,7 +180,7 @@ export default function AdminPage() {
                 </div>
 
                 <div className="flex items-center gap-3 flex-wrap">
-                    <Button variant="outline" onClick={loadMatches} className="gap-2">
+                    <Button variant="outline" onClick={() => loadMatches(true)} className="gap-2">
                         <RefreshCw className="h-4 w-4" /> Refresh
                     </Button>
                     <Button
@@ -184,8 +204,12 @@ export default function AdminPage() {
                             <span className="text-muted-foreground">Exact scoreline</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <span className="text-green-400 font-black text-lg">2 pts</span>
+                            <span className="text-green-400 font-black text-lg">3 pts</span>
                             <span className="text-muted-foreground">Correct result (W/D/L)</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-purple-400 font-black text-lg">2 pts</span>
+                            <span className="text-muted-foreground">Chaotic event matched</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <span className="text-red-400 font-black text-lg">0 pts</span>
@@ -219,76 +243,88 @@ export default function AdminPage() {
             <div className="space-y-3">
                 {filteredMatches.map((match) => (
                     <Card key={match.id} className="bg-card/50 border-border/50 hover:border-primary/30 transition-all">
-                        <CardContent className="py-4">
-                            <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+                        <CardContent className="py-3 space-y-3">
+                            {/* Row 1: Match Info | Score Inputs | Buttons — always one line */}
+                            <div className="flex flex-nowrap items-center gap-3 overflow-x-auto scrollbar-hide">
                                 {/* Match Info */}
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                <div className="flex-1 min-w-[180px]">
+                                    <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                                         <span className={`text-xs font-bold px-2 py-0.5 rounded-full capitalize ${statusColors[match.status] || "bg-muted text-muted-foreground"}`}>
                                             {match.status}
                                         </span>
                                         <span className="text-xs text-muted-foreground">{match.round}</span>
                                         {match.group_name && <span className="text-xs text-muted-foreground">• {match.group_name}</span>}
                                     </div>
-                                    <div className="font-bold text-lg">
-                                        {match.home_team} <span className="text-muted-foreground font-normal text-sm">vs</span> {match.away_team}
+                                    <div className="font-bold text-sm leading-tight whitespace-nowrap">
+                                        <span>{TEAMS.find(t => t.name === match.home_team)?.flag_icon ?? '🏳️'}</span>
+                                        {' '}{match.home_team}
+                                        <span className="text-muted-foreground font-normal text-xs mx-1">vs</span>
+                                        <span>{TEAMS.find(t => t.name === match.away_team)?.flag_icon ?? '🏳️'}</span>
+                                        {' '}{match.away_team}
                                     </div>
-                                    <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
-                                        <Clock className="h-3 w-3" />
-                                        {format(new Date(match.kickoff_time), "EEE d MMM yyyy, HH:mm")}
+                                    <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5 whitespace-nowrap">
+                                        <Clock className="h-3 w-3 shrink-0" />
+                                        {format(new Date(match.kickoff_time), "EEE d MMM yyyy, h:mm a")}
                                     </div>
                                 </div>
 
-                                {/* Current Score Display */}
+                                {/* Finished Score Badge */}
                                 {match.status === "finished" && match.home_score !== null && (
-                                    <div className="flex items-center gap-2 text-2xl font-black">
+                                    <div className="flex items-center gap-1 text-xl font-black shrink-0">
                                         <span>{match.home_score}</span>
-                                        <span className="text-muted-foreground text-base">-</span>
+                                        <span className="text-muted-foreground text-sm">-</span>
                                         <span>{match.away_score}</span>
                                         <CheckCircle2 className="h-4 w-4 text-green-400 ml-1" />
                                     </div>
                                 )}
 
-                                {/* Score Input */}
-                                <div className="flex items-center gap-2">
-                                    <div className="flex items-center gap-2">
-                                        <Label className="text-xs text-muted-foreground shrink-0">Home</Label>
-                                        <Input
-                                            type="number"
-                                            min={0}
-                                            max={99}
-                                            value={match.editHome}
-                                            onChange={(e) => setMatches(prev =>
-                                                prev.map(m => m.id === match.id ? { ...m, editHome: e.target.value } : m)
-                                            )}
-                                            className="w-16 h-9 text-center font-bold text-lg"
-                                            placeholder="–"
-                                        />
-                                    </div>
-                                    <span className="font-bold text-muted-foreground">:</span>
-                                    <div className="flex items-center gap-2">
-                                        <Input
-                                            type="number"
-                                            min={0}
-                                            max={99}
-                                            value={match.editAway}
-                                            onChange={(e) => setMatches(prev =>
-                                                prev.map(m => m.id === match.id ? { ...m, editAway: e.target.value } : m)
-                                            )}
-                                            className="w-16 h-9 text-center font-bold text-lg"
-                                            placeholder="–"
-                                        />
-                                        <Label className="text-xs text-muted-foreground shrink-0">Away</Label>
-                                    </div>
+                                {/* Score Inputs */}
+                                <div className="flex items-center gap-1.5 shrink-0">
+                                    <Label className="text-xs text-muted-foreground">H</Label>
+                                    <Input
+                                        type="number" min={0} max={99}
+                                        value={match.editHome}
+                                        onChange={(e) => setMatches(prev => prev.map(m => m.id === match.id ? { ...m, editHome: e.target.value } : m))}
+                                        className="w-14 h-8 text-center font-bold text-base"
+                                        placeholder="–"
+                                    />
+                                    <span className="font-bold text-muted-foreground text-sm">:</span>
+                                    <Input
+                                        type="number" min={0} max={99}
+                                        value={match.editAway}
+                                        onChange={(e) => setMatches(prev => prev.map(m => m.id === match.id ? { ...m, editAway: e.target.value } : m))}
+                                        className="w-14 h-8 text-center font-bold text-base"
+                                        placeholder="–"
+                                    />
+                                    <Label className="text-xs text-muted-foreground">A</Label>
                                 </div>
 
-                                {/* Status Buttons */}
-                                <div className="flex gap-2 flex-wrap">
+                                {/* ⚡ Chaotic Event — inline after score */}
+                                <div className="flex items-center gap-1.5 shrink-0 w-52">
+                                    <Label className="text-xs text-muted-foreground font-bold shrink-0">⚡</Label>
+                                    <Select
+                                        value={match.editChaoticEvent}
+                                        onValueChange={(val) => setMatches(prev => prev.map(m => m.id === match.id ? { ...m, editChaoticEvent: val === "none" ? "" : val } : m))}
+                                    >
+                                        <SelectTrigger className="h-8 text-xs w-full">
+                                            <SelectValue placeholder="Chaotic event?" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="none">None</SelectItem>
+                                            {FUNNY_PREDICTION_OPTIONS.map((opt) => (
+                                                <SelectItem key={opt} value={opt} className="text-xs">{opt}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                {/* Action Buttons */}
+                                <div className="flex gap-2 shrink-0">
                                     <Button
                                         size="sm"
                                         variant={match.status === "live" ? "default" : "outline"}
                                         className="text-xs font-bold gap-1"
-                                        onClick={() => updateMatch(match.id, match.editHome, match.editAway, "live")}
+                                        onClick={() => updateMatch(match.id, match.editHome, match.editAway, "live", match.editChaoticEvent)}
                                         disabled={match.saving}
                                     >
                                         {match.saving ? <Loader2 className="h-3 w-3 animate-spin" /> : null}
@@ -298,12 +334,27 @@ export default function AdminPage() {
                                         size="sm"
                                         variant={match.status === "finished" ? "default" : "outline"}
                                         className="text-xs font-bold gap-1 bg-green-600 hover:bg-green-700 text-white border-0"
-                                        onClick={() => updateMatch(match.id, match.editHome, match.editAway, "finished")}
+                                        onClick={() => updateMatch(match.id, match.editHome, match.editAway, "finished", match.editChaoticEvent)}
                                         disabled={match.saving}
                                     >
                                         {match.saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
                                         Save & Finish
                                     </Button>
+                                    {match.status !== "upcoming" && (
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            className="text-xs font-bold gap-1 text-red-500 border-red-300 hover:bg-red-50 hover:text-red-600"
+                                            onClick={() => {
+                                                setMatches(prev => prev.map(m => m.id === match.id ? { ...m, editHome: "", editAway: "", editChaoticEvent: "" } : m));
+                                                updateMatch(match.id, "", "", "upcoming", "");
+                                            }}
+                                            disabled={match.saving}
+                                        >
+                                            <RotateCcw className="h-3 w-3" />
+                                            Reset
+                                        </Button>
+                                    )}
                                 </div>
                             </div>
                         </CardContent>
