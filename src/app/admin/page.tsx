@@ -304,7 +304,7 @@ export default function AdminPage() {
                                     <Label className="text-xs text-muted-foreground font-bold shrink-0">⚡</Label>
                                     <Select
                                         value={match.editChaoticEvent}
-                                        onValueChange={(val) => setMatches(prev => prev.map(m => m.id === match.id ? { ...m, editChaoticEvent: val === "none" ? "" : val } : m))}
+                                        onValueChange={(val) => setMatches(prev => prev.map(m => m.id === match.id ? { ...m, editChaoticEvent: val === "none" || !val ? "" : val } : m))}
                                     >
                                         <SelectTrigger className="h-8 text-xs w-full">
                                             <SelectValue placeholder="Chaotic event?" />
