@@ -53,70 +53,75 @@ export default function ExcusesPage() {
     const generateExcuse = () => {
         const template = EXCUSE_TEMPLATES[Math.floor(Math.random() * EXCUSE_TEMPLATES.length)];
         const generated = template.replace("{outcome}", outcome);
-        setExcuse(`As a ${selectedTeam?.flag_icon || ""} ${team} fan, I must say: ${generated}`);
+        // Modern format with hashtags
+        const formattedTeam = team.replace(/\s+/g, "");
+        setExcuse(`${generated} #${formattedTeam} ${selectedTeam?.flag_icon || ""} #WorldCup2026 #FootballChaos`);
     };
 
     const copyToClipboard = () => {
         if (excuse) {
             navigator.clipboard.writeText(excuse);
-            toast.success("Copied to clipboard!", { description: "Ready for Twitter." });
+            toast.success("Copied to clipboard!", { description: "Ready to go viral." });
         }
     };
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-3xl">
-            <div className="flex flex-col items-center justify-center text-center space-y-4 mb-8">
-                <div className="p-3 w-16 h-16 rounded-2xl bg-green-500/20 text-green-500 flex items-center justify-center mb-2">
-                    <MessageSquareText className="w-8 h-8" />
+        <div className="container mx-auto px-4 py-12 max-w-3xl">
+            <div className="flex flex-col items-center justify-center text-center space-y-4 mb-12 animate-in fade-in slide-in-from-top-4 duration-700">
+                <div className="p-4 w-20 h-20 rounded-3xl bg-green-500/10 text-green-500 flex items-center justify-center mb-2 shadow-inner border border-green-500/20">
+                    <MessageSquareText className="w-10 h-10" />
                 </div>
-                <h1 className="text-4xl font-black italic tracking-tight uppercase">Manager Excuse Generator</h1>
-                <p className="text-muted-foreground text-lg max-w-2xl">
-                    Did your team drop points again? Don&apos;t blame the tactics. Use our highly-advanced delusional AI to craft the perfect excuse.
+                <h1 className="text-5xl font-black italic tracking-tighter uppercase leading-none">
+                    Manager <span className="text-green-500">Excuse</span> Generator
+                </h1>
+                <p className="text-muted-foreground text-xl max-w-2xl font-medium">
+                    Tactical masterclass or delusional meltdown? You decide.
                 </p>
             </div>
 
-            <Card className="w-full bg-card/50 backdrop-blur shadow-xl border-border/50">
-                <CardHeader>
-                    <CardTitle>Configure Delusion</CardTitle>
-                    <CardDescription>Select the parameters of your team&apos;s failure.</CardDescription>
+            <Card className="w-full bg-card/40 backdrop-blur-2xl shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] border-border/40 overflow-hidden rounded-[2rem]">
+                <CardHeader className="bg-muted/30 pb-8">
+                    <CardTitle className="text-2xl font-black uppercase italic tracking-tight">Configure Delusion</CardTitle>
+                    <CardDescription className="text-base font-medium">Select the parameters of your team&apos;s beautiful failure.</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                            <Label>Team</Label>
+                <CardContent className="space-y-8 pt-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-3">
+                            <Label className="text-sm font-black uppercase tracking-widest text-muted-foreground">Your Team</Label>
                             <Popover open={openTeam} onOpenChange={setOpenTeam}>
                                 <PopoverTrigger
-                                    className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+                                    className="flex h-12 w-full items-center justify-between rounded-xl border border-border/50 bg-background/50 px-4 text-base font-bold shadow-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                                 >
                                     {selectedTeam ? (
-                                        <span className="flex items-center gap-2">
-                                            <span>{selectedTeam.flag_icon}</span>
+                                        <span className="flex items-center gap-3">
+                                            <span className="text-2xl">{selectedTeam.flag_icon}</span>
                                             <span>{selectedTeam.name}</span>
                                         </span>
-                                    ) : "Select team..."}
+                                    ) : "Find your team..."}
                                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                 </PopoverTrigger>
-                                <PopoverContent className="w-[320px] p-0" align="start">
-                                    <Command>
-                                        <CommandInput placeholder="Search team..." />
-                                        <CommandList>
-                                            <CommandEmpty>No team found.</CommandEmpty>
+                                <PopoverContent className="w-[320px] p-0 rounded-2xl overflow-hidden shadow-2xl border-border/50" align="start">
+                                    <Command className="bg-background/95 backdrop-blur-xl">
+                                        <CommandInput placeholder="Search national teams..." className="h-12 text-base" />
+                                        <CommandList className="max-h-[300px]">
+                                            <CommandEmpty>No delusions found for this team.</CommandEmpty>
                                             <CommandGroup>
                                                 {sortedTeams.map((t) => (
                                                     <CommandItem
                                                         key={t.name}
                                                         value={t.name}
+                                                        className="px-4 py-3 text-base font-semibold"
                                                         onSelect={(currentValue) => {
                                                             const actual = sortedTeams.find(x => x.name.toLowerCase() === currentValue.toLowerCase())?.name || currentValue;
                                                             setTeam(actual);
                                                             setOpenTeam(false);
                                                         }}
                                                     >
-                                                        <span className="mr-2">{t.flag_icon}</span>
+                                                        <span className="mr-3 text-xl">{t.flag_icon}</span>
                                                         {t.name}
                                                         <Check
                                                             className={cn(
-                                                                "ml-auto h-4 w-4",
+                                                                "ml-auto h-5 w-5 text-green-500",
                                                                 team === t.name ? "opacity-100" : "opacity-0"
                                                             )}
                                                         />
@@ -128,48 +133,58 @@ export default function ExcusesPage() {
                                 </PopoverContent>
                             </Popover>
                         </div>
-                        <div className="space-y-2">
-                            <Label>Outcome</Label>
+                        <div className="space-y-3">
+                            <Label className="text-sm font-black uppercase tracking-widest text-muted-foreground">The Outcome</Label>
                             <Select value={outcome} onValueChange={(val) => setOutcome(val || OUTCOMES[1])}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select outcome..." />
+                                <SelectTrigger className="h-12 w-full rounded-xl border-border/50 bg-background/50 px-4 text-base font-bold shadow-sm">
+                                    <SelectValue placeholder="What happened?" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent className="rounded-xl border-border/50 bg-background/95 backdrop-blur-xl font-bold">
                                     {OUTCOMES.map((o) => (
-                                        <SelectItem key={o} value={o}>{o.toUpperCase()}</SelectItem>
+                                        <SelectItem key={o} value={o} className="text-base uppercase tracking-wider">{o}</SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
                         </div>
                     </div>
 
-                    <Button onClick={generateExcuse} size="lg" className="w-full font-bold h-14 text-lg">
-                        <Shuffle className="w-5 h-5 mr-2" /> Generate Excuse
+                    <Button onClick={generateExcuse} size="lg" className="w-full font-black h-16 text-xl rounded-2xl shadow-xl hover:scale-[1.02] transition-all bg-green-500 hover:bg-green-400 text-white uppercase tracking-wider italic">
+                        <Shuffle className="w-6 h-6 mr-3" /> Generate Excuse
                     </Button>
 
                     {excuse && (
-                        <div className="mt-8 animate-in zoom-in-95 fade-in">
-                            <div className="bg-muted rounded-2xl p-6 relative border border-border">
-                                <div className="absolute -top-3 -left-2 text-4xl text-primary/40">❝</div>
-                                <p className="text-2xl font-medium italic relative z-10 pl-4">{excuse}</p>
-                                <div className="absolute -bottom-6 -right-2 text-4xl text-primary/40">❞</div>
+                        <div className="mt-8 animate-in zoom-in-95 fade-in duration-500">
+                            {/* Social Media Post Style */}
+                            <div className="bg-background-secondary/50 rounded-[1.5rem] p-6 border-2 border-border/50 shadow-2xl space-y-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-3xl shadow-sm border border-border/50">
+                                        {selectedTeam?.flag_icon || "⚽"}
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="font-black text-base italic leading-tight">{team} Fan</span>
+                                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">@chaos_merchant • Just now</span>
+                                    </div>
+                                </div>
+                                <p className="text-2xl font-bold leading-tight tracking-tight">
+                                    {excuse.split(" #").map((part, i) => i === 0 ? part : <span key={i} className="text-blue-500 font-black"> #{part}</span>)}
+                                </p>
                             </div>
 
-                            <div className="flex gap-3 mt-6 justify-end flex-wrap">
-                                <Button variant="outline" onClick={copyToClipboard}>
-                                    <Copy className="w-4 h-4 mr-2" /> Copy text
+                            <div className="flex gap-4 mt-8 justify-center flex-wrap">
+                                <Button variant="outline" onClick={copyToClipboard} className="h-12 rounded-full px-6 font-bold shadow-sm border-border/50">
+                                    <Copy className="w-4 h-4 mr-2" /> Copy Text
                                 </Button>
                                 <Button
                                     onClick={shareToTwitter}
-                                    className="bg-black text-white hover:bg-zinc-800 font-bold gap-2"
+                                    className="bg-black text-white hover:bg-zinc-800 font-bold h-12 rounded-full px-6 shadow-xl gap-2 transition-all hover:scale-105"
                                 >
                                     <TwitterXIcon /> Post on X
                                 </Button>
                                 <Button
                                     onClick={shareToFacebook}
-                                    className="bg-[#1877F2] text-white hover:bg-[#0d6be0] font-bold gap-2"
+                                    className="bg-[#1877F2] text-white hover:bg-[#0d6be0] font-bold h-12 rounded-full px-6 shadow-xl gap-2 transition-all hover:scale-105"
                                 >
-                                    <FacebookIcon /> Share on Facebook
+                                    <FacebookIcon /> Facebook
                                 </Button>
                             </div>
                         </div>
