@@ -1,6 +1,7 @@
 import { TEAMS } from "@/lib/data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Globe } from "lucide-react";
+import Link from "next/link";
 
 export default function GroupsPage() {
     // Group teams by their group name
@@ -35,12 +36,17 @@ export default function GroupsPage() {
                         <CardContent className="pt-6">
                             <ul className="space-y-4">
                                 {groupedTeams[groupName].map((team) => (
-                                    <li key={team.name} className="flex items-center gap-4 p-2 rounded-lg hover:bg-muted/30 transition-colors">
-                                        <span className="text-3xl drop-shadow-md">{team.flag_icon}</span>
-                                        <div className="flex flex-col">
-                                            <span className="font-bold text-lg leading-tight">{team.name}</span>
-                                            <span className="text-xs text-muted-foreground uppercase font-semibold">{team.continent}</span>
-                                        </div>
+                                    <li key={team.name} className="flex">
+                                        <Link
+                                            href={`/teams/${encodeURIComponent(team.name)}`}
+                                            className="flex items-center gap-4 p-2 rounded-lg hover:bg-primary/20 transition-all hover:translate-x-1 flex-1 w-full"
+                                        >
+                                            <span className="text-3xl drop-shadow-md">{team.flag_icon}</span>
+                                            <div className="flex flex-col">
+                                                <span className="font-bold text-lg leading-tight">{team.name}</span>
+                                                <span className="text-xs text-muted-foreground uppercase font-semibold">{team.continent}</span>
+                                            </div>
+                                        </Link>
                                     </li>
                                 ))}
                             </ul>
