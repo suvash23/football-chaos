@@ -1,4 +1,5 @@
 import teamsMetaRaw from './teams_meta.json';
+import squadsDataRaw from './data/squads.json';
 import { supabase } from './supabase';
 
 export type Match = {
@@ -131,3 +132,20 @@ export const BINGO_ITEMS = [
     "Missed open goal",
     "Perfect top bin"
 ];
+
+export type SquadPlayer = {
+    no: string;
+    pos: string;
+    name: string;
+    dob: string;
+    caps: string;
+    goals: string;
+    club: string;
+};
+
+export type TeamSquad = {
+    team: string;
+    players: SquadPlayer[];
+};
+
+export const SQUADS: TeamSquad[] = squadsDataRaw as TeamSquad[];

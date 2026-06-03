@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
+import Link from "next/link";
 import { fetchMatches, FUNNY_PREDICTION_OPTIONS, type Match } from "@/lib/data";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
@@ -209,7 +210,9 @@ export default function PredictionsPage() {
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex flex-col items-center gap-2 w-1/3">
                                     <span className="text-6xl">{match.home_flag}</span>
-                                    <span className="font-bold text-center">{match.home_team}</span>
+                                    <Link href={`/teams/${encodeURIComponent(match.home_team)}`} className="font-bold text-center hover:text-primary hover:underline underline-offset-4 transition-colors leading-tight">
+                                        {match.home_team}
+                                    </Link>
                                 </div>
 
                                 <div className="flex flex-col items-center justify-center w-1/3">
@@ -237,7 +240,9 @@ export default function PredictionsPage() {
 
                                 <div className="flex flex-col items-center gap-2 w-1/3">
                                     <span className="text-6xl">{match.away_flag}</span>
-                                    <span className="font-bold text-center">{match.away_team}</span>
+                                    <Link href={`/teams/${encodeURIComponent(match.away_team)}`} className="font-bold text-center hover:text-primary hover:underline underline-offset-4 transition-colors leading-tight">
+                                        {match.away_team}
+                                    </Link>
                                 </div>
                             </div>
 
