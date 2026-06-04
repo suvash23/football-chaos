@@ -295,6 +295,8 @@ export default function PredictionsPage() {
                                         </DialogHeader>
                                         <PredictionForm
                                             current={predictions[match.id]}
+                                            homeTeam={match.home_team}
+                                            awayTeam={match.away_team}
                                             onSave={(data) => handlePredict(match.id, data)}
                                         />
                                     </DialogContent>
@@ -308,7 +310,7 @@ export default function PredictionsPage() {
     );
 }
 
-function PredictionForm({ current, onSave }: { current: { homeScore?: number | string; awayScore?: number | string; funnyPrediction?: string }, onSave: (data: { homeScore: number; awayScore: number; funnyPrediction: string }) => void }) {
+function PredictionForm({ current, homeTeam, awayTeam, onSave }: { current: { homeScore?: number | string; awayScore?: number | string; funnyPrediction?: string }, homeTeam: string; awayTeam: string; onSave: (data: { homeScore: number; awayScore: number; funnyPrediction: string }) => void }) {
     const [homeScore, setHomeScore] = useState(current?.homeScore?.toString() || "0");
     const [awayScore, setAwayScore] = useState(current?.awayScore?.toString() || "0");
     const [funnyPrediction, setFunnyPrediction] = useState(current?.funnyPrediction || "");
@@ -317,7 +319,7 @@ function PredictionForm({ current, onSave }: { current: { homeScore?: number | s
         <div className="flex flex-col gap-6 py-4">
             <div className="flex items-center justify-between gap-4">
                 <div className="flex flex-col gap-2 flex-1">
-                    <Label htmlFor="home-score" className="text-center">Home Score</Label>
+                    <Label htmlFor="home-score" className="text-center font-black uppercase tracking-wide text-sm">{homeTeam}</Label>
                     <Input
                         id="home-score"
                         type="number"
@@ -327,9 +329,9 @@ function PredictionForm({ current, onSave }: { current: { homeScore?: number | s
                         onChange={(e) => setHomeScore(e.target.value)}
                     />
                 </div>
-                <div className="text-2xl font-black text-muted-foreground">-</div>
+                <div className="text-3xl font-black text-muted-foreground pt-6">—</div>
                 <div className="flex flex-col gap-2 flex-1">
-                    <Label htmlFor="away-score" className="text-center">Away Score</Label>
+                    <Label htmlFor="away-score" className="text-center font-black uppercase tracking-wide text-sm">{awayTeam}</Label>
                     <Input
                         id="away-score"
                         type="number"
@@ -342,7 +344,7 @@ function PredictionForm({ current, onSave }: { current: { homeScore?: number | s
             </div>
 
             <div className="flex flex-col gap-2">
-                <Label>Chaotic Event Prediction (10 pts)</Label>
+                <Label>Chaotic Event Prediction (2 pts)</Label>
                 <Select value={funnyPrediction} onValueChange={(val) => setFunnyPrediction(val || "")}>
                     <SelectTrigger>
                         <SelectValue placeholder="Select a funny event to happen..." />
