@@ -342,7 +342,7 @@ function PredictionForm({ current, onSave }: { current: { homeScore?: number | s
             </div>
 
             <div className="flex flex-col gap-2">
-                <Label>Chaotic Event Prediction (10 pts)</Label>
+                <Label>Chaotic Event Prediction (2 pts)</Label>
                 <Select value={funnyPrediction} onValueChange={(val) => setFunnyPrediction(val || "")}>
                     <SelectTrigger>
                         <SelectValue placeholder="Select a funny event to happen..." />
