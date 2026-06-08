@@ -93,10 +93,10 @@ export default function GroupsPage() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        fetchMatches().then(data => {
-            setMatches(data);
-            setIsLoading(false);
-        });
+        fetchMatches()
+            .then(data => setMatches(data))
+            .catch(err => console.error("Error loading groups:", err))
+            .finally(() => setIsLoading(false));
     }, []);
 
     // Group teams by group name

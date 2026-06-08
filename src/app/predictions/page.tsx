@@ -40,29 +40,35 @@ export default function PredictionsPage() {
 
     useEffect(() => {
         async function load() {
-            const data = await fetchMatches();
-            setMatches(data);
+            try {
+                const data = await fetchMatches();
+                setMatches(data);
 
-            if (user) {
-                const { data: userPredictions } = await supabase
-                    .from('predictions')
-                    .select('*')
-                    .eq('user_id', user.id);
+                if (user) {
+                    const { data: userPredictions, error } = await supabase
+                        .from('predictions')
+                        .select('*')
+                        .eq('user_id', user.id);
 
-                if (userPredictions) {
-                    const loadedPredictions: Record<string, { homeScore: number; awayScore: number; funnyPrediction: string }> = {};
-                    userPredictions.forEach(p => {
-                        loadedPredictions[p.match_id] = {
-                            homeScore: p.predicted_home_score,
-                            awayScore: p.predicted_away_score,
-                            funnyPrediction: p.funny_prediction
-                        };
-                    });
-                    setPredictions(loadedPredictions);
+                    if (error) {
+                        console.error("Error fetching user predictions:", error);
+                    } else if (userPredictions) {
+                        const loadedPredictions: Record<string, { homeScore: number; awayScore: number; funnyPrediction: string }> = {};
+                        userPredictions.forEach(p => {
+                            loadedPredictions[p.match_id] = {
+                                homeScore: p.predicted_home_score,
+                                awayScore: p.predicted_away_score,
+                                funnyPrediction: p.funny_prediction
+                            };
+                        });
+                        setPredictions(loadedPredictions);
+                    }
                 }
+            } catch (err) {
+                console.error("Critical error in Predictions load:", err);
+            } finally {
+                setIsLoading(false);
             }
-
-            setIsLoading(false);
         }
         load();
     }, [user]);
