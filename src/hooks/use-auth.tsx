@@ -23,30 +23,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         let mounted = true;
 
         const fetchSessionAndProfile = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            const currentUser = session?.user ?? null;
-            if (!mounted) return;
-            setUser(currentUser);
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                const currentUser = session?.user ?? null;
+                if (!mounted) return;
+                setUser(currentUser);
 
-            if (currentUser) {
-                const { data } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
-                if (mounted) setProfile(data);
+                if (currentUser) {
+                    const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+                    if (mounted) {
+                        if (error) console.error("Error fetching profile:", error);
+                        setProfile(data || null);
+                    }
+                }
+            } catch (err) {
+                console.error("Auth initialization error:", err);
+            } finally {
+                if (mounted) setLoading(false);
             }
-            if (mounted) setLoading(false);
         };
 
         fetchSessionAndProfile();
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-            const currentUser = session?.user ?? null;
-            setUser(currentUser);
-            if (currentUser) {
-                const { data } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
-                setProfile(data);
-            } else {
-                setProfile(null);
+            try {
+                const currentUser = session?.user ?? null;
+                setUser(currentUser);
+                if (currentUser) {
+                    const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+                    if (error) console.error("Auth state change profile error:", error);
+                    setProfile(data || null);
+                } else {
+                    setProfile(null);
+                }
+            } catch (err) {
+                console.error("Auth state change error:", err);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         });
 
         return () => {
@@ -56,10 +70,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     return (
-        <AuthContext.Provider value= {{ user, profile, loading }
-}>
-    { children }
-    </AuthContext.Provider>
+        <AuthContext.Provider value={{ user, profile, loading }
+        }>
+            {children}
+        </AuthContext.Provider>
     );
 }
 

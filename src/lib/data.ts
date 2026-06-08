@@ -24,38 +24,49 @@ let matchCache: { data: Match[]; timestamp: number } | null = null;
 const CACHE_TTL_MS = 60_000; // 60 seconds
 
 export async function fetchMatches(): Promise<Match[]> {
-    // Return cached data if still fresh
-    if (matchCache && Date.now() - matchCache.timestamp < CACHE_TTL_MS) {
-        return matchCache.data;
+    try {
+        // Return cached data if still fresh
+        if (matchCache && Date.now() - matchCache.timestamp < CACHE_TTL_MS) {
+            return matchCache.data;
+        }
+
+        const { data: dbMatches, error } = await supabase
+            .from('matches')
+            .select('*')
+            .order('kickoff_time', { ascending: true });
+
+        if (error) {
+            console.error("Supabase error fetching matches:", error);
+            return matchCache?.data ?? [];
+        }
+
+        if (!dbMatches) return [];
+
+        const mapped = dbMatches.map((m: { id: string, round: string, home_team: string, away_team: string, kickoff_time: string, status: 'upcoming' | 'live' | 'finished', home_score: number | null, away_score: number | null, group_name?: string, stadium?: string, [key: string]: unknown }) => {
+            const homeTeamInfo = TEAMS.find((t) => t.name === m.home_team);
+            const awayTeamInfo = TEAMS.find((t) => t.name === m.away_team);
+            return {
+                id: m.id,
+                round: m.round,
+                home_team: m.home_team,
+                away_team: m.away_team,
+                kickoff_time: m.kickoff_time,
+                status: m.status,
+                home_score: m.home_score,
+                away_score: m.away_score,
+                home_flag: homeTeamInfo?.flag_icon || "🚩",
+                away_flag: awayTeamInfo?.flag_icon || "🚩",
+                group: m.group_name || homeTeamInfo?.group || "Unknown",
+                stadium: m.stadium || "Unknown",
+            };
+        });
+
+        matchCache = { data: mapped, timestamp: Date.now() };
+        return mapped;
+    } catch (err) {
+        console.error("Critical error in fetchMatches:", err);
+        return matchCache?.data ?? [];
     }
-
-    const { data: dbMatches, error } = await supabase.from('matches').select('*').order('kickoff_time', { ascending: true });
-    if (error) {
-        console.error("Error fetching matches:", error);
-        return matchCache?.data ?? []; // return stale cache on error rather than empty
-    }
-
-    const mapped = dbMatches.map((m: { id: string, round: string, home_team: string, away_team: string, kickoff_time: string, status: 'upcoming' | 'live' | 'finished', home_score: number | null, away_score: number | null, group_name?: string, stadium?: string, [key: string]: unknown }) => {
-        const homeTeamInfo = TEAMS.find((t) => t.name === m.home_team);
-        const awayTeamInfo = TEAMS.find((t) => t.name === m.away_team);
-        return {
-            id: m.id,
-            round: m.round,
-            home_team: m.home_team,
-            away_team: m.away_team,
-            kickoff_time: m.kickoff_time,
-            status: m.status,
-            home_score: m.home_score,
-            away_score: m.away_score,
-            home_flag: homeTeamInfo?.flag_icon || "🚩",
-            away_flag: awayTeamInfo?.flag_icon || "🚩",
-            group: m.group_name || homeTeamInfo?.group || "Unknown",
-            stadium: m.stadium || "Unknown",
-        };
-    });
-
-    matchCache = { data: mapped, timestamp: Date.now() };
-    return mapped;
 }
 
 // Call this after admin updates a match result so cache invalidates immediately
