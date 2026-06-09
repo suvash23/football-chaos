@@ -31,9 +31,9 @@ function calculatePoints(
         pts += 3;
     }
 
-    // Chaotic Event Prediction: 2 points
+    // Chaotic Event Prediction: 1 point
     if (actualChaoticEvent && actualChaoticEvent === predictedChaoticEvent) {
-        pts += 2;
+        pts += 1;
     }
 
     return pts;
@@ -131,7 +131,7 @@ export async function POST(request: Request) {
             message: 'Points calculated and updated successfully!',
             processed: predictions.length,
             usersUpdated: userPoints.size,
-            scoring: { exact_score: 5, correct_result: 3, chaotic_event: 2 },
+            scoring: { exact_score: 5, correct_result: 3, chaotic_event: 1 },
         });
 
     } catch (error: unknown) {
