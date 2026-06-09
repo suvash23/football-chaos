@@ -208,7 +208,7 @@ export default function AdminPage() {
                             <span className="text-muted-foreground">Correct result (W/D/L)</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <span className="text-purple-400 font-black text-lg">2 pts</span>
+                            <span className="text-purple-400 font-black text-lg">1 pt</span>
                             <span className="text-muted-foreground">Chaotic event matched</span>
                         </div>
                         <div className="flex items-center gap-2">

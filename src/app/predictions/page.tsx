@@ -160,7 +160,7 @@ export default function PredictionsPage() {
                 <span className="font-bold text-muted-foreground uppercase tracking-wider text-xs">How points work:</span>
                 <span className="flex items-center gap-1.5"><span className="font-black text-yellow-500">5 pts</span><span className="text-muted-foreground">Exact scoreline</span></span>
                 <span className="flex items-center gap-1.5"><span className="font-black text-green-500">3 pts</span><span className="text-muted-foreground">Correct result (W/D/L)</span></span>
-                <span className="flex items-center gap-1.5"><span className="font-black text-purple-500">2 pts</span><span className="text-muted-foreground">Chaotic event matched</span></span>
+                <span className="flex items-center gap-1.5"><span className="font-black text-purple-500">1 pt</span><span className="text-muted-foreground">Chaotic event matched</span></span>
                 <span className="flex items-center gap-1.5"><span className="font-black text-red-400">0 pts</span><span className="text-muted-foreground">Wrong result</span></span>
             </div>
 
@@ -350,7 +350,7 @@ function PredictionForm({ current, homeTeam, awayTeam, onSave }: { current: { ho
             </div>
 
             <div className="flex flex-col gap-2">
-                <Label>Chaotic Event Prediction (2 pts)</Label>
+                <Label>Chaotic Event Prediction (1 pt)</Label>
                 <Select value={funnyPrediction} onValueChange={(val) => setFunnyPrediction(val || "")}>
                     <SelectTrigger>
                         <SelectValue placeholder="Select a funny event to happen..." />
