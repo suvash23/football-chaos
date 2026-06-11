@@ -24,13 +24,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         const fetchSessionAndProfile = async () => {
             try {
-                const { data: { session } } = await supabase.auth.getSession();
-                const currentUser = session?.user ?? null;
-                if (!mounted) return;
-                setUser(currentUser);
+                // Use getUser() to verify the session with the server, rather than just getSession()
+                const { data: { user: currentUser }, error: userError } = await supabase.auth.getUser();
 
-                if (currentUser) {
-                    const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
+                if (userError) {
+                    // If there's an error getting the user (e.g. invalid session), we should clear it
+                    console.log("Session invalid or expired, clearing storage:", userError.message);
+                    await supabase.auth.signOut();
+                    if (mounted) {
+                        setUser(null);
+                        setProfile(null);
+                    }
+                } else if (currentUser) {
+                    if (!mounted) return;
+                    setUser(currentUser);
+
+                    const { data, error } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', currentUser.id)
+                        .maybeSingle();
+
                     if (mounted) {
                         if (error) console.error("Error fetching profile:", error);
                         setProfile(data || null);
@@ -38,6 +52,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 }
             } catch (err) {
                 console.error("Auth initialization error:", err);
+                if (mounted) {
+                    setUser(null);
+                    setProfile(null);
+                }
             } finally {
                 if (mounted) setLoading(false);
             }
@@ -45,22 +63,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         fetchSessionAndProfile();
 
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-            try {
-                const currentUser = session?.user ?? null;
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+            console.log(`Auth event: ${event}`);
+
+            const currentUser = session?.user ?? null;
+
+            if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
                 setUser(currentUser);
                 if (currentUser) {
-                    const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
-                    if (error) console.error("Auth state change profile error:", error);
+                    const { data } = await supabase.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
                     setProfile(data || null);
-                } else {
+                }
+            } else if (event === 'SIGNED_OUT') {
+                setUser(null);
+                setProfile(null);
+            } else if (event === 'INITIAL_SESSION') {
+                // Already handled by fetchSessionAndProfile, but stay in sync
+                if (!currentUser) {
+                    setUser(null);
                     setProfile(null);
                 }
-            } catch (err) {
-                console.error("Auth state change error:", err);
-            } finally {
-                setLoading(false);
             }
+
+            setLoading(false);
         });
 
         return () => {

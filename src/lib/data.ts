@@ -30,10 +30,36 @@ export async function fetchMatches(): Promise<Match[]> {
             return matchCache.data;
         }
 
-        const { data: dbMatches, error } = await supabase
+        // Add a timeout to prevent hanging on network issues
+        const matchesPromise = supabase
             .from('matches')
             .select('*')
             .order('kickoff_time', { ascending: true });
+
+        const timeoutPromise = new Promise<{ data: null; error: { message: string } }>((_, reject) =>
+            setTimeout(() => reject(new Error("Request timed out")), 10000)
+        );
+
+        interface DBMatch {
+            id: string;
+            round: string;
+            home_team: string;
+            away_team: string;
+            kickoff_time: string;
+            status: Match['status'];
+            home_score: number | null;
+            away_score: number | null;
+            group_name?: string;
+            stadium?: string;
+        }
+
+        const result = await Promise.race([
+            matchesPromise,
+            timeoutPromise
+        ]) as { data: DBMatch[] | null; error: { message: string } | null };
+
+        const dbMatches = result.data;
+        const error = result.error;
 
         if (error) {
             console.error("Supabase error fetching matches:", error);
@@ -42,7 +68,7 @@ export async function fetchMatches(): Promise<Match[]> {
 
         if (!dbMatches) return [];
 
-        const mapped = dbMatches.map((m: { id: string, round: string, home_team: string, away_team: string, kickoff_time: string, status: 'upcoming' | 'live' | 'finished', home_score: number | null, away_score: number | null, group_name?: string, stadium?: string, [key: string]: unknown }) => {
+        const mapped = dbMatches.map((m) => {
             const homeTeamInfo = TEAMS.find((t) => t.name === m.home_team);
             const awayTeamInfo = TEAMS.find((t) => t.name === m.away_team);
             return {
