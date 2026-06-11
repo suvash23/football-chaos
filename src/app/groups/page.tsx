@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Globe, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
+import { Flag } from "@/components/flag";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -196,7 +197,7 @@ export default function GroupsPage() {
                                                                     href={`/teams/${encodeURIComponent(row.team.name)}`}
                                                                     className="flex items-center gap-2 group"
                                                                 >
-                                                                    <span className="text-lg leading-none">{row.team.flag_icon}</span>
+                                                                    <Flag emoji={row.team.flag_icon} size={20} />
                                                                     <span className="font-semibold text-xs leading-tight group-hover:text-primary transition-colors truncate max-w-[80px]">
                                                                         {row.team.name}
                                                                     </span>

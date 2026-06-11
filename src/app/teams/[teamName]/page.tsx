@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Users, Trophy, MapPin, User } from "lucide-react";
+import { Flag } from "@/components/flag";
 
 interface PageProps {
     params: Promise<{ teamName: string }>;
@@ -35,8 +36,8 @@ export default async function TeamPage({ params }: PageProps) {
                 {/* Left: Flag + Name + Meta */}
                 <Card className="border-border/50 bg-card/30 backdrop-blur-xl shadow-xl overflow-hidden">
                     <CardContent className="p-6 flex flex-col md:flex-row items-center md:items-start gap-5 h-full">
-                        <div className="text-7xl drop-shadow-2xl shrink-0">
-                            {teamMeta?.flag_icon || "🚩"}
+                        <div className="shrink-0 flex items-center justify-center">
+                            <Flag emoji={teamMeta?.flag_icon || "🚩"} size={80} />
                         </div>
                         <div className="text-center md:text-left space-y-3">
                             <h1 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-500">

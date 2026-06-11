@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2, Save, Trophy, Info, CheckCircle2, XCircle, Lock } from "lucide-react";
 import { toast } from "sonner";
+import { Flag } from "@/components/flag";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -543,7 +544,7 @@ function TeamRow({
     return (
         <div className={`${rowBase} ${clickable} ${rowColor}`} onClick={onClick} title={isLocked ? undefined : `Pick ${team.name}`}>
             <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-base leading-none">{team.flag}</span>
+                <Flag emoji={team.flag} size={16} />
                 <span className={`text-[11px] font-semibold truncate max-w-[90px] ${isPicked ? "font-black" : ""}`}>
                     {team.name}
                 </span>

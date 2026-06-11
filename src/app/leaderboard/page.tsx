@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Trophy, Medal, Crown } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Flag } from "@/components/flag";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -76,7 +77,7 @@ export default async function LeaderboardPage() {
 
                                     <Avatar className="h-12 w-12 border-2 border-background shadow-sm bg-secondary shrink-0">
                                         <AvatarFallback className="bg-secondary text-xl border-none">
-                                            {user.avatar_url || "⚽"}
+                                            <Flag emoji={user.avatar_url || "⚽"} size={32} />
                                         </AvatarFallback>
                                     </Avatar>
 
