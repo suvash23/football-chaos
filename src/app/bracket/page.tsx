@@ -147,7 +147,7 @@ export default function BracketBuilderPage() {
                     .from("profiles")
                     .select("bracket_data")
                     .eq("id", user.id)
-                    .single();
+                    .maybeSingle();
 
                 if (profile?.bracket_data) {
                     setPicks(profile.bracket_data as BracketPicks);

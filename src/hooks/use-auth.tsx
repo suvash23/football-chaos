@@ -30,7 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 setUser(currentUser);
 
                 if (currentUser) {
-                    const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+                    const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
                     if (mounted) {
                         if (error) console.error("Error fetching profile:", error);
                         setProfile(data || null);
@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 const currentUser = session?.user ?? null;
                 setUser(currentUser);
                 if (currentUser) {
-                    const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+                    const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
                     if (error) console.error("Auth state change profile error:", error);
                     setProfile(data || null);
                 } else {

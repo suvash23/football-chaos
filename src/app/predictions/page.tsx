@@ -95,7 +95,7 @@ export default function PredictionsPage() {
                 .select('id')
                 .eq('user_id', user.id)
                 .eq('match_id', matchId)
-                .single();
+                .maybeSingle();
 
             if (existing) {
                 await supabase.from('predictions').update({
