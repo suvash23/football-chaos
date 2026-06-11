@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy, ClipboardList, MonitorPlay, MessageSquareText, ArrowRight, Globe, History, Calendar, MapPin, Zap } from "lucide-react";
+import { Trophy, ClipboardList, MonitorPlay, MessageSquareText, ArrowRight, Globe, History, Calendar, MapPin } from "lucide-react";
 import { Countdown } from "@/components/countdown";
 import Image from "next/image";
 import { fetchMatches } from "@/lib/data";
 import { Flag } from "@/components/flag";
 import { format } from "date-fns";
+
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const matches = await fetchMatches();
@@ -130,7 +132,7 @@ export default async function Home() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
             <div className="text-center md:text-left">
               <h2 className="text-4xl font-black italic uppercase tracking-tighter leading-none mb-2">Next on the Pitch</h2>
-              <p className="text-muted-foreground font-bold text-sm uppercase tracking-widest opacity-70">Don't miss a single second of the chaos</p>
+              <p className="text-muted-foreground font-bold text-sm uppercase tracking-widest opacity-70">Don&apos;t miss a single second of the chaos</p>
             </div>
             <Link href="/predictions">
               <Button variant="outline" className="rounded-xl font-black uppercase italic tracking-wider gap-2 hover:bg-primary/10 transition-all">
