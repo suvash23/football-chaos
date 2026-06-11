@@ -4,8 +4,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Trophy, ClipboardList, MonitorPlay, MessageSquareText, ArrowRight, Globe, History, Calendar, MapPin, Zap } from "lucide-react";
 import { Countdown } from "@/components/countdown";
 import Image from "next/image";
+import { fetchMatches } from "@/lib/data";
+import { Flag } from "@/components/flag";
+import { format } from "date-fns";
 
-export default function Home() {
+export default async function Home() {
+  const matches = await fetchMatches();
+  const upcoming = matches
+    .filter(m => m.status === 'upcoming' || m.status === 'live')
+    .slice(0, 3);
+
   const features = [
     {
       title: "Match Predictions",
@@ -86,7 +94,7 @@ export default function Home() {
       <section className="container mx-auto px-4 -mt-32 relative z-40">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Countdown Card with Buttons */}
-          <Card className="lg:col-span-2 overflow-hidden border-border/50 bg-card/70 backdrop-blur-3xl shadow-2xl flex flex-col">
+          <Card className="lg:col-span-3 overflow-hidden border-border/50 bg-card/70 backdrop-blur-3xl shadow-2xl flex flex-col">
             <CardHeader className="text-center pb-2 border-b border-border/10">
               <CardTitle className="text-sm font-black uppercase tracking-[0.3em] text-muted-foreground italic flex items-center justify-center gap-2">
                 <Calendar className="h-4 w-4" /> Kickoff Starts In
@@ -95,13 +103,13 @@ export default function Home() {
             <CardContent className="py-12 flex-1 flex flex-col items-center justify-center gap-10">
               <Countdown targetDate="2026-06-11T13:00:00-06:00" />
 
-              <div className="flex flex-wrap items-center justify-center gap-4 w-full">
-                <Link href="/predictions" className="flex-1 min-w-[200px]">
+              <div className="flex flex-wrap items-center justify-center gap-4 w-full px-6">
+                <Link href="/predictions" className="flex-1 min-w-[260px]">
                   <Button size="lg" className="w-full rounded-2xl px-8 text-xl font-black h-16 shadow-xl hover:scale-[1.02] transition-all italic uppercase tracking-wider bg-yellow-500 hover:bg-yellow-400 text-black border-2 border-black group">
                     Start Predicting <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-                <Link href="/groups" className="flex-1 min-w-[200px]">
+                <Link href="/groups" className="flex-1 min-w-[260px]">
                   <Button variant="outline" size="lg" className="w-full rounded-2xl px-8 text-xl font-black h-16 backdrop-blur-md bg-muted/50 transition-all italic uppercase tracking-wider hover:bg-muted/80">
                     Tournament Wiki
                   </Button>
@@ -109,37 +117,68 @@ export default function Home() {
               </div>
             </CardContent>
           </Card>
+        </div>
+      </section>
 
-          {/* Opening Match Card */}
-          <Card className="overflow-hidden border-border/50 bg-primary shadow-2xl text-primary-foreground relative group">
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
-            <CardHeader className="pb-2 border-b border-white/10">
-              <CardTitle className="text-xs font-black uppercase tracking-widest text-white/70 italic flex items-center gap-2">
-                <Zap className="h-3 w-3 fill-white/70" /> Opening Match Highlight
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6 relative z-10">
-              <div className="flex flex-col items-center gap-4 text-center">
-                <div className="flex items-center justify-between w-full px-4">
-                  <div className="flex flex-col items-center gap-2">
-                    <span className="text-4xl">🇲🇽</span>
-                    <span className="text-sm font-black uppercase italic">Mexico</span>
+      {/* Upcoming Matches Full Width Section */}
+      <section className="w-full bg-muted/30 border-y border-border/50 py-16 mb-16 mt-16 relative overflow-hidden">
+        {/* Subtle background flair */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl" />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
+            <div className="text-center md:text-left">
+              <h2 className="text-4xl font-black italic uppercase tracking-tighter leading-none mb-2">Next on the Pitch</h2>
+              <p className="text-muted-foreground font-bold text-sm uppercase tracking-widest opacity-70">Don't miss a single second of the chaos</p>
+            </div>
+            <Link href="/predictions">
+              <Button variant="outline" className="rounded-xl font-black uppercase italic tracking-wider gap-2 hover:bg-primary/10 transition-all">
+                All Fixtures <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {upcoming.length > 0 ? (
+              upcoming.map((match) => (
+                <Card key={match.id} className="group overflow-hidden border-border/50 bg-card/60 backdrop-blur-xl hover:border-primary/40 hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
+                  <CardHeader className="pb-3 border-b border-border/10">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                        <Calendar className="h-3 w-3" /> {format(new Date(match.kickoff_time), "EEE, MMM d")}
+                      </span>
+                      <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${match.status === 'live' ? 'bg-green-500/10 text-green-500 animate-pulse' : 'bg-primary/10 text-primary'}`}>
+                        {match.status === 'live' ? 'Live Now' : format(new Date(match.kickoff_time), "h:mm a")}
+                      </span>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-6 pb-6">
+                    <div className="flex items-center justify-around gap-4 px-2">
+                      <div className="flex flex-col items-center gap-2">
+                        <Flag emoji={match.home_flag} size={36} />
+                        <span className="text-sm font-black uppercase italic tracking-tighter truncate max-w-[80px]">{match.home_team}</span>
+                      </div>
+                      <div className="text-xl font-black italic text-muted-foreground/30">VS</div>
+                      <div className="flex flex-col items-center gap-2">
+                        <Flag emoji={match.away_flag} size={36} />
+                        <span className="text-sm font-black uppercase italic tracking-tighter truncate max-w-[80px]">{match.away_team}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <div className="px-4 pb-4">
+                    <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold text-muted-foreground/60 uppercase">
+                      <MapPin className="h-3 w-3" /> {match.stadium}
+                    </div>
                   </div>
-                  <div className="text-2xl font-black italic text-white/50">VS</div>
-                  <div className="flex flex-col items-center gap-2">
-                    <span className="text-4xl">🇿🇦</span>
-                    <span className="text-sm font-black uppercase italic">S. Africa</span>
-                  </div>
-                </div>
-                <div className="mt-2 space-y-1">
-                  <p className="text-xl font-black italic tracking-tight">Estadio Azteca</p>
-                  <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-white/80 uppercase">
-                    <MapPin className="h-3 w-3" /> Mexico City, MEX
-                  </div>
-                </div>
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-1 md:col-span-3 py-12 text-center text-muted-foreground italic bg-muted/20 rounded-3xl border border-dashed border-border">
+                All scheduled matches have concluded. Wait for the knockouts!
               </div>
-            </CardContent>
-          </Card>
+            )}
+          </div>
         </div>
       </section>
 
