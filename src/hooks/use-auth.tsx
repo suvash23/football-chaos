@@ -22,70 +22,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         let mounted = true;
 
-        const fetchSessionAndProfile = async () => {
-            try {
-                // Use getUser() to verify the session with the server, rather than just getSession()
-                const { data: { user: currentUser }, error: userError } = await supabase.auth.getUser();
-
-                if (userError) {
-                    // If there's an error getting the user (e.g. invalid session), we should clear it
-                    console.log("Session invalid or expired, clearing storage:", userError.message);
-                    await supabase.auth.signOut();
-                    if (mounted) {
-                        setUser(null);
-                        setProfile(null);
-                    }
-                } else if (currentUser) {
-                    if (!mounted) return;
-                    setUser(currentUser);
-
-                    const { data, error } = await supabase
-                        .from('profiles')
-                        .select('*')
-                        .eq('id', currentUser.id)
-                        .maybeSingle();
-
-                    if (mounted) {
-                        if (error) console.error("Error fetching profile:", error);
-                        setProfile(data || null);
-                    }
-                }
-            } catch (err) {
-                console.error("Auth initialization error:", err);
-                if (mounted) {
-                    setUser(null);
-                    setProfile(null);
-                }
-            } finally {
-                if (mounted) setLoading(false);
-            }
-        };
-
-        fetchSessionAndProfile();
-
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
             console.log(`Auth event: ${event}`);
 
             const currentUser = session?.user ?? null;
 
-            if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+            // For INITIAL_SESSION, SIGNED_IN, TOKEN_REFRESHED, USER_UPDATED
+            if (currentUser) {
                 setUser(currentUser);
-                if (currentUser) {
-                    const { data } = await supabase.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
+                const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
+                if (mounted) {
+                    if (error) console.error("Error fetching profile:", error);
                     setProfile(data || null);
+                    setLoading(false);
                 }
-            } else if (event === 'SIGNED_OUT') {
-                setUser(null);
-                setProfile(null);
-            } else if (event === 'INITIAL_SESSION') {
-                // Already handled by fetchSessionAndProfile, but stay in sync
-                if (!currentUser) {
+            } else {
+                // SIGNED_OUT or INITIAL_SESSION with no user
+                if (mounted) {
                     setUser(null);
                     setProfile(null);
+                    setLoading(false);
                 }
             }
-
-            setLoading(false);
         });
 
         return () => {
