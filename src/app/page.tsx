@@ -6,7 +6,7 @@ import { Countdown } from "@/components/countdown";
 import Image from "next/image";
 import { fetchMatches } from "@/lib/data";
 import { Flag } from "@/components/flag";
-import { format } from "date-fns";
+import { LocalKickoffTime, LocalKickoffDate } from "@/components/local-kickoff-time";
 
 export const dynamic = "force-dynamic";
 
@@ -148,11 +148,9 @@ export default async function Home() {
                   <CardHeader className="pb-3 border-b border-border/10">
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-                        <Calendar className="h-3 w-3" /> {format(new Date(match.kickoff_time), "EEE, MMM d")}
+                        <Calendar className="h-3 w-3" /> <LocalKickoffDate kickoffTime={match.kickoff_time} />
                       </span>
-                      <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${match.status === 'live' ? 'bg-green-500/10 text-green-500 animate-pulse' : 'bg-primary/10 text-primary'}`}>
-                        {match.status === 'live' ? 'Live Now' : format(new Date(match.kickoff_time), "h:mm a")}
-                      </span>
+                      <LocalKickoffTime kickoffTime={match.kickoff_time} isLive={match.status === 'live'} />
                     </div>
                   </CardHeader>
                   <CardContent className="pt-6 pb-6">
