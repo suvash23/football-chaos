@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { CalendarIcon, Clock, AlertTriangle, Search, MapPin, Lock } from "lucide-react";
 import { toast } from "sonner";
+import { Flag } from "@/components/flag";
 
 export default function PredictionsPage() {
     const [predictions, setPredictions] = useState<Record<string, { homeScore: number; awayScore: number; funnyPrediction: string }>>({});
@@ -215,7 +216,7 @@ export default function PredictionsPage() {
                         <CardContent className="pt-4">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex flex-col items-center gap-2 w-1/3">
-                                    <span className="text-6xl">{match.home_flag}</span>
+                                    <Flag emoji={match.home_flag} size={48} />
                                     <Link href={`/teams/${encodeURIComponent(match.home_team)}`} className="font-bold text-center hover:text-primary hover:underline underline-offset-4 transition-colors leading-tight">
                                         {match.home_team}
                                     </Link>
@@ -245,7 +246,7 @@ export default function PredictionsPage() {
                                 </div>
 
                                 <div className="flex flex-col items-center gap-2 w-1/3">
-                                    <span className="text-6xl">{match.away_flag}</span>
+                                    <Flag emoji={match.away_flag} size={48} />
                                     <Link href={`/teams/${encodeURIComponent(match.away_team)}`} className="font-bold text-center hover:text-primary hover:underline underline-offset-4 transition-colors leading-tight">
                                         {match.away_team}
                                     </Link>

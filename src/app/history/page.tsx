@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import teamsMetaRaw from '@/lib/teams_meta.json';
+import { Flag } from "@/components/flag";
 
 type Goal = {
     name: string;
@@ -69,7 +70,7 @@ const getFlag = (teamName: string) => {
 const MatchBadge = ({ team, score, isWinner }: { team: string, score: number | string, isWinner?: boolean }) => (
     <div className={`flex items-center justify-between p-1.5 hover:bg-muted/50 rounded-md transition-colors ${isWinner ? 'text-primary' : ''}`}>
         <div className="flex items-center gap-2">
-            <span className="text-lg opacity-80">{getFlag(team)}</span>
+            <Flag emoji={getFlag(team)} size={20} />
             <span className={`text-xs truncate max-w-[120px] ${isWinner ? 'font-bold' : 'font-semibold text-foreground/80'}`}>{team || "TBA"}</span>
         </div>
         <span className={`font-black text-sm bg-secondary/50 px-2 py-0.5 rounded-md min-w-[24px] text-center ${isWinner ? 'bg-primary/20 text-primary' : ''}`}>
@@ -163,7 +164,7 @@ export default function HistoryPage() {
                     <div className="flex flex-col space-y-3">
                         <div className="flex justify-between items-start">
                             <div className="flex flex-col flex-1 truncate pr-2">
-                                <span className="font-bold text-sm sm:text-base flex items-center gap-1.5"><span className="text-lg opacity-80">{getFlag(m.team1)}</span> {m.team1 || "TBA"}</span>
+                                <span className="font-bold text-sm sm:text-base flex items-center gap-1.5"><Flag emoji={getFlag(m.team1)} size={24} /> {m.team1 || "TBA"}</span>
                                 {m.goals1 && m.goals1.length > 0 && (
                                     <div className="flex flex-wrap gap-1 mt-1">
                                         {m.goals1.map((g, gi) => (
@@ -179,7 +180,7 @@ export default function HistoryPage() {
 
                         <div className="flex justify-between items-start">
                             <div className="flex flex-col flex-1 truncate pr-2">
-                                <span className="font-bold text-sm sm:text-base flex items-center gap-1.5"><span className="text-lg opacity-80">{getFlag(m.team2)}</span> {m.team2 || "TBA"}</span>
+                                <span className="font-bold text-sm sm:text-base flex items-center gap-1.5"><Flag emoji={getFlag(m.team2)} size={24} /> {m.team2 || "TBA"}</span>
                                 {m.goals2 && m.goals2.length > 0 && (
                                     <div className="flex flex-wrap gap-1 mt-1">
                                         {m.goals2.map((g, gi) => (

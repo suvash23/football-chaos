@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { Loader2, ShieldAlert, Save, RefreshCw, CheckCircle2, Clock, Zap, RotateCcw } from "lucide-react";
 import { format } from "date-fns";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Flag } from "@/components/flag";
 
 type DbMatch = {
     id: string;
@@ -255,12 +256,12 @@ export default function AdminPage() {
                                         <span className="text-xs text-muted-foreground">{match.round}</span>
                                         {match.group_name && <span className="text-xs text-muted-foreground">• {match.group_name}</span>}
                                     </div>
-                                    <div className="font-bold text-sm leading-tight whitespace-nowrap">
-                                        <span>{TEAMS.find(t => t.name === match.home_team)?.flag_icon ?? '🏳️'}</span>
-                                        {' '}{match.home_team}
+                                    <div className="font-bold text-sm leading-tight whitespace-nowrap flex items-center gap-2">
+                                        <Flag emoji={TEAMS.find(t => t.name === match.home_team)?.flag_icon || "🏳️"} size={16} />
+                                        <span>{match.home_team}</span>
                                         <span className="text-muted-foreground font-normal text-xs mx-1">vs</span>
-                                        <span>{TEAMS.find(t => t.name === match.away_team)?.flag_icon ?? '🏳️'}</span>
-                                        {' '}{match.away_team}
+                                        <Flag emoji={TEAMS.find(t => t.name === match.away_team)?.flag_icon || "🏳️"} size={16} />
+                                        <span>{match.away_team}</span>
                                     </div>
                                     <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5 whitespace-nowrap">
                                         <Clock className="h-3 w-3 shrink-0" />
