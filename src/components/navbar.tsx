@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Globe, Trophy, Home, ClipboardList, MonitorPlay, MessageSquareText, User, Network } from 'lucide-react';
+import { Globe, Trophy, Home, ClipboardList, MonitorPlay, MessageSquareText, User, Network, LogIn } from 'lucide-react';
 import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from './ui/sheet';
 import { useAuth } from '@/hooks/use-auth';
@@ -48,7 +48,22 @@ export function Navbar() {
                         <span className="text-white">0 pts</span>
                     </div>
 
-                    <div className="md:hidden flex items-center">
+                    <div className="md:hidden flex items-center gap-2">
+                        {/* Compact auth button visible on mobile next to hamburger */}
+                        {user ? (
+                            <Link href="/profile">
+                                <Button variant="secondary" size="icon" className="rounded-full bg-white text-[#182357] hover:bg-gray-200 h-8 w-8">
+                                    <User className="h-4 w-4" />
+                                    <span className="sr-only">Profile</span>
+                                </Button>
+                            </Link>
+                        ) : (
+                            <Link href="/auth">
+                                <Button size="sm" className="font-bold bg-white text-[#182357] hover:bg-gray-200 h-8 px-3 text-xs">
+                                    <LogIn className="h-3.5 w-3.5 mr-1" /> Sign In
+                                </Button>
+                            </Link>
+                        )}
                         <Sheet>
                             <SheetTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent text-white hover:bg-[#20327A] h-9 w-9">
                                 <span className="sr-only">Toggle Menu</span>
@@ -62,23 +77,46 @@ export function Navbar() {
                                 <SheetHeader>
                                     <SheetTitle>Menu</SheetTitle>
                                 </SheetHeader>
-                                <div className="flex flex-col space-y-4 mt-6">
+                                <div className="flex flex-col space-y-1 mt-6">
                                     {navLinks.map((link) => (
                                         <Link
                                             key={link.href}
                                             href={link.href}
-                                            className="flex items-center text-lg font-medium text-muted-foreground hover:text-primary"
+                                            className="flex items-center text-lg font-medium text-muted-foreground hover:text-primary py-2"
                                         >
                                             <link.icon className="mr-4 h-5 w-5" />
                                             {link.label}
                                         </Link>
                                     ))}
-                                    {user && (
-                                        <div className="flex items-center gap-2 text-lg font-semibold bg-secondary px-4 py-2 rounded-lg mt-4 w-max">
-                                            <Trophy className="h-5 w-5 text-yellow-500" />
-                                            <span>0 pts</span>
-                                        </div>
-                                    )}
+
+                                    {/* Auth section at bottom of drawer */}
+                                    <div className="pt-4 mt-4 border-t border-border">
+                                        {user ? (
+                                            <div className="flex flex-col gap-3">
+                                                {profile?.favorite_team && (
+                                                    <div className="flex items-center gap-2 bg-secondary px-4 py-2 rounded-lg w-full">
+                                                        <span className="text-xl">{profile.avatar_url || "⚽"}</span>
+                                                        <span className="font-bold text-sm">{profile.favorite_team}</span>
+                                                    </div>
+                                                )}
+                                                <div className="flex items-center gap-2 bg-secondary px-4 py-2 rounded-lg w-max">
+                                                    <Trophy className="h-5 w-5 text-yellow-500" />
+                                                    <span className="font-semibold">0 pts</span>
+                                                </div>
+                                                <Link href="/profile" className="w-full">
+                                                    <Button variant="outline" className="w-full font-bold gap-2">
+                                                        <User className="h-4 w-4" /> My Profile
+                                                    </Button>
+                                                </Link>
+                                            </div>
+                                        ) : (
+                                            <Link href="/auth" className="w-full">
+                                                <Button className="w-full font-black uppercase italic text-base h-12 gap-2">
+                                                    <LogIn className="h-5 w-5" /> Sign In
+                                                </Button>
+                                            </Link>
+                                        )}
+                                    </div>
                                 </div>
                             </SheetContent>
                         </Sheet>
