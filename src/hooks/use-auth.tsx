@@ -22,12 +22,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         let mounted = true;
 
+        async function initAuth() {
+            try {
+                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+                if (sessionError) throw sessionError;
+
+                if (session?.user) {
+                    const currentUser = session.user;
+                    if (mounted) setUser(currentUser);
+
+                    const { data: profileData, error: profileError } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', currentUser.id)
+                        .maybeSingle();
+
+                    if (mounted) {
+                        if (profileError) console.error("Error fetching profile:", profileError);
+                        setProfile(profileData || null);
+                    }
+                }
+            } catch (err) {
+                console.error("Auth init error:", err);
+                if (mounted) {
+                    setUser(null);
+                    setProfile(null);
+                }
+            } finally {
+                if (mounted) setLoading(false);
+            }
+        }
+
+        initAuth();
+
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
             console.log(`Auth event: ${event}`);
-
             const currentUser = session?.user ?? null;
 
-            // For INITIAL_SESSION, SIGNED_IN, TOKEN_REFRESHED, USER_UPDATED
             if (currentUser) {
                 setUser(currentUser);
                 const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
@@ -37,7 +68,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     setLoading(false);
                 }
             } else {
-                // SIGNED_OUT or INITIAL_SESSION with no user
                 if (mounted) {
                     setUser(null);
                     setProfile(null);

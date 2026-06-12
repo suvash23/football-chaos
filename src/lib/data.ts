@@ -21,12 +21,12 @@ type TeamJson = { name: string; flag_icon: string;[key: string]: unknown };
 
 // Simple in-memory cache — avoids hitting Supabase on every page navigation
 let matchCache: { data: Match[]; timestamp: number } | null = null;
-const CACHE_TTL_MS = 60_000; // 60 seconds
+const CACHE_TTL_MS = 10_000; // 10 seconds for more frequent updates during live tournament
 
-export async function fetchMatches(): Promise<Match[]> {
+export async function fetchMatches(force = false): Promise<Match[]> {
     try {
-        // Return cached data if still fresh
-        if (matchCache && Date.now() - matchCache.timestamp < CACHE_TTL_MS) {
+        // Return cached data if still fresh and not forced
+        if (!force && matchCache && Date.now() - matchCache.timestamp < CACHE_TTL_MS) {
             return matchCache.data;
         }
 
@@ -37,7 +37,7 @@ export async function fetchMatches(): Promise<Match[]> {
             .order('kickoff_time', { ascending: true });
 
         const timeoutPromise = new Promise<{ data: null; error: { message: string } }>((_, reject) =>
-            setTimeout(() => reject(new Error("Request timed out")), 10000)
+            setTimeout(() => reject(new Error("Supabase request timed out after 15s")), 15000)
         );
 
         interface DBMatch {
@@ -63,10 +63,14 @@ export async function fetchMatches(): Promise<Match[]> {
 
         if (error) {
             console.error("Supabase error fetching matches:", error);
+            // If we have stale cache, return it rather than empty
             return matchCache?.data ?? [];
         }
 
-        if (!dbMatches) return [];
+        if (!dbMatches || dbMatches.length === 0) {
+            console.warn("fetchMatches: No records returned from DB");
+            return [];
+        }
 
         const mapped = dbMatches.map((m) => {
             const homeTeamInfo = TEAMS.find((t) => t.name === m.home_team);
@@ -87,10 +91,11 @@ export async function fetchMatches(): Promise<Match[]> {
             };
         });
 
+        console.log(`fetchMatches: Refreshed ${mapped.length} matches from DB (force=${force})`);
         matchCache = { data: mapped, timestamp: Date.now() };
         return mapped;
     } catch (err) {
-        console.error("Critical error in fetchMatches:", err);
+        console.error("Critical error in fetchMatches:", err instanceof Error ? err.message : err);
         return matchCache?.data ?? [];
     }
 }
