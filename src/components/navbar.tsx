@@ -52,10 +52,12 @@ export function Navbar() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <div className="hidden md:flex items-center gap-2 text-sm font-semibold bg-[#20327A] px-3 py-1.5 rounded-full border border-blue-400/30">
-                        <Trophy className="h-4 w-4 text-[#FFD700]" />
-                        <span className="text-white">0 pts</span>
-                    </div>
+                    {user && (
+                        <div className="hidden md:flex items-center gap-2 text-sm font-semibold bg-[#20327A] px-3 py-1.5 rounded-full border border-blue-400/30">
+                            <Trophy className="h-4 w-4 text-[#FFD700]" />
+                            <span className="text-white">{profile?.points || 0} pts</span>
+                        </div>
+                    )}
 
                     <div className="md:hidden flex items-center gap-2">
                         {/* Compact auth button visible on mobile next to hamburger */}
@@ -119,7 +121,7 @@ export function Navbar() {
                                                 )}
                                                 <div className="flex items-center gap-2 bg-secondary px-4 py-2 rounded-lg w-max">
                                                     <Trophy className="h-5 w-5 text-yellow-500" />
-                                                    <span className="font-semibold">0 pts</span>
+                                                    <span className="font-semibold">{profile?.points || 0} pts</span>
                                                 </div>
                                                 <Link href="/profile" className="w-full">
                                                     <Button variant="outline" className="w-full font-bold gap-2">
