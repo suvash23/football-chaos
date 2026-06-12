@@ -24,28 +24,30 @@ export function Navbar() {
     return (
         <nav className="sticky top-0 z-50 w-full bg-[#182357] text-white shadow-md">
             <div className="container mx-auto flex h-16 items-center px-4 justify-between">
-                <div className="flex gap-6 md:gap-10">
-                    <Link href="/" className="flex items-center space-x-2">
-                        <span className="text-2xl font-black italic text-white tracking-widest">⚽ CHAOS</span>
+                <div className="flex gap-4 lg:gap-8 transition-all">
+                    <Link href="/" className="flex items-center space-x-2 shrink-0">
+                        <span className="text-xl lg:text-2xl font-black italic text-white tracking-widest leading-none">⚽ CHAOS</span>
                     </Link>
-                    <div className="hidden md:flex gap-6">
+                    <div className="hidden md:flex items-center gap-2 lg:gap-4 xl:gap-6">
                         {navLinks.slice(1).map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className="flex items-center text-sm font-semibold text-gray-200 transition-colors hover:text-white uppercase tracking-wide"
+                                className="flex items-center text-[10px] lg:text-xs xl:text-sm font-semibold text-gray-200 transition-colors hover:text-white uppercase tracking-wide whitespace-nowrap"
                             >
-                                <link.icon className="mr-2 h-4 w-4" />
-                                {link.label}
+                                <link.icon className="mr-1 lg:mr-2 h-3 w-3 lg:h-4 lg:w-4" />
+                                <span className="hidden lg:inline">{link.label}</span>
+                                <span className="lg:hidden">{link.label.slice(0, 3)}</span>
                             </Link>
                         ))}
                         {profile?.is_admin && (
                             <Link
                                 href="/admin"
-                                className="flex items-center text-sm font-bold text-orange-400 transition-colors hover:text-orange-300 uppercase tracking-wide"
+                                className="flex items-center text-[10px] lg:text-xs xl:text-sm font-bold text-orange-400 transition-colors hover:text-orange-300 uppercase tracking-wide whitespace-nowrap"
                             >
-                                <ShieldAlert className="mr-2 h-4 w-4" />
-                                Admin
+                                <ShieldAlert className="mr-1 lg:mr-2 h-3 w-3 lg:h-4 lg:w-4" />
+                                <span className="hidden lg:inline">Admin</span>
+                                <span className="lg:hidden">ADM</span>
                             </Link>
                         )}
                     </div>

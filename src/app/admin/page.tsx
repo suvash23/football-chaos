@@ -8,7 +8,6 @@ import { invalidateMatchCache, FUNNY_PREDICTION_OPTIONS, TEAMS } from "@/lib/dat
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Loader2, ShieldAlert, Save, RefreshCw, CheckCircle2, Clock, Zap, RotateCcw } from "lucide-react";
 import { format } from "date-fns";
@@ -245,117 +244,118 @@ export default function AdminPage() {
                 {filteredMatches.map((match) => (
                     <Card key={match.id} className="bg-card/50 border-border/50 hover:border-primary/30 transition-all">
                         <CardContent className="py-3 space-y-3">
-                            {/* Row 1: Match Info | Score Inputs | Buttons — always one line */}
-                            <div className="flex flex-nowrap items-center gap-3 overflow-x-auto scrollbar-hide">
+                            {/* Responsive Match Layout */}
+                            <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6">
                                 {/* Match Info */}
                                 <div className="flex-1 min-w-[180px]">
-                                    <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full capitalize ${statusColors[match.status] || "bg-muted text-muted-foreground"}`}>
+                                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                        <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${statusColors[match.status] || "bg-muted text-muted-foreground"}`}>
                                             {match.status}
                                         </span>
-                                        <span className="text-xs text-muted-foreground">{match.round}</span>
-                                        {match.group_name && <span className="text-xs text-muted-foreground">• {match.group_name}</span>}
+                                        <span className="text-[10px] font-bold text-muted-foreground uppercase">{match.round}</span>
+                                        {match.group_name && <span className="text-[10px] text-muted-foreground">• {match.group_name}</span>}
                                     </div>
-                                    <div className="font-bold text-sm leading-tight whitespace-nowrap flex items-center gap-2">
-                                        <Flag emoji={TEAMS.find(t => t.name === match.home_team)?.flag_icon || "🏳️"} size={16} />
+                                    <div className="font-bold text-base leading-tight flex items-center gap-2 mb-1">
+                                        <Flag emoji={TEAMS.find(t => t.name === match.home_team)?.flag_icon || "🏳️"} size={18} />
                                         <span>{match.home_team}</span>
                                         <span className="text-muted-foreground font-normal text-xs mx-1">vs</span>
-                                        <Flag emoji={TEAMS.find(t => t.name === match.away_team)?.flag_icon || "🏳️"} size={16} />
+                                        <Flag emoji={TEAMS.find(t => t.name === match.away_team)?.flag_icon || "🏳️"} size={18} />
                                         <span>{match.away_team}</span>
                                     </div>
-                                    <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5 whitespace-nowrap">
+                                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                         <Clock className="h-3 w-3 shrink-0" />
-                                        {format(new Date(match.kickoff_time), "EEE d MMM yyyy, h:mm a")}
+                                        {format(new Date(match.kickoff_time), "EEE d MMM, h:mm a")}
                                     </div>
                                 </div>
 
-                                {/* Finished Score Badge */}
-                                {match.status === "finished" && match.home_score !== null && (
-                                    <div className="flex items-center gap-1 text-xl font-black shrink-0">
-                                        <span>{match.home_score}</span>
-                                        <span className="text-muted-foreground text-sm">-</span>
-                                        <span>{match.away_score}</span>
-                                        <CheckCircle2 className="h-4 w-4 text-green-400 ml-1" />
+                                <div className="flex flex-wrap items-center gap-4 lg:gap-8">
+                                    {/* Finished Score Badge */}
+                                    {match.status === "finished" && match.home_score !== null && (
+                                        <div className="flex items-center gap-1 text-2xl font-black shrink-0 bg-muted/30 px-3 py-1 rounded-lg">
+                                            <span>{match.home_score}</span>
+                                            <span className="text-muted-foreground text-sm">-</span>
+                                            <span>{match.away_score}</span>
+                                            <CheckCircle2 className="h-4 w-4 text-green-400 ml-1" />
+                                        </div>
+                                    )}
+
+                                    {/* Inputs Group */}
+                                    <div className="flex items-center gap-4">
+                                        {/* Score Inputs */}
+                                        <div className="flex items-center gap-1.5 bg-muted/20 p-1 rounded-lg border border-border/50">
+                                            <Input
+                                                type="number" min={0} max={99}
+                                                value={match.editHome}
+                                                onChange={(e) => setMatches(prev => prev.map(m => m.id === match.id ? { ...m, editHome: e.target.value } : m))}
+                                                className="w-12 h-8 text-center font-bold text-sm bg-transparent border-none focus-visible:ring-0"
+                                                placeholder="–"
+                                            />
+                                            <span className="font-bold text-muted-foreground text-xs">:</span>
+                                            <Input
+                                                type="number" min={0} max={99}
+                                                value={match.editAway}
+                                                onChange={(e) => setMatches(prev => prev.map(m => m.id === match.id ? { ...m, editAway: e.target.value } : m))}
+                                                className="w-12 h-8 text-center font-bold text-sm bg-transparent border-none focus-visible:ring-0"
+                                                placeholder="–"
+                                            />
+                                        </div>
+
+                                        {/* ⚡ Chaotic Event */}
+                                        <div className="flex items-center gap-1.5 w-40 sm:w-48 lg:w-52">
+                                            <Select
+                                                value={match.editChaoticEvent}
+                                                onValueChange={(val) => setMatches(prev => prev.map(m => m.id === match.id ? { ...m, editChaoticEvent: val === "none" || !val ? "" : val } : m))}
+                                            >
+                                                <SelectTrigger className="h-10 lg:h-8 text-xs w-full bg-muted/20">
+                                                    <SelectValue placeholder="⚡ event?" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="none">None</SelectItem>
+                                                    {FUNNY_PREDICTION_OPTIONS.map((opt) => (
+                                                        <SelectItem key={opt} value={opt} className="text-xs">{opt}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
                                     </div>
-                                )}
 
-                                {/* Score Inputs */}
-                                <div className="flex items-center gap-1.5 shrink-0">
-                                    <Label className="text-xs text-muted-foreground">H</Label>
-                                    <Input
-                                        type="number" min={0} max={99}
-                                        value={match.editHome}
-                                        onChange={(e) => setMatches(prev => prev.map(m => m.id === match.id ? { ...m, editHome: e.target.value } : m))}
-                                        className="w-14 h-8 text-center font-bold text-base"
-                                        placeholder="–"
-                                    />
-                                    <span className="font-bold text-muted-foreground text-sm">:</span>
-                                    <Input
-                                        type="number" min={0} max={99}
-                                        value={match.editAway}
-                                        onChange={(e) => setMatches(prev => prev.map(m => m.id === match.id ? { ...m, editAway: e.target.value } : m))}
-                                        className="w-14 h-8 text-center font-bold text-base"
-                                        placeholder="–"
-                                    />
-                                    <Label className="text-xs text-muted-foreground">A</Label>
-                                </div>
-
-                                {/* ⚡ Chaotic Event — inline after score */}
-                                <div className="flex items-center gap-1.5 shrink-0 w-52">
-                                    <Label className="text-xs text-muted-foreground font-bold shrink-0">⚡</Label>
-                                    <Select
-                                        value={match.editChaoticEvent}
-                                        onValueChange={(val) => setMatches(prev => prev.map(m => m.id === match.id ? { ...m, editChaoticEvent: val === "none" || !val ? "" : val } : m))}
-                                    >
-                                        <SelectTrigger className="h-8 text-xs w-full">
-                                            <SelectValue placeholder="Chaotic event?" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="none">None</SelectItem>
-                                            {FUNNY_PREDICTION_OPTIONS.map((opt) => (
-                                                <SelectItem key={opt} value={opt} className="text-xs">{opt}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-
-                                {/* Action Buttons */}
-                                <div className="flex gap-2 shrink-0">
-                                    <Button
-                                        size="sm"
-                                        variant={match.status === "live" ? "default" : "outline"}
-                                        className="text-xs font-bold gap-1"
-                                        onClick={() => updateMatch(match.id, match.editHome, match.editAway, "live", match.editChaoticEvent)}
-                                        disabled={match.saving}
-                                    >
-                                        {match.saving ? <Loader2 className="h-3 w-3 animate-spin" /> : null}
-                                        🟢 Live
-                                    </Button>
-                                    <Button
-                                        size="sm"
-                                        variant={match.status === "finished" ? "default" : "outline"}
-                                        className="text-xs font-bold gap-1 bg-green-600 hover:bg-green-700 text-white border-0"
-                                        onClick={() => updateMatch(match.id, match.editHome, match.editAway, "finished", match.editChaoticEvent)}
-                                        disabled={match.saving}
-                                    >
-                                        {match.saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
-                                        Save & Finish
-                                    </Button>
-                                    {match.status !== "upcoming" && (
+                                    {/* Action Buttons */}
+                                    <div className="flex items-center gap-2 w-full sm:w-auto">
                                         <Button
                                             size="sm"
-                                            variant="outline"
-                                            className="text-xs font-bold gap-1 text-red-500 border-red-300 hover:bg-red-50 hover:text-red-600"
-                                            onClick={() => {
-                                                setMatches(prev => prev.map(m => m.id === match.id ? { ...m, editHome: "", editAway: "", editChaoticEvent: "" } : m));
-                                                updateMatch(match.id, "", "", "upcoming", "");
-                                            }}
+                                            variant={match.status === "live" ? "default" : "outline"}
+                                            className="flex-1 sm:flex-none text-[10px] font-bold gap-1 h-10 lg:h-8"
+                                            onClick={() => updateMatch(match.id, match.editHome, match.editAway, "live", match.editChaoticEvent)}
                                             disabled={match.saving}
                                         >
-                                            <RotateCcw className="h-3 w-3" />
-                                            Reset
+                                            {match.saving ? <Loader2 className="h-3 w-3 animate-spin" /> : null}
+                                            🟢 Live
                                         </Button>
-                                    )}
+                                        <Button
+                                            size="sm"
+                                            variant={match.status === "finished" ? "default" : "outline"}
+                                            className="flex-1 sm:flex-none text-[10px] font-bold gap-1 bg-green-600 hover:bg-green-700 text-white border-0 h-10 lg:h-8"
+                                            onClick={() => updateMatch(match.id, match.editHome, match.editAway, "finished", match.editChaoticEvent)}
+                                            disabled={match.saving}
+                                        >
+                                            {match.saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
+                                            Save
+                                        </Button>
+                                        {match.status !== "upcoming" && (
+                                            <Button
+                                                size="icon"
+                                                variant="outline"
+                                                className="shrink-0 h-10 w-10 lg:h-8 lg:w-8 text-red-500 border-red-200 hover:bg-red-50"
+                                                onClick={() => {
+                                                    setMatches(prev => prev.map(m => m.id === match.id ? { ...m, editHome: "", editAway: "", editChaoticEvent: "" } : m));
+                                                    updateMatch(match.id, "", "", "upcoming", "");
+                                                }}
+                                                disabled={match.saving}
+                                            >
+                                                <RotateCcw className="h-3 w-3" />
+                                            </Button>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </CardContent>
