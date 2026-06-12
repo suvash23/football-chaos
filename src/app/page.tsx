@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy, ClipboardList, MonitorPlay, MessageSquareText, ArrowRight, Globe, History, Calendar, MapPin } from "lucide-react";
-import { Countdown } from "@/components/countdown";
+import { Trophy, ClipboardList, MonitorPlay, MessageSquareText, ArrowRight, Globe, History, Calendar, MapPin, Zap } from "lucide-react";
 import Image from "next/image";
 import { fetchMatches } from "@/lib/data";
 import { Flag } from "@/components/flag";
@@ -92,28 +91,36 @@ export default async function Home() {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-100 h-1/2 mt-auto" />
       </section>
 
-      {/* Countdown & Info Section */}
+      {/* Live Status Section */}
       <section className="container mx-auto px-4 -mt-32 relative z-40">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Countdown Card with Buttons */}
+          {/* Tournament Live Card with Buttons */}
           <Card className="lg:col-span-3 overflow-hidden border-border/50 bg-card/70 backdrop-blur-3xl shadow-2xl flex flex-col">
             <CardHeader className="text-center pb-2 border-b border-border/10">
-              <CardTitle className="text-sm font-black uppercase tracking-[0.3em] text-muted-foreground italic flex items-center justify-center gap-2">
-                <Calendar className="h-4 w-4" /> Kickoff Starts In
+              <CardTitle className="text-sm font-black uppercase tracking-[0.3em] text-primary italic flex items-center justify-center gap-2">
+                <Zap className="h-4 w-4 fill-primary animate-pulse" /> Tournament in Progress
               </CardTitle>
             </CardHeader>
-            <CardContent className="py-12 flex-1 flex flex-col items-center justify-center gap-10">
-              <Countdown targetDate="2026-06-11T13:00:00-06:00" />
+            <CardContent className="py-12 flex-1 flex flex-col items-center justify-center gap-8 text-center px-4">
+              <div className="space-y-2">
+                <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-none mb-4">
+                  The Wait is Over. <br />
+                  <span className="text-primary italic">The Chaos has Begun.</span>
+                </h2>
+                <p className="text-muted-foreground text-lg font-bold uppercase tracking-widest opacity-80 max-w-2xl mx-auto">
+                  Every goal, every save, and every manager meltdown matters. Are you ready to predict the madness?
+                </p>
+              </div>
 
-              <div className="flex flex-wrap items-center justify-center gap-4 w-full px-6">
-                <Link href="/predictions" className="flex-1 min-w-[260px]">
-                  <Button size="lg" className="w-full rounded-2xl px-8 text-xl font-black h-16 shadow-xl hover:scale-[1.02] transition-all italic uppercase tracking-wider bg-yellow-500 hover:bg-yellow-400 text-black border-2 border-black group">
-                    Start Predicting <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <div className="flex flex-wrap items-center justify-center gap-4 w-full max-w-4xl px-6 pt-4">
+                <Link href="/predictions" className="flex-1 min-w-[280px]">
+                  <Button size="lg" className="w-full rounded-2xl px-10 text-2xl font-black h-20 shadow-2xl hover:scale-[1.03] transition-all italic uppercase tracking-wider bg-yellow-400 hover:bg-yellow-300 text-black border-4 border-black group">
+                    Play Now <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-                <Link href="/groups" className="flex-1 min-w-[260px]">
-                  <Button variant="outline" size="lg" className="w-full rounded-2xl px-8 text-xl font-black h-16 backdrop-blur-md bg-muted/50 transition-all italic uppercase tracking-wider hover:bg-muted/80">
-                    Tournament Wiki
+                <Link href="/groups" className="flex-1 min-w-[280px]">
+                  <Button variant="outline" size="lg" className="w-full rounded-2xl px-10 text-2xl font-black h-20 backdrop-blur-md bg-muted/50 transition-all italic uppercase tracking-wider hover:bg-muted/80 border-2 border-border/80">
+                    Squad Stats
                   </Button>
                 </Link>
               </div>
