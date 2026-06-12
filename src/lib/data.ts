@@ -37,78 +37,88 @@ export async function fetchMatches(force = false): Promise<Match[]> {
 
     // 3. Otherwise, start a new request and track it
     pendingMatchesRequest = (async () => {
-        try {
-            console.log(`fetchMatches: Starting fresh DB fetch (force=${force})...`);
+        const MAX_RETRIES = 3;
+        const ATTEMPT_TIMEOUT_MS = 5000;
 
-            const matchesPromise = supabase
-                .from('matches')
-                .select('*')
-                .order('kickoff_time', { ascending: true });
+        for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+            try {
+                console.log(`fetchMatches: Attempt ${attempt}/${MAX_RETRIES} (force=${force})...`);
 
-            const timeoutPromise = new Promise<{ data: null; error: { message: string } }>((_, reject) =>
-                setTimeout(() => reject(new Error("Supabase request timed out after 15s")), 15000)
-            );
+                // Select only specific columns to optimize performance and reduce bandwidth
+                const matchesPromise = supabase
+                    .from('matches')
+                    .select('id, round, home_team, away_team, kickoff_time, status, home_score, away_score, group_name, stadium')
+                    .order('kickoff_time', { ascending: true });
 
-            interface DBMatch {
-                id: string;
-                round: string;
-                home_team: string;
-                away_team: string;
-                kickoff_time: string;
-                status: Match['status'];
-                home_score: number | null;
-                away_score: number | null;
-                group_name?: string;
-                stadium?: string;
+                const timeoutPromise = new Promise<{ data: null; error: { message: string } }>((_, reject) =>
+                    setTimeout(() => reject(new Error(`Timeout attempt ${attempt}`)), ATTEMPT_TIMEOUT_MS)
+                );
+
+                interface DBMatch {
+                    id: string;
+                    round: string;
+                    home_team: string;
+                    away_team: string;
+                    kickoff_time: string;
+                    status: Match['status'];
+                    home_score: number | null;
+                    away_score: number | null;
+                    group_name?: string;
+                    stadium?: string;
+                }
+
+                const result = await Promise.race([
+                    matchesPromise,
+                    timeoutPromise
+                ]) as { data: DBMatch[] | null; error: { message: string } | null };
+
+                const dbMatches = result.data;
+                const error = result.error;
+
+                if (error) {
+                    throw new Error(error.message);
+                }
+
+                if (!dbMatches) {
+                    throw new Error("No data returned");
+                }
+
+                const mapped = dbMatches.map((m) => {
+                    const homeTeamInfo = TEAMS.find((t) => t.name === m.home_team);
+                    const awayTeamInfo = TEAMS.find((t) => t.name === m.away_team);
+                    return {
+                        id: m.id,
+                        round: m.round,
+                        home_team: m.home_team,
+                        away_team: m.away_team,
+                        kickoff_time: m.kickoff_time,
+                        status: m.status,
+                        home_score: m.home_score,
+                        away_score: m.away_score,
+                        home_flag: homeTeamInfo?.flag_icon || "🚩",
+                        away_flag: awayTeamInfo?.flag_icon || "🚩",
+                        group: m.group_name || homeTeamInfo?.group || "Unknown",
+                        stadium: m.stadium || "Unknown",
+                    };
+                });
+
+                console.log(`fetchMatches: Success on attempt ${attempt}. Found ${mapped.length} matches.`);
+                matchCache = { data: mapped, timestamp: Date.now() };
+                return mapped;
+            } catch (err) {
+                console.warn(`fetchMatches: Attempt ${attempt} failed:`, err instanceof Error ? err.message : err);
+                if (attempt === MAX_RETRIES) {
+                    console.error("fetchMatches: All retry attempts failed.");
+                    return matchCache?.data ?? [];
+                }
+                // Wait briefly before retrying
+                await new Promise(resolve => setTimeout(resolve, 500 * attempt));
             }
-
-            const result = await Promise.race([
-                matchesPromise,
-                timeoutPromise
-            ]) as { data: DBMatch[] | null; error: { message: string } | null };
-
-            const dbMatches = result.data;
-            const error = result.error;
-
-            if (error) {
-                throw new Error(error.message);
-            }
-
-            if (!dbMatches || dbMatches.length === 0) {
-                console.warn("fetchMatches: No records returned from DB");
-                return matchCache?.data ?? [];
-            }
-
-            const mapped = dbMatches.map((m) => {
-                const homeTeamInfo = TEAMS.find((t) => t.name === m.home_team);
-                const awayTeamInfo = TEAMS.find((t) => t.name === m.away_team);
-                return {
-                    id: m.id,
-                    round: m.round,
-                    home_team: m.home_team,
-                    away_team: m.away_team,
-                    kickoff_time: m.kickoff_time,
-                    status: m.status,
-                    home_score: m.home_score,
-                    away_score: m.away_score,
-                    home_flag: homeTeamInfo?.flag_icon || "🚩",
-                    away_flag: awayTeamInfo?.flag_icon || "🚩",
-                    group: m.group_name || homeTeamInfo?.group || "Unknown",
-                    stadium: m.stadium || "Unknown",
-                };
-            });
-
-            console.log(`fetchMatches: Successfully fetched ${mapped.length} matches`);
-            matchCache = { data: mapped, timestamp: Date.now() };
-            return mapped;
-        } catch (err) {
-            console.error("fetchMatches Error:", err instanceof Error ? err.message : err);
-            return matchCache?.data ?? [];
-        } finally {
-            // Clear the pending request so subsequent calls after conclusion start anew (or use cache)
-            pendingMatchesRequest = null;
         }
-    })();
+        return matchCache?.data ?? [];
+    })().finally(() => {
+        pendingMatchesRequest = null;
+    });
 
     return pendingMatchesRequest;
 }
