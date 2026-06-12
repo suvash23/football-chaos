@@ -17,6 +17,8 @@ import { CalendarIcon, Clock, AlertTriangle, Search, MapPin, Lock } from "lucide
 import { toast } from "sonner";
 import { Flag } from "@/components/flag";
 
+export const dynamic = "force-dynamic";
+
 export default function PredictionsPage() {
     const [predictions, setPredictions] = useState<Record<string, { homeScore: number; awayScore: number; funnyPrediction: string }>>({});
     const [searchCountry, setSearchCountry] = useState("");
@@ -42,7 +44,7 @@ export default function PredictionsPage() {
     useEffect(() => {
         async function load() {
             try {
-                const data = await fetchMatches();
+                const data = await fetchMatches(true);
                 setMatches(data);
 
                 if (user) {

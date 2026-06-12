@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { fetchMatches, TEAMS, type Match, type Team } from "@/lib/data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Globe, Loader2 } from "lucide-react";
+
+export const dynamic = "force-dynamic";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Flag } from "@/components/flag";
@@ -94,7 +96,7 @@ export default function GroupsPage() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        fetchMatches()
+        fetchMatches(true)
             .then(data => setMatches(data))
             .catch(err => console.error("Error loading groups:", err))
             .finally(() => setIsLoading(false));
