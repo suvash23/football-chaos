@@ -13,11 +13,13 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { CalendarIcon, Clock, AlertTriangle, Search, MapPin, Lock } from "lucide-react";
+import { CalendarIcon, Clock, AlertTriangle, Search, MapPin, Lock, Zap, CheckCircle2, Timer } from "lucide-react";
 import { toast } from "sonner";
 import { Flag } from "@/components/flag";
 
 export const dynamic = "force-dynamic";
+
+type TabId = "upcoming" | "live" | "finished";
 
 export default function PredictionsPage() {
     const [predictions, setPredictions] = useState<Record<string, { homeScore: number; awayScore: number; funnyPrediction: string }>>({});
@@ -25,6 +27,7 @@ export default function PredictionsPage() {
     const [filterGroup, setFilterGroup] = useState("All");
     const [matches, setMatches] = useState<Match[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState<TabId>("upcoming");
 
     const { user } = useAuth();
     const [now, setNow] = useState(() => new Date());
@@ -78,12 +81,32 @@ export default function PredictionsPage() {
 
     const groups = ["All", ...Array.from(new Set(matches.map(m => m.group))).filter(Boolean).sort()];
 
-    const filteredMatches = matches.filter((match) => {
+    // Base filter (search + group)
+    const baseFiltered = matches.filter((match) => {
         const matchesSearch = searchCountry === "" || match.home_team.toLowerCase().includes(searchCountry.toLowerCase()) || match.away_team.toLowerCase().includes(searchCountry.toLowerCase());
         const matchesGroup = filterGroup === "All" || match.group === filterGroup;
         return matchesSearch && matchesGroup;
     });
 
+    // Split into tabs
+    const liveMatches = baseFiltered.filter(m => m.status === 'live');
+    const finishedMatches = baseFiltered.filter(m => m.status === 'finished');
+    const upcomingMatches = baseFiltered.filter(m => m.status !== 'live' && m.status !== 'finished');
+
+    const tabMatches: Record<TabId, Match[]> = {
+        upcoming: upcomingMatches,
+        live: liveMatches,
+        finished: finishedMatches,
+    };
+
+    const filteredMatches = tabMatches[activeTab];
+
+    // Auto-switch to live tab if there are live matches (only on initial load)
+    useEffect(() => {
+        if (!isLoading && liveMatches.length > 0) {
+            setActiveTab("live");
+        }
+    }, [isLoading]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handlePredict = async (matchId: string, data: { homeScore: number; awayScore: number; funnyPrediction: string }) => {
         if (!user) {
@@ -92,7 +115,6 @@ export default function PredictionsPage() {
         }
 
         try {
-            // Check if existing prediction exists
             const { data: existing } = await supabase
                 .from('predictions')
                 .select('id')
@@ -125,6 +147,30 @@ export default function PredictionsPage() {
         }
     };
 
+    const tabs: { id: TabId; label: string; icon: React.ReactNode; count: number; accent: string }[] = [
+        {
+            id: "upcoming",
+            label: "Upcoming",
+            icon: <Timer className="w-4 h-4" />,
+            count: upcomingMatches.length,
+            accent: "text-primary border-primary bg-primary/10",
+        },
+        {
+            id: "live",
+            label: "Live",
+            icon: <Zap className="w-4 h-4" />,
+            count: liveMatches.length,
+            accent: "text-green-600 border-green-500 bg-green-500/10",
+        },
+        {
+            id: "finished",
+            label: "Finished",
+            icon: <CheckCircle2 className="w-4 h-4" />,
+            count: finishedMatches.length,
+            accent: "text-muted-foreground border-border bg-muted/40",
+        },
+    ];
+
     return (
         <div className="container mx-auto px-4 py-8 max-w-5xl">
             <div className="flex flex-col gap-4 mb-8">
@@ -134,7 +180,8 @@ export default function PredictionsPage() {
                 </p>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-4 mb-8">
+            {/* Filters */}
+            <div className="flex flex-col md:flex-row gap-4 mb-6">
                 <div className="flex-1 relative">
                     <Input
                         placeholder="Search by country..."
@@ -158,6 +205,44 @@ export default function PredictionsPage() {
                 </div>
             </div>
 
+            {/* Tabs */}
+            <div className="flex gap-2 mb-6 p-1.5 bg-muted/40 border border-border/50 rounded-2xl w-fit">
+                {tabs.map(tab => {
+                    const isActive = activeTab === tab.id;
+                    return (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`
+                                relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-200
+                                ${isActive
+                                    ? `${tab.accent} border shadow-sm`
+                                    : "text-muted-foreground hover:text-foreground hover:bg-muted/60 border border-transparent"
+                                }
+                                ${tab.id === "live" && tab.count > 0 && !isActive ? "text-green-600" : ""}
+                            `}
+                        >
+                            {/* Pulsing dot for live tab when there are live matches */}
+                            {tab.id === "live" && tab.count > 0 && (
+                                <span className="relative flex h-2 w-2 shrink-0">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                </span>
+                            )}
+                            {tab.id !== "live" || tab.count === 0 ? tab.icon : null}
+                            <span>{tab.label}</span>
+                            <span className={`
+                                text-xs font-black px-1.5 py-0.5 rounded-full min-w-[20px] text-center
+                                ${isActive ? "bg-current/10" : "bg-muted text-muted-foreground"}
+                                ${tab.id === "live" && tab.count > 0 ? "bg-green-500/20 text-green-700" : ""}
+                            `}>
+                                {tab.count}
+                            </span>
+                        </button>
+                    );
+                })}
+            </div>
+
             {/* Scoring Legend */}
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm mb-6 px-4 py-3 rounded-xl bg-muted/40 border border-border/50">
                 <span className="font-bold text-muted-foreground uppercase tracking-wider text-xs">How points work:</span>
@@ -167,6 +252,7 @@ export default function PredictionsPage() {
                 <span className="flex items-center gap-1.5"><span className="font-black text-red-400">0 pts</span><span className="text-muted-foreground">Wrong result</span></span>
             </div>
 
+            {/* Match Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {isLoading && (
                     <div className="col-span-1 md:col-span-2 text-center py-12 text-muted-foreground animate-pulse">
@@ -174,8 +260,26 @@ export default function PredictionsPage() {
                     </div>
                 )}
                 {!isLoading && filteredMatches.length === 0 && (
-                    <div className="col-span-1 md:col-span-2 text-center py-12 text-muted-foreground">
-                        No matches found.
+                    <div className="col-span-1 md:col-span-2 text-center py-16 text-muted-foreground flex flex-col items-center gap-3">
+                        {activeTab === "live" ? (
+                            <>
+                                <Zap className="w-10 h-10 opacity-30" />
+                                <p className="font-semibold text-lg">No live matches right now</p>
+                                <p className="text-sm opacity-70">Check back when a match kicks off!</p>
+                            </>
+                        ) : activeTab === "finished" ? (
+                            <>
+                                <CheckCircle2 className="w-10 h-10 opacity-30" />
+                                <p className="font-semibold text-lg">No finished matches yet</p>
+                                <p className="text-sm opacity-70">Results will appear here once matches are played.</p>
+                            </>
+                        ) : (
+                            <>
+                                <Timer className="w-10 h-10 opacity-30" />
+                                <p className="font-semibold text-lg">No upcoming matches found</p>
+                                <p className="text-sm opacity-70">Try clearing your filters.</p>
+                            </>
+                        )}
                     </div>
                 )}
                 {filteredMatches.map((match) => (
