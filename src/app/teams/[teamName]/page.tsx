@@ -120,6 +120,8 @@ export default async function TeamPage({ params }: PageProps) {
                 })()}
             </div>
 
+
+
             <Card className="border-border/50 bg-card/30 backdrop-blur-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-500">
                 <CardHeader className="bg-muted/50 border-b border-border/50 py-6">
                     <CardTitle className="flex items-center gap-3 text-2xl font-black uppercase italic tracking-wider">

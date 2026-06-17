@@ -264,7 +264,7 @@ export default function GroupsPage() {
                                                                     </span>
                                                                 ) : (
                                                                     <span className="text-[10px] font-bold text-muted-foreground px-1" suppressHydrationWarning>
-                                                                        {format(new Date(match.kickoff_time), "HH:mm")}
+                                                                        {format(new Date(match.kickoff_time), "h:mm a")} <span className="opacity-75">Local</span>
                                                                     </span>
                                                                 )}
 
