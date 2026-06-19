@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy, ClipboardList, MonitorPlay, MessageSquareText, ArrowRight, Globe, History, Calendar, MapPin, Zap } from "lucide-react";
+import { Trophy, ClipboardList, MonitorPlay, MessageSquareText, ArrowRight, Globe, History, Zap } from "lucide-react";
 import Image from "next/image";
 import { fetchMatches } from "@/lib/data";
-import { Flag } from "@/components/flag";
-import { LocalKickoffTime, LocalKickoffDate } from "@/components/local-kickoff-time";
+import { UpcomingMatchesCarousel } from "@/components/upcoming-matches-carousel";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +12,7 @@ export default async function Home() {
   const matches = await fetchMatches();
   const upcoming = matches
     .filter(m => m.status === 'upcoming' || m.status === 'live')
-    .slice(0, 3);
+    .slice(0, 9);
 
   const features = [
     {
@@ -148,44 +147,7 @@ export default async function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {upcoming.length > 0 ? (
-              upcoming.map((match) => (
-                <Card key={match.id} className="group overflow-hidden border-border/50 bg-card/60 backdrop-blur-xl hover:border-primary/40 hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
-                  <CardHeader className="pb-3 border-b border-border/10">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-                        <Calendar className="h-3 w-3" /> <LocalKickoffDate kickoffTime={match.kickoff_time} />
-                      </span>
-                      <LocalKickoffTime kickoffTime={match.kickoff_time} isLive={match.status === 'live'} />
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-6 pb-6">
-                    <div className="flex items-center justify-around gap-4 px-2">
-                      <div className="flex flex-col items-center gap-2">
-                        <Flag emoji={match.home_flag} size={36} />
-                        <span className="text-sm font-black uppercase italic tracking-tighter truncate max-w-[80px]">{match.home_team}</span>
-                      </div>
-                      <div className="text-xl font-black italic text-muted-foreground/30">VS</div>
-                      <div className="flex flex-col items-center gap-2">
-                        <Flag emoji={match.away_flag} size={36} />
-                        <span className="text-sm font-black uppercase italic tracking-tighter truncate max-w-[80px]">{match.away_team}</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <div className="px-4 pb-4">
-                    <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold text-muted-foreground/60 uppercase">
-                      <MapPin className="h-3 w-3" /> {match.stadium}
-                    </div>
-                  </div>
-                </Card>
-              ))
-            ) : (
-              <div className="col-span-1 md:col-span-3 py-12 text-center text-muted-foreground italic bg-muted/20 rounded-3xl border border-dashed border-border">
-                All scheduled matches have concluded. Wait for the knockouts!
-              </div>
-            )}
-          </div>
+          <UpcomingMatchesCarousel matches={upcoming} />
         </div>
       </section>
 
