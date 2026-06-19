@@ -56,3 +56,21 @@ A lightweight, highly shareable football entertainment web app. Because football
 
 ## License
 Built for the culture.
+
+
+
+I am the admin for a football prediction game called 'Football Chaos'. Based on the match summary/commentary provided below, which of these 'Chaotic Events' best describes the defining moment of the game?
+
+Options:
+
+VAR disaster
+Manager loses mind
+Penalty drama
+Last-minute heartbreak
+Twitter meltdown
+Player removes shirt
+Crowd boos referee
+None (if it was a standard/boring game)
+Please provide the single best option and a one-sentence justification based on the match events.
+
+MATCH SUMMARY: [PASTE MATCH REPORT OR LIVE TEXT HERE]"
