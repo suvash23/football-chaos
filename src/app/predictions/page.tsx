@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import Link from "next/link";
-import { fetchMatches, FUNNY_PREDICTION_OPTIONS, type Match } from "@/lib/data";
+import { fetchMatches, FUNNY_PREDICTION_OPTIONS, type Match, type Goal } from "@/lib/data";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -36,7 +36,7 @@ function buildGoogleCalendarUrl(match: { kickoff_time: string; home_team: string
 
 type TabId = "upcoming" | "live" | "finished";
 
-const GoalList = ({ goals, align = 'left' }: { goals?: any[]; align?: 'left' | 'right' }) => {
+const GoalList = ({ goals, align = 'left' }: { goals?: Goal[]; align?: 'left' | 'right' }) => {
     if (!goals || goals.length === 0) return null;
     return (
         <div className={`mt-2 flex flex-col gap-0.5 ${align === 'right' ? 'items-end' : 'items-start'}`}>
@@ -46,7 +46,7 @@ const GoalList = ({ goals, align = 'left' }: { goals?: any[]; align?: 'left' | '
                         <>
                             <span>⚽</span>
                             <span className="truncate max-w-[60px]">{g.name}</span>
-                            <span className="opacity-50">{g.minute}'</span>
+                            <span className="opacity-50">{g.minute}&apos;</span>
                             {g.penalty && <span className="text-primary text-[7px] border border-primary/20 px-0.5 rounded">P</span>}
                             {g.owngoal && <span className="text-orange-500 text-[7px] border border-orange-500/20 px-0.5 rounded">OG</span>}
                         </>
@@ -54,7 +54,7 @@ const GoalList = ({ goals, align = 'left' }: { goals?: any[]; align?: 'left' | '
                         <>
                             {g.owngoal && <span className="text-orange-500 text-[7px] border border-orange-500/20 px-0.5 rounded">OG</span>}
                             {g.penalty && <span className="text-primary text-[7px] border border-primary/20 px-0.5 rounded">P</span>}
-                            <span className="opacity-50">{g.minute}'</span>
+                            <span className="opacity-50">{g.minute}&apos;</span>
                             <span className="truncate max-w-[60px]">{g.name}</span>
                             <span>⚽</span>
                         </>

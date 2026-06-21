@@ -97,8 +97,16 @@ export async function fetchMatches(force = false): Promise<Match[]> {
                     const homeTeamInfo = TEAMS.find((t) => t.name === m.home_team);
                     const awayTeamInfo = TEAMS.find((t) => t.name === m.away_team);
 
+                    interface JsonMatch {
+                        team1: string;
+                        team2: string;
+                        score?: { ft: [number, number] };
+                        goals1?: Goal[];
+                        goals2?: Goal[];
+                    }
+
                     // Try to find goal info in our local JSON
-                    const jsonMatch = (worldCup2026Raw.matches as any[]).find(jm =>
+                    const jsonMatch = (worldCup2026Raw.matches as JsonMatch[]).find(jm =>
                         (jm.team1 === m.home_team && jm.team2 === m.away_team) ||
                         (jm.team1 === m.away_team && jm.team2 === m.home_team)
                     );
