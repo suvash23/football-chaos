@@ -36,6 +36,35 @@ function buildGoogleCalendarUrl(match: { kickoff_time: string; home_team: string
 
 type TabId = "upcoming" | "live" | "finished";
 
+const GoalList = ({ goals, align = 'left' }: { goals?: any[]; align?: 'left' | 'right' }) => {
+    if (!goals || goals.length === 0) return null;
+    return (
+        <div className={`mt-2 flex flex-col gap-0.5 ${align === 'right' ? 'items-end' : 'items-start'}`}>
+            {goals.map((g, i) => (
+                <div key={i} className="flex items-center gap-1.5 text-[9px] font-bold text-muted-foreground/60 uppercase tracking-tighter leading-none">
+                    {align === 'left' ? (
+                        <>
+                            <span>⚽</span>
+                            <span className="truncate max-w-[60px]">{g.name}</span>
+                            <span className="opacity-50">{g.minute}'</span>
+                            {g.penalty && <span className="text-primary text-[7px] border border-primary/20 px-0.5 rounded">P</span>}
+                            {g.owngoal && <span className="text-orange-500 text-[7px] border border-orange-500/20 px-0.5 rounded">OG</span>}
+                        </>
+                    ) : (
+                        <>
+                            {g.owngoal && <span className="text-orange-500 text-[7px] border border-orange-500/20 px-0.5 rounded">OG</span>}
+                            {g.penalty && <span className="text-primary text-[7px] border border-primary/20 px-0.5 rounded">P</span>}
+                            <span className="opacity-50">{g.minute}'</span>
+                            <span className="truncate max-w-[60px]">{g.name}</span>
+                            <span>⚽</span>
+                        </>
+                    )}
+                </div>
+            ))}
+        </div>
+    );
+};
+
 export default function PredictionsPage() {
     const [predictions, setPredictions] = useState<Record<string, { homeScore: number; awayScore: number; funnyPrediction: string }>>({});
     const [searchCountry, setSearchCountry] = useState("");
@@ -314,10 +343,10 @@ export default function PredictionsPage() {
                         >
                             {/* ── Header bar ── */}
                             <div className={`flex items-center justify-between px-5 py-3 ${isLive
-                                    ? 'bg-gradient-to-r from-green-600 to-emerald-600'
-                                    : isFinished
-                                        ? 'bg-zinc-700'
-                                        : 'bg-gradient-to-r from-zinc-900 to-zinc-800'
+                                ? 'bg-gradient-to-r from-green-600 to-emerald-600'
+                                : isFinished
+                                    ? 'bg-zinc-700'
+                                    : 'bg-gradient-to-r from-zinc-900 to-zinc-800'
                                 }`}>
                                 <span className="text-[10px] font-black uppercase tracking-[0.25em] text-white/90">
                                     {match.group}
@@ -347,14 +376,15 @@ export default function PredictionsPage() {
                                     <Link href={`/teams/${encodeURIComponent(match.home_team)}`} className="text-[11px] font-black uppercase tracking-widest text-center text-foreground/80 hover:text-primary transition-colors leading-tight line-clamp-2 h-8">
                                         {match.home_team}
                                     </Link>
+                                    <GoalList goals={match.goals1} align="left" />
                                 </div>
 
                                 {/* Centre */}
                                 <div className="flex-1 flex flex-col items-center gap-1 text-center z-10">
                                     {(isFinished || isLive) && match.home_score !== null ? (
                                         <div className={`flex items-center gap-3 px-6 py-3 rounded-2xl text-4xl font-black italic tracking-tighter relative shadow-inner ${isLive
-                                                ? 'bg-green-600 text-white shadow-green-900/20'
-                                                : 'bg-secondary text-foreground border border-border/10'
+                                            ? 'bg-green-600 text-white shadow-green-900/20'
+                                            : 'bg-secondary text-foreground border border-border/10'
                                             }`}>
                                             {isLive && (
                                                 <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4">
@@ -395,6 +425,7 @@ export default function PredictionsPage() {
                                     <Link href={`/teams/${encodeURIComponent(match.away_team)}`} className="text-[11px] font-black uppercase tracking-widest text-center text-foreground/80 hover:text-primary transition-colors leading-tight line-clamp-2 h-8">
                                         {match.away_team}
                                     </Link>
+                                    <GoalList goals={match.goals2} align="right" />
                                 </div>
                             </div>
 
@@ -420,10 +451,10 @@ export default function PredictionsPage() {
                             <div className="border-t border-border/5 mt-auto bg-muted/5 p-4">
                                 {isPredictionLocked(match) ? (
                                     <div className={`flex items-center justify-center gap-2 py-3 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl border ${isLive
-                                            ? 'bg-green-500/10 text-green-600 border-green-500/20'
-                                            : isFinished
-                                                ? 'bg-zinc-100 text-muted-foreground border-zinc-200'
-                                                : 'bg-orange-500/10 text-orange-600 border-orange-500/20'
+                                        ? 'bg-green-500/10 text-green-600 border-green-500/20'
+                                        : isFinished
+                                            ? 'bg-zinc-100 text-muted-foreground border-zinc-200'
+                                            : 'bg-orange-500/10 text-orange-600 border-orange-500/20'
                                         }`}>
                                         <Lock className="w-3 h-3" />
                                         {isLive ? 'Match in progress' : isFinished ? 'Match finished' : 'Predictions locked'}
