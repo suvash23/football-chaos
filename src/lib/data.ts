@@ -1,6 +1,14 @@
 import teamsMetaRaw from './teams_meta.json';
 import squadsDataRaw from './data/squads.json';
+import worldCup2026Raw from '../../public/data/worldcups/2026.json';
 import { supabase } from './supabase';
+
+export type Goal = {
+    name: string;
+    minute: string;
+    penalty?: boolean;
+    owngoal?: boolean;
+};
 
 export type Match = {
     id: string;
@@ -15,6 +23,8 @@ export type Match = {
     away_flag: string;
     group: string;
     stadium: string;
+    goals1?: Goal[];
+    goals2?: Goal[];
 };
 
 type TeamJson = { name: string; flag_icon: string;[key: string]: unknown };
@@ -86,6 +96,15 @@ export async function fetchMatches(force = false): Promise<Match[]> {
                 const mapped = dbMatches.map((m) => {
                     const homeTeamInfo = TEAMS.find((t) => t.name === m.home_team);
                     const awayTeamInfo = TEAMS.find((t) => t.name === m.away_team);
+
+                    // Try to find goal info in our local JSON
+                    const jsonMatch = (worldCup2026Raw.matches as any[]).find(jm =>
+                        (jm.team1 === m.home_team && jm.team2 === m.away_team) ||
+                        (jm.team1 === m.away_team && jm.team2 === m.home_team)
+                    );
+
+                    const isReversed = jsonMatch && jsonMatch.team1 !== m.home_team;
+
                     return {
                         id: m.id,
                         round: m.round,
@@ -93,12 +112,14 @@ export async function fetchMatches(force = false): Promise<Match[]> {
                         away_team: m.away_team,
                         kickoff_time: m.kickoff_time,
                         status: m.status,
-                        home_score: m.home_score,
-                        away_score: m.away_score,
+                        home_score: m.home_score ?? (jsonMatch?.score?.ft ? (isReversed ? jsonMatch.score.ft[1] : jsonMatch.score.ft[0]) : null),
+                        away_score: m.away_score ?? (jsonMatch?.score?.ft ? (isReversed ? jsonMatch.score.ft[0] : jsonMatch.score.ft[1]) : null),
                         home_flag: homeTeamInfo?.flag_icon || "🚩",
                         away_flag: awayTeamInfo?.flag_icon || "🚩",
                         group: m.group_name || homeTeamInfo?.group || "Unknown",
                         stadium: m.stadium || "Unknown",
+                        goals1: isReversed ? jsonMatch?.goals2 : jsonMatch?.goals1,
+                        goals2: isReversed ? jsonMatch?.goals1 : jsonMatch?.goals2,
                     };
                 });
 
