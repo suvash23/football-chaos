@@ -74,7 +74,13 @@ export default async function Home() {
       <section className="relative w-full min-h-[700px] flex flex-col items-center justify-start overflow-hidden pt-12">
         <Image
           src={(() => {
-            const heroes = ["/heroes/legends-0.png", "/heroes/legends-1.png", "/heroes/legends-2.png", "/heroes/legends-4.png"];
+            const heroes = [
+              "/heroes/legends-0.png",
+              "/heroes/legends-1.png",
+              "/heroes/legends-2.png",
+              "/heroes/legends-3.png",
+              "/heroes/legends-4.png"
+            ];
             return heroes[Math.floor(Math.random() * heroes.length)];
           })()}
           alt="World Cup Legends"
