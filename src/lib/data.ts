@@ -10,6 +10,14 @@ export type Goal = {
     owngoal?: boolean;
 };
 
+export interface JsonMatch {
+    team1: string;
+    team2: string;
+    score?: { ft: [number, number] };
+    goals1?: Goal[];
+    goals2?: Goal[];
+}
+
 export type Match = {
     id: string;
     round: string;
@@ -97,13 +105,7 @@ export async function fetchMatches(force = false): Promise<Match[]> {
                     const homeTeamInfo = TEAMS.find((t) => t.name === m.home_team);
                     const awayTeamInfo = TEAMS.find((t) => t.name === m.away_team);
 
-                    interface JsonMatch {
-                        team1: string;
-                        team2: string;
-                        score?: { ft: [number, number] };
-                        goals1?: Goal[];
-                        goals2?: Goal[];
-                    }
+
 
                     // Try to find goal info in our local JSON
                     const jsonMatch = (worldCup2026Raw.matches as JsonMatch[]).find(jm =>
@@ -170,6 +172,50 @@ export const TEAMS: Team[] = (teamsMetaRaw as TeamJson[]).map((t) => ({
     group: `Group ${t.group as string}`,
     continent: t.continent as string,
 }));
+
+export type Scorer = {
+    name: string;
+    team: string;
+    flag: string;
+    goals: number;
+};
+
+export async function fetchTopScorers(): Promise<Scorer[]> {
+    const matches = (worldCup2026Raw.matches as JsonMatch[]);
+    const scorerMap: Record<string, { goals: number, team: string, flag: string }> = {};
+
+    matches.forEach(m => {
+        const processGoals = (goals: Goal[] | undefined, teamName: string) => {
+            if (!goals) return;
+            goals.forEach(g => {
+                if (g.owngoal) return; // Own goals don't count for the player
+                const key = `${g.name}|${teamName}`;
+                if (!scorerMap[key]) {
+                    const teamInfo = TEAMS.find(t => t.name === teamName);
+                    scorerMap[key] = {
+                        goals: 0,
+                        team: teamName,
+                        flag: teamInfo?.flag_icon || "🚩"
+                    };
+                }
+                scorerMap[key].goals += 1;
+            });
+        };
+
+        processGoals(m.goals1, m.team1);
+        processGoals(m.goals2, m.team2);
+    });
+
+    return Object.entries(scorerMap)
+        .map(([key, data]) => ({
+            name: key.split('|')[0],
+            team: data.team,
+            flag: data.flag,
+            goals: data.goals
+        }))
+        .sort((a, b) => b.goals - a.goals || a.name.localeCompare(b.name))
+        .slice(0, 10); // Top 10
+}
 
 export const MOCK_LEADERBOARD = [
     { id: "1", username: "TacticalGenius", points: 150, title: "Football Prophet", avatar: "🧠" },
