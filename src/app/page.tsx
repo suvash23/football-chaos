@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trophy, ClipboardList, MonitorPlay, MessageSquareText, ArrowRight, Globe, History, Zap } from "lucide-react";
 import Image from "next/image";
-import { fetchMatches } from "@/lib/data";
+import { fetchMatches, fetchTopScorers } from "@/lib/data";
 import { UpcomingMatchesCarousel } from "@/components/upcoming-matches-carousel";
+import { Flag } from "@/components/flag";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,8 @@ export default async function Home() {
   const upcoming = matches
     .filter(m => m.status === 'upcoming' || m.status === 'live')
     .slice(0, 9);
+
+  const topScorers = await fetchTopScorers();
 
   const features = [
     {
@@ -149,6 +152,63 @@ export default async function Home() {
 
           <UpcomingMatchesCarousel matches={upcoming} />
         </div>
+      </section>
+
+      {/* Player Rank Section */}
+      <section className="container mx-auto px-4 py-24 relative">
+        <div className="flex flex-col items-center justify-center text-center space-y-4 mb-16 px-4">
+          <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-none">
+            Golden <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Boot</span> Race
+          </h2>
+          <p className="text-muted-foreground font-bold text-sm uppercase tracking-[0.2em] opacity-70">The World&apos;s Deadliest Finishers</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {topScorers.map((scorer, i) => (
+            <div
+              key={i}
+              className="group relative flex items-center gap-4 p-6 rounded-[2rem] bg-card/40 backdrop-blur-3xl border border-border/10 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:scale-[1.02]"
+            >
+              {/* Rank Badge */}
+              <div className={`flex items-center justify-center w-12 h-12 rounded-2xl font-black italic text-xl shadow-lg shrink-0 ${i === 0 ? 'bg-gradient-to-br from-yellow-300 to-yellow-600 text-black animate-pulse' :
+                  i === 1 ? 'bg-gradient-to-br from-zinc-300 to-zinc-500 text-black' :
+                    i === 2 ? 'bg-gradient-to-br from-orange-400 to-orange-700 text-white' :
+                      'bg-muted/50 text-muted-foreground'
+                }`}>
+                {i + 1}
+              </div>
+
+              {/* Player Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-0.5">
+                  <Flag emoji={scorer.flag} size={20} />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">{scorer.team}</span>
+                </div>
+                <h3 className="text-xl font-black uppercase italic tracking-tight truncate leading-tight group-hover:text-primary transition-colors">
+                  {scorer.name}
+                </h3>
+              </div>
+
+              {/* Goal Count */}
+              <div className="flex flex-col items-end">
+                <span className="text-3xl font-black italic tracking-tighter text-primary">{scorer.goals}</span>
+                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/50">Goals</span>
+              </div>
+
+              {/* Glow for top 3 */}
+              {i < 3 && (
+                <div className={`absolute inset-0 rounded-[2rem] opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none ${i === 0 ? 'bg-yellow-400' : i === 1 ? 'bg-zinc-300' : 'bg-orange-500'
+                  }`} />
+              )}
+            </div>
+          ))}
+        </div>
+
+        {topScorers.length === 0 && (
+          <div className="text-center py-20 bg-muted/20 rounded-[3rem] border border-dashed border-border/40">
+            <p className="text-muted-foreground font-bold italic uppercase tracking-widest">No goals registered yet. The chaos awaits.</p>
+          </div>
+        )}
       </section>
 
       {/* Quick Stats Grid */}
