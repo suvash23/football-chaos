@@ -73,7 +73,10 @@ export default async function Home() {
       {/* Hero Section - Purely for the legends now */}
       <section className="relative w-full min-h-[700px] flex flex-col items-center justify-start overflow-hidden pt-12">
         <Image
-          src={Math.random() > 0.5 ? "/hero-legends.png" : "/hero-legends-2.png"}
+          src={(() => {
+            const heroes = ["/heroes/legends-1.png", "/heroes/legends-2.png", "/heroes/stadium.png"];
+            return heroes[Math.floor(Math.random() * heroes.length)];
+          })()}
           alt="World Cup Legends"
           fill
           className="object-cover object-center brightness-[1.1] contrast-[1.05]"
