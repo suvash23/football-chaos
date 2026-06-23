@@ -73,7 +73,10 @@ export default async function Home() {
       {/* Hero Section - Purely for the legends now */}
       <section className="relative w-full min-h-[700px] flex flex-col items-center justify-start overflow-hidden pt-12">
         <Image
-          src="/hero-legends.png"
+          src={(() => {
+            const heroes = ["/heroes/legends-1.png", "/heroes/legends-2.png", "/heroes/stadium.png"];
+            return heroes[Math.floor(Math.random() * heroes.length)];
+          })()}
           alt="World Cup Legends"
           fill
           className="object-cover object-center brightness-[1.1] contrast-[1.05]"
@@ -171,9 +174,9 @@ export default async function Home() {
             >
               {/* Rank Badge */}
               <div className={`flex items-center justify-center w-12 h-12 rounded-2xl font-black italic text-xl shadow-lg shrink-0 ${i === 0 ? 'bg-gradient-to-br from-yellow-300 to-yellow-600 text-black animate-pulse' :
-                  i === 1 ? 'bg-gradient-to-br from-zinc-300 to-zinc-500 text-black' :
-                    i === 2 ? 'bg-gradient-to-br from-orange-400 to-orange-700 text-white' :
-                      'bg-muted/50 text-muted-foreground'
+                i === 1 ? 'bg-gradient-to-br from-zinc-300 to-zinc-500 text-black' :
+                  i === 2 ? 'bg-gradient-to-br from-orange-400 to-orange-700 text-white' :
+                    'bg-muted/50 text-muted-foreground'
                 }`}>
                 {i + 1}
               </div>
