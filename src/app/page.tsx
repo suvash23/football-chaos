@@ -22,7 +22,7 @@ export default async function Home() {
       title: "Match Predictions",
       description: "Guess the score and predict chaotic moments (e.g. 'Manager loses mind') to win points.",
       icon: ClipboardList,
-      href: "/predictions",
+      href: "/fixtures",
       color: "text-blue-400",
       bg: "bg-blue-500/10"
     },
@@ -124,7 +124,7 @@ export default async function Home() {
               </div>
 
               <div className="flex flex-wrap items-center justify-center gap-4 w-full max-w-4xl px-6 pt-4">
-                <Link href="/predictions" className="flex-1 min-w-[280px]">
+                <Link href="/fixtures" className="flex-1 min-w-[280px]">
                   <Button size="lg" className="w-full rounded-2xl px-10 text-2xl font-black h-20 shadow-2xl hover:scale-[1.03] transition-all italic uppercase tracking-wider bg-yellow-400 hover:bg-yellow-300 text-black border-4 border-black group">
                     Play Now <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
                   </Button>
@@ -152,7 +152,7 @@ export default async function Home() {
               <h2 className="text-4xl font-black italic uppercase tracking-tighter leading-none mb-2">Next on the Pitch</h2>
               <p className="text-muted-foreground font-bold text-sm uppercase tracking-widest opacity-70">Don&apos;t miss a single second of the chaos</p>
             </div>
-            <Link href="/predictions">
+            <Link href="/fixtures">
               <Button variant="outline" className="rounded-xl font-black uppercase italic tracking-wider gap-2 hover:bg-primary/10 transition-all">
                 All Fixtures <ArrowRight className="h-4 w-4" />
               </Button>

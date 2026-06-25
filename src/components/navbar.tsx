@@ -12,7 +12,7 @@ export function Navbar() {
     const navLinks = [
         { href: '/', label: 'Home', icon: Home },
         { href: '/groups', label: 'Groups', icon: Globe },
-        { href: '/predictions', label: 'Fixtures', icon: ClipboardList },
+        { href: '/fixtures', label: 'Fixtures', icon: ClipboardList },
         { href: '/bracket', label: 'Bracket', icon: Network },
         // { href: '/var-simulator', label: 'VAR Sim', icon: MonitorPlay },
         { href: '/excuses', label: 'Excuses', icon: MessageSquareText },
