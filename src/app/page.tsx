@@ -22,7 +22,7 @@ export default async function Home() {
       title: "Match Predictions",
       description: "Guess the score and predict chaotic moments (e.g. 'Manager loses mind') to win points.",
       icon: ClipboardList,
-      href: "/predictions",
+      href: "/fixtures",
       color: "text-blue-400",
       bg: "bg-blue-500/10"
     },
@@ -115,16 +115,16 @@ export default async function Home() {
             <CardContent className="py-12 flex-1 flex flex-col items-center justify-center gap-8 text-center px-4">
               <div className="space-y-2">
                 <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-none mb-4">
-                  The Wait is Over. <br />
-                  <span className="text-primary italic">The Chaos has Begun.</span>
+                  Survival of <br />
+                  <span className="text-primary italic">The Fittest.</span>
                 </h2>
                 <p className="text-muted-foreground text-lg font-bold uppercase tracking-widest opacity-80 max-w-2xl mx-auto">
-                  Every goal, every save, and every manager meltdown matters. Are you ready to predict the madness?
+                  The margin for error is gone. One mistake means elimination. One moment of brilliance means immortality. Predict the Bracket now.
                 </p>
               </div>
 
               <div className="flex flex-wrap items-center justify-center gap-4 w-full max-w-4xl px-6 pt-4">
-                <Link href="/predictions" className="flex-1 min-w-[280px]">
+                <Link href="/fixtures" className="flex-1 min-w-[280px]">
                   <Button size="lg" className="w-full rounded-2xl px-10 text-2xl font-black h-20 shadow-2xl hover:scale-[1.03] transition-all italic uppercase tracking-wider bg-yellow-400 hover:bg-yellow-300 text-black border-4 border-black group">
                     Play Now <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
                   </Button>
@@ -140,6 +140,48 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Group Stage Conclusion / Knockouts Hype Section */}
+      <section className="container mx-auto px-4 mt-24 mb-12">
+        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary/20 via-background to-orange-500/10 border border-primary/20 p-8 md:p-12 text-center shadow-2xl">
+          {/* Decorative background flair */}
+          <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/20 rounded-full blur-[100px]" />
+          <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-orange-500/20 rounded-full blur-[100px]" />
+
+          <div className="relative z-10 space-y-6">
+            <div className="flex items-center justify-center gap-3">
+              <span className="h-px w-8 md:w-16 bg-primary/40" />
+              <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary italic drop-shadow-sm">Tournament Status Update</span>
+              <span className="h-px w-8 md:w-16 bg-primary/40" />
+            </div>
+
+            <h2 className="text-4xl md:text-7xl font-black uppercase italic tracking-tighter leading-none mb-4">
+              Group Stage <span className="text-muted-foreground opacity-30">Concluded.</span><br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Round of 32 Loading...</span>
+            </h2>
+
+            <p className="max-w-3xl mx-auto text-base md:text-xl font-bold text-muted-foreground uppercase tracking-widest opacity-80 leading-relaxed">
+              The noise of the groups fades. The intensity of the <span className="text-foreground italic underline decoration-primary decoration-4">Knockouts</span> begins.
+              Only the strong survive from here.
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
+              <div className="flex items-center gap-3 bg-card/50 backdrop-blur-md px-6 py-3 rounded-2xl border border-border/10">
+                <div className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest">Bracket Finalizing</span>
+              </div>
+
+              <div className="flex items-center gap-3 bg-card/50 backdrop-blur-md px-6 py-3 rounded-2xl border border-border/10">
+                <Zap className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                <span className="text-[10px] font-black uppercase tracking-widest">High Intensity Expected</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Upcoming Matches Full Width Section */}
       <section className="w-full bg-muted/30 border-y border-border/50 py-16 mb-16 mt-16 relative overflow-hidden">
         {/* Subtle background flair */}
@@ -152,7 +194,7 @@ export default async function Home() {
               <h2 className="text-4xl font-black italic uppercase tracking-tighter leading-none mb-2">Next on the Pitch</h2>
               <p className="text-muted-foreground font-bold text-sm uppercase tracking-widest opacity-70">Don&apos;t miss a single second of the chaos</p>
             </div>
-            <Link href="/predictions">
+            <Link href="/fixtures">
               <Button variant="outline" className="rounded-xl font-black uppercase italic tracking-wider gap-2 hover:bg-primary/10 transition-all">
                 All Fixtures <ArrowRight className="h-4 w-4" />
               </Button>

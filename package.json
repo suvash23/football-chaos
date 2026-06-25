@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed:knockouts": "node scripts/update-knockouts.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
