@@ -115,11 +115,11 @@ export default async function Home() {
             <CardContent className="py-12 flex-1 flex flex-col items-center justify-center gap-8 text-center px-4">
               <div className="space-y-2">
                 <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-none mb-4">
-                  The Wait is Over. <br />
-                  <span className="text-primary italic">The Chaos has Begun.</span>
+                  Survival of <br />
+                  <span className="text-primary italic">The Fittest.</span>
                 </h2>
                 <p className="text-muted-foreground text-lg font-bold uppercase tracking-widest opacity-80 max-w-2xl mx-auto">
-                  Every goal, every save, and every manager meltdown matters. Are you ready to predict the madness?
+                  The margin for error is gone. One mistake means elimination. One moment of brilliance means immortality. Predict the Bracket now.
                 </p>
               </div>
 
