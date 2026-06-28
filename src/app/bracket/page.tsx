@@ -69,7 +69,13 @@ function pickStatus(
     return pick === winner ? "correct" : "wrong";
 }
 
-// ─── Build initial bracket structure from DB matches ──────────────────────────
+const ROUND_SEQUENCES: Record<string, number[]> = {
+    "Round of 32": [74, 77, 73, 75, 83, 84, 81, 82, 76, 78, 79, 80, 86, 88, 85, 87],
+    "Round of 16": [89, 90, 93, 94, 91, 92, 95, 96],
+    "Quarter-final": [97, 98, 99, 100],
+    "Semi-final": [101, 102],
+    "Final": [104],
+};
 
 function buildBracketSlots(matches: Match[]): BracketMatch[] {
     const result: BracketMatch[] = [];
@@ -79,9 +85,19 @@ function buildBracketSlots(matches: Match[]): BracketMatch[] {
     );
 
     KNOCKOUT_ROUNDS.forEach(round => {
+        const seq = ROUND_SEQUENCES[round] || [];
         const roundMatches = koMatches
             .filter(m => m.round === round)
-            .sort((a, b) => new Date(a.kickoff_time).getTime() - new Date(b.kickoff_time).getTime());
+            .sort((a, b) => {
+                const aNum = a.match_number ?? 0;
+                const bNum = b.match_number ?? 0;
+                const idxA = seq.indexOf(aNum);
+                const idxB = seq.indexOf(bNum);
+                if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                if (idxA !== -1) return -1;
+                if (idxB !== -1) return 1;
+                return aNum - bNum;
+            });
 
         roundMatches.forEach((m, pos) => {
             result.push({
