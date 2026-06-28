@@ -210,15 +210,34 @@ export default function BracketBuilderPage() {
 
                 if (!nextMatch) return updated;
 
+                // Determine the loser of the semi-final if we are in semi-final round
+                let loserTeam: TeamSlot | null = null;
+                if (match.round === "Semi-final") {
+                    if (pickedTeam.name === match.home?.name) {
+                        loserTeam = match.away;
+                    } else if (pickedTeam.name === match.away?.name) {
+                        loserTeam = match.home;
+                    }
+                }
+
                 // Place the pick into next round's slot (update bracketSlots)
                 setBracketSlots(prevSlots =>
                     prevSlots.map(slot => {
-                        if (slot.id !== nextMatch.id) return slot;
-                        if (isHome) {
-                            return { ...slot, home: pickedTeam };
-                        } else {
-                            return { ...slot, away: pickedTeam };
+                        if (slot.id === nextMatch.id) {
+                            if (isHome) {
+                                return { ...slot, home: pickedTeam };
+                            } else {
+                                return { ...slot, away: pickedTeam };
+                            }
                         }
+                        if (match.round === "Semi-final" && slot.isThirdPlace) {
+                            if (isHome) {
+                                return { ...slot, home: loserTeam };
+                            } else {
+                                return { ...slot, away: loserTeam };
+                            }
+                        }
+                        return slot;
                     })
                 );
 
@@ -231,6 +250,18 @@ export default function BracketBuilderPage() {
                         // Clear downstream cascade — remove nextMatch pick and everything further
                         const toClear = collectDownstreamIds(nextMatch.id, bracketSlots);
                         toClear.forEach(id => delete updated[id]);
+                    }
+                }
+
+                // Also clear third place pick if the loser changes
+                if (match.round === "Semi-final") {
+                    const thirdPlaceMatch = bracketSlots.find(s => s.isThirdPlace);
+                    if (thirdPlaceMatch && loserTeam) {
+                        const oldPickInThird = updated[thirdPlaceMatch.id];
+                        const previousLoser = isHome ? thirdPlaceMatch.home?.name : thirdPlaceMatch.away?.name;
+                        if (oldPickInThird && oldPickInThird === previousLoser && previousLoser !== loserTeam.name) {
+                            delete updated[thirdPlaceMatch.id];
+                        }
                     }
                 }
 
