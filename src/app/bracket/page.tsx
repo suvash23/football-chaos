@@ -812,7 +812,7 @@ function BracketColumn({
             <div className="text-xs font-black py-2 px-3 rounded-xl text-center uppercase tracking-widest bg-secondary/60 border border-border/50 text-muted-foreground">
                 {title}
             </div>
-            <div className={`flex flex-col flex-1 gap-3 py-4 ${matches.length > 2 ? "justify-start" : "justify-around"} min-h-[600px]`}>
+            <div className={`flex flex-col flex-1 justify-around gap-2 py-2 min-h-[600px]`}>
                 {matches.map((match) => (
                     <BracketMatchCard
                         key={match.id}
