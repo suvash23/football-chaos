@@ -155,13 +155,12 @@ export default async function Home() {
             </div>
 
             <h2 className="text-4xl md:text-7xl font-black uppercase italic tracking-tighter leading-none mb-4">
-              Group Stage <span className="text-muted-foreground opacity-30">Concluded.</span><br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Round of 32 Loading...</span>
+              Round of 32 <span className="text-muted-foreground opacity-30">Is Here.</span><br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">It Starts Today. 🔥</span>
             </h2>
 
             <p className="max-w-3xl mx-auto text-base md:text-xl font-bold text-muted-foreground uppercase tracking-widest opacity-80 leading-relaxed">
-              The noise of the groups fades. The intensity of the <span className="text-foreground italic underline decoration-primary decoration-4">Knockouts</span> begins.
-              Only the strong survive from here.
+              The group stage is done. 32 teams remain. Every match is <span className="text-foreground italic underline decoration-primary decoration-4">sudden death</span> — one loss and you go home.
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
@@ -170,12 +169,12 @@ export default async function Home() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-widest">Bracket Finalizing</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">Knockouts Underway</span>
               </div>
 
               <div className="flex items-center gap-3 bg-card/50 backdrop-blur-md px-6 py-3 rounded-2xl border border-border/10">
                 <Zap className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-                <span className="text-[10px] font-black uppercase tracking-widest">High Intensity Expected</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">No Second Chances</span>
               </div>
             </div>
           </div>
