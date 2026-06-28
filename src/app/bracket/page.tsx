@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { fetchMatches, TEAMS, type Match } from "@/lib/data";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
+import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2, Save, Trophy, Info, CheckCircle2, XCircle, Lock, Printer } from "lucide-react";
@@ -337,8 +338,11 @@ export default function BracketBuilderPage() {
             {/* Header */}
             <div className="mb-6 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                 <div>
-                    <h1 className="text-4xl font-black italic uppercase tracking-wider mb-1">
-                        🏆 Bracket Builder
+                    <h1 className="text-4xl font-black italic uppercase tracking-wider mb-1 flex items-center gap-2">
+                        <div className="relative w-8 h-10 shrink-0 drop-shadow-[0_4px_8px_rgba(234,179,8,0.4)]">
+                            <Image src="/wc-trophy.png" alt="World Cup Trophy" fill className="object-contain" />
+                        </div>
+                        Bracket Builder
                     </h1>
                     <p className="text-muted-foreground text-sm">
                         Pick your winners round by round. Save your bracket and track how badly you got it wrong.
