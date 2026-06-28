@@ -315,8 +315,6 @@ export default function BracketBuilderPage() {
         );
     }
 
-    const visibleRounds = activeRound === "All" ? KNOCKOUT_ROUNDS : [activeRound];
-
     return (
         <div className="container mx-auto px-4 py-8 max-w-full">
             {/* Print styles injected inline */}

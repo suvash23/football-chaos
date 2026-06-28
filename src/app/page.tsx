@@ -102,80 +102,61 @@ export default async function Home() {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-100 h-1/2 mt-auto" />
       </section>
 
-      {/* Live Status Section */}
+      {/* Knockouts Hero Section — merged status + CTAs */}
       <section className="container mx-auto px-4 -mt-32 relative z-40">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Tournament Live Card with Buttons */}
-          <Card className="lg:col-span-3 overflow-hidden border-border/50 bg-card/70 backdrop-blur-3xl shadow-2xl flex flex-col">
-            <CardHeader className="text-center pb-2 border-b border-border/10">
-              <CardTitle className="text-sm font-black uppercase tracking-[0.3em] text-primary italic flex items-center justify-center gap-2">
-                <Zap className="h-4 w-4 fill-primary animate-pulse" /> Knockouts in Progress
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="py-12 flex-1 flex flex-col items-center justify-center gap-8 text-center px-4">
-              <div className="space-y-2">
-                <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-none mb-4">
-                  Survival of <br />
-                  <span className="text-primary italic">The Fittest.</span>
-                </h2>
-                <p className="text-muted-foreground text-lg font-bold uppercase tracking-widest opacity-80 max-w-2xl mx-auto">
-                  The margin for error is gone. One mistake means elimination. One moment of brilliance means immortality. Predict the Bracket now.
-                </p>
-              </div>
+        <div className="relative overflow-hidden rounded-[2.5rem] bg-card/70 backdrop-blur-3xl border border-border/50 shadow-2xl p-8 md:p-14 text-center">
+          {/* Decorative blobs */}
+          <div className="absolute -top-24 -right-24 w-72 h-72 bg-primary/15 rounded-full blur-[100px]" />
+          <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-orange-500/15 rounded-full blur-[100px]" />
 
-              <div className="flex flex-wrap items-center justify-center gap-4 w-full max-w-4xl px-6 pt-4">
-                <Link href="/bracket" className="flex-1 min-w-[280px]">
-                  <Button size="lg" className="w-full rounded-2xl px-10 text-2xl font-black h-20 shadow-2xl hover:scale-[1.03] transition-all italic uppercase tracking-wider bg-yellow-400 hover:bg-yellow-300 text-black border-4 border-black group">
-                    Build Bracket <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
-                <Link href="/fixtures" className="flex-1 min-w-[280px]">
-                  <Button variant="outline" size="lg" className="w-full rounded-2xl px-10 text-2xl font-black h-20 backdrop-blur-md bg-muted/50 transition-all italic uppercase tracking-wider hover:bg-muted/80 border-2 border-border/80">
-                    View Fixtures
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* Group Stage Conclusion / Knockouts Hype Section */}
-      <section className="container mx-auto px-4 mt-24 mb-12">
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary/20 via-background to-orange-500/10 border border-primary/20 p-8 md:p-12 text-center shadow-2xl">
-          {/* Decorative background flair */}
-          <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/20 rounded-full blur-[100px]" />
-          <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-orange-500/20 rounded-full blur-[100px]" />
-
-          <div className="relative z-10 space-y-6">
-            <div className="flex items-center justify-center gap-3">
+          <div className="relative z-10 flex flex-col items-center gap-8">
+            {/* Label */}
+            <div className="flex items-center gap-3">
               <span className="h-px w-8 md:w-16 bg-primary/40" />
-              <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary italic drop-shadow-sm">Tournament Status Update</span>
+              <span className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary italic">
+                <Zap className="h-3 w-3 fill-primary animate-pulse" /> Knockouts in Progress
+              </span>
               <span className="h-px w-8 md:w-16 bg-primary/40" />
             </div>
 
-            <h2 className="text-4xl md:text-7xl font-black uppercase italic tracking-tighter leading-none mb-4">
-              Round of 32 <span className="text-muted-foreground opacity-30">Is Here.</span><br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">It Starts Today. 🔥</span>
-            </h2>
+            {/* Headline */}
+            <div className="space-y-1">
+              <h2 className="text-4xl md:text-7xl font-black uppercase italic tracking-tighter leading-none">
+                Round of 32 <span className="text-muted-foreground opacity-30">Is Here.</span><br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Survival of the Fittest. 🔥</span>
+              </h2>
+              <p className="text-muted-foreground text-base md:text-lg font-bold uppercase tracking-widest opacity-80 max-w-3xl mx-auto pt-4">
+                32 teams remain. Every match is <span className="text-foreground italic underline decoration-primary decoration-4">sudden death</span> — one loss and you go home. No margin for error.
+              </p>
+            </div>
 
-            <p className="max-w-3xl mx-auto text-base md:text-xl font-bold text-muted-foreground uppercase tracking-widest opacity-80 leading-relaxed">
-              The group stage is done. 32 teams remain. Every match is <span className="text-foreground italic underline decoration-primary decoration-4">sudden death</span> — one loss and you go home.
-            </p>
-
-            <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
-              <div className="flex items-center gap-3 bg-card/50 backdrop-blur-md px-6 py-3 rounded-2xl border border-border/10">
+            {/* Status Badges */}
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <div className="flex items-center gap-3 bg-card/50 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-border/20">
                 <div className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                 </div>
                 <span className="text-[10px] font-black uppercase tracking-widest">Knockouts Underway</span>
               </div>
-
-              <div className="flex items-center gap-3 bg-card/50 backdrop-blur-md px-6 py-3 rounded-2xl border border-border/10">
+              <div className="flex items-center gap-3 bg-card/50 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-border/20">
                 <Zap className="h-4 w-4 text-yellow-400 fill-yellow-400" />
                 <span className="text-[10px] font-black uppercase tracking-widest">No Second Chances</span>
               </div>
+            </div>
+
+            {/* CTAs */}
+            <div className="flex flex-wrap items-center justify-center gap-4 w-full max-w-4xl px-6">
+              <Link href="/bracket" className="flex-1 min-w-[260px]">
+                <Button size="lg" className="w-full rounded-2xl px-10 text-2xl font-black h-20 shadow-2xl hover:scale-[1.03] transition-all italic uppercase tracking-wider bg-yellow-400 hover:bg-yellow-300 text-black border-4 border-black group">
+                  Build Bracket <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+              <Link href="/fixtures" className="flex-1 min-w-[260px]">
+                <Button variant="outline" size="lg" className="w-full rounded-2xl px-10 text-2xl font-black h-20 backdrop-blur-md bg-muted/50 transition-all italic uppercase tracking-wider hover:bg-muted/80 border-2 border-border/80">
+                  View Fixtures
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
