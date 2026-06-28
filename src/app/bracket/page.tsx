@@ -69,7 +69,13 @@ function pickStatus(
     return pick === winner ? "correct" : "wrong";
 }
 
-// ─── Build initial bracket structure from DB matches ──────────────────────────
+const ROUND_SEQUENCES: Record<string, number[]> = {
+    "Round of 32": [74, 77, 73, 75, 83, 84, 81, 82, 76, 78, 79, 80, 86, 88, 85, 87],
+    "Round of 16": [89, 90, 93, 94, 91, 92, 95, 96],
+    "Quarter-final": [97, 98, 99, 100],
+    "Semi-final": [101, 102],
+    "Final": [104],
+};
 
 function buildBracketSlots(matches: Match[]): BracketMatch[] {
     const result: BracketMatch[] = [];
@@ -79,9 +85,19 @@ function buildBracketSlots(matches: Match[]): BracketMatch[] {
     );
 
     KNOCKOUT_ROUNDS.forEach(round => {
+        const seq = ROUND_SEQUENCES[round] || [];
         const roundMatches = koMatches
             .filter(m => m.round === round)
-            .sort((a, b) => new Date(a.kickoff_time).getTime() - new Date(b.kickoff_time).getTime());
+            .sort((a, b) => {
+                const aNum = a.match_number ?? 0;
+                const bNum = b.match_number ?? 0;
+                const idxA = seq.indexOf(aNum);
+                const idxB = seq.indexOf(bNum);
+                if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                if (idxA !== -1) return -1;
+                if (idxB !== -1) return 1;
+                return aNum - bNum;
+            });
 
         roundMatches.forEach((m, pos) => {
             result.push({
@@ -194,15 +210,34 @@ export default function BracketBuilderPage() {
 
                 if (!nextMatch) return updated;
 
+                // Determine the loser of the semi-final if we are in semi-final round
+                let loserTeam: TeamSlot | null = null;
+                if (match.round === "Semi-final") {
+                    if (pickedTeam.name === match.home?.name) {
+                        loserTeam = match.away;
+                    } else if (pickedTeam.name === match.away?.name) {
+                        loserTeam = match.home;
+                    }
+                }
+
                 // Place the pick into next round's slot (update bracketSlots)
                 setBracketSlots(prevSlots =>
                     prevSlots.map(slot => {
-                        if (slot.id !== nextMatch.id) return slot;
-                        if (isHome) {
-                            return { ...slot, home: pickedTeam };
-                        } else {
-                            return { ...slot, away: pickedTeam };
+                        if (slot.id === nextMatch.id) {
+                            if (isHome) {
+                                return { ...slot, home: pickedTeam };
+                            } else {
+                                return { ...slot, away: pickedTeam };
+                            }
                         }
+                        if (match.round === "Semi-final" && slot.isThirdPlace) {
+                            if (isHome) {
+                                return { ...slot, home: loserTeam };
+                            } else {
+                                return { ...slot, away: loserTeam };
+                            }
+                        }
+                        return slot;
                     })
                 );
 
@@ -215,6 +250,18 @@ export default function BracketBuilderPage() {
                         // Clear downstream cascade — remove nextMatch pick and everything further
                         const toClear = collectDownstreamIds(nextMatch.id, bracketSlots);
                         toClear.forEach(id => delete updated[id]);
+                    }
+                }
+
+                // Also clear third place pick if the loser changes
+                if (match.round === "Semi-final") {
+                    const thirdPlaceMatch = bracketSlots.find(s => s.isThirdPlace);
+                    if (thirdPlaceMatch && loserTeam) {
+                        const oldPickInThird = updated[thirdPlaceMatch.id];
+                        const previousLoser = isHome ? thirdPlaceMatch.home?.name : thirdPlaceMatch.away?.name;
+                        if (oldPickInThird && oldPickInThird === previousLoser && previousLoser !== loserTeam.name) {
+                            delete updated[thirdPlaceMatch.id];
+                        }
                     }
                 }
 

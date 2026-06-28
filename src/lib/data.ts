@@ -31,6 +31,7 @@ export type Match = {
     away_flag: string;
     group: string;
     stadium: string;
+    match_number?: number;
     goals1?: Goal[];
     goals2?: Goal[];
 };
@@ -65,7 +66,7 @@ export async function fetchMatches(force = false): Promise<Match[]> {
                 // Select only specific columns to optimize performance and reduce bandwidth
                 const matchesPromise = supabase
                     .from('matches')
-                    .select('id, round, home_team, away_team, kickoff_time, status, home_score, away_score, group_name, stadium')
+                    .select('id, round, home_team, away_team, kickoff_time, status, home_score, away_score, group_name, stadium, match_number')
                     .order('kickoff_time', { ascending: true });
 
                 const timeoutPromise = new Promise<{ data: null; error: { message: string } }>((_, reject) =>
@@ -81,8 +82,9 @@ export async function fetchMatches(force = false): Promise<Match[]> {
                     status: Match['status'];
                     home_score: number | null;
                     away_score: number | null;
-                    group_name?: string;
-                    stadium?: string;
+                    group_name: string | null;
+                    stadium: string | null;
+                    match_number: number | null;
                 }
 
                 const result = await Promise.race([
@@ -128,6 +130,7 @@ export async function fetchMatches(force = false): Promise<Match[]> {
                         away_flag: awayTeamInfo?.flag_icon || "🚩",
                         group: m.group_name || homeTeamInfo?.group || "Unknown",
                         stadium: m.stadium || "Unknown",
+                        match_number: m.match_number ?? undefined,
                         goals1: isReversed ? jsonMatch?.goals2 : jsonMatch?.goals1,
                         goals2: isReversed ? jsonMatch?.goals1 : jsonMatch?.goals2,
                     };
