@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { fetchMatches, TEAMS, type Match } from "@/lib/data";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2, Save, Trophy, Info, CheckCircle2, XCircle, Lock } from "lucide-react";
+import { Loader2, Save, Trophy, Info, CheckCircle2, XCircle, Lock, Printer } from "lucide-react";
 import { toast } from "sonner";
 import { Flag } from "@/components/flag";
 
@@ -151,6 +151,11 @@ export default function BracketBuilderPage() {
     const [picks, setPicks] = useState<BracketPicks>({});
     const [savedPicks, setSavedPicks] = useState<BracketPicks>({});
     const [activeRound, setActiveRound] = useState<KnockoutRound | "All">("All");
+    const printRef = useRef<HTMLDivElement>(null);
+
+    const handlePrint = () => {
+        window.print();
+    };
 
     // Load matches and saved bracket
     useEffect(() => {
@@ -314,6 +319,23 @@ export default function BracketBuilderPage() {
 
     return (
         <div className="container mx-auto px-4 py-8 max-w-full">
+            {/* Print styles injected inline */}
+            <style>{`
+                @media print {
+                    /* Hide everything but the bracket */
+                    nav, header, footer,
+                    .no-print { display: none !important; }
+                    body { background: white !important; color: black !important; }
+                    .print-bracket {
+                        width: 100% !important;
+                        overflow: visible !important;
+                        padding: 0 !important;
+                    }
+                    /* Force colour cards to print */
+                    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                    @page { size: A3 landscape; margin: 10mm; }
+                }
+            `}</style>
             {/* Header */}
             <div className="mb-6 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                 <div>
@@ -359,11 +381,21 @@ export default function BracketBuilderPage() {
                             Sign in to save your bracket
                         </div>
                     )}
+
+                    {/* Print / Download PDF — available to all users */}
+                    <Button
+                        onClick={handlePrint}
+                        variant="outline"
+                        className="font-bold gap-2 no-print"
+                    >
+                        <Printer className="w-4 h-4" />
+                        Print / Save PDF
+                    </Button>
                 </div>
             </div>
 
             {/* Info Banner */}
-            <div className="flex items-start gap-3 bg-blue-500/10 border border-blue-500/20 rounded-xl px-4 py-3 mb-6 text-sm text-blue-700 dark:text-blue-300">
+            <div className="no-print flex items-start gap-3 bg-blue-500/10 border border-blue-500/20 rounded-xl px-4 py-3 mb-6 text-sm text-blue-700 dark:text-blue-300">
                 <Info className="w-4 h-4 mt-0.5 shrink-0" />
                 <span>
                     Click a team to pick them as the winner. Their name will advance to the next round.
@@ -372,7 +404,7 @@ export default function BracketBuilderPage() {
             </div>
 
             {/* Round Tabs */}
-            <div className="flex gap-2 overflow-x-auto pb-3 mb-6 scrollbar-hide">
+            <div className="no-print flex gap-2 overflow-x-auto pb-3 mb-6 scrollbar-hide">
                 <button
                     onClick={() => setActiveRound("All")}
                     className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap border transition-all duration-200 ${activeRound === "All"
@@ -397,72 +429,152 @@ export default function BracketBuilderPage() {
             </div>
 
             {/* Bracket View */}
-            <div className="w-full overflow-x-auto pb-8">
-                <div className={`flex gap-5 ${activeRound === "All" ? "min-w-max items-stretch" : "flex-wrap justify-center items-start"}`}>
-                    {visibleRounds.map((roundName) => {
-                        const roundMatchSlots = bracketSlots
-                            .filter(m => m.round === roundName && !m.isThirdPlace)
-                            .sort((a, b) => a.position - b.position);
+            <div ref={printRef} className="print-bracket w-full overflow-x-auto pb-8">
+                {activeRound === "All" ? (
+                    // Split Bracket Layout (Left Side vs Right Side)
+                    <div className="flex gap-6 min-w-max items-stretch px-4">
+                        {/* 1. R32 Left */}
+                        <BracketColumn
+                            title="Round of 32 (Left)"
+                            matches={bracketSlots.filter(m => m.round === "Round of 32" && m.position < 8)}
+                            picks={picks}
+                            onPick={handlePick}
+                        />
+                        {/* 2. R16 Left */}
+                        <BracketColumn
+                            title="Round of 16 (Left)"
+                            matches={bracketSlots.filter(m => m.round === "Round of 16" && m.position < 4)}
+                            picks={picks}
+                            onPick={handlePick}
+                        />
+                        {/* 3. QF Left */}
+                        <BracketColumn
+                            title="Quarter-final (Left)"
+                            matches={bracketSlots.filter(m => m.round === "Quarter-final" && m.position < 2)}
+                            picks={picks}
+                            onPick={handlePick}
+                        />
+                        {/* 4. SF Left */}
+                        <BracketColumn
+                            title="Semi-final (Left)"
+                            matches={bracketSlots.filter(m => m.round === "Semi-final" && m.position === 0)}
+                            picks={picks}
+                            onPick={handlePick}
+                        />
 
-                        const thirdPlaceSlots = roundName === "Final"
-                            ? bracketSlots.filter(m => m.isThirdPlace)
-                            : [];
-
-                        return (
-                            <div
-                                key={roundName}
-                                className={`flex flex-col gap-3 ${activeRound === "All" ? "w-[230px]" : "w-[280px]"}`}
-                            >
-                                {/* Round Header */}
-                                <div
-                                    className={`text-xs font-black py-2 px-3 rounded-xl text-center uppercase tracking-widest border transition-all cursor-pointer ${activeRound === roundName
-                                        ? "bg-primary text-primary-foreground border-primary"
-                                        : "bg-secondary/60 border-border/50 text-muted-foreground hover:bg-secondary"
-                                        }`}
-                                    onClick={() => setActiveRound(activeRound === roundName ? "All" : roundName)}
-                                >
-                                    {roundName}
+                        {/* 5. Center (Finals + 3rd Place) */}
+                        <div className="flex flex-col gap-3 w-[260px] justify-between py-8">
+                            <div className="flex flex-col gap-3 justify-center flex-1">
+                                <div className="text-xs font-black py-2 px-3 rounded-xl text-center uppercase tracking-widest bg-primary text-primary-foreground border border-primary">
+                                    Final
                                 </div>
-
-                                {/* Matches */}
-                                <div className={`flex flex-col flex-1 gap-3 ${activeRound === "All" ? "justify-around" : "justify-start"}`}>
-                                    {roundMatchSlots.map((match) => (
+                                {(() => {
+                                    const m = bracketSlots.find(m => m.round === "Final" && !m.isThirdPlace);
+                                    return m ? (
                                         <BracketMatchCard
-                                            key={match.id}
-                                            match={match}
-                                            pick={picks[match.id]}
+                                            match={m}
+                                            pick={picks[m.id]}
                                             onPick={handlePick}
                                         />
-                                    ))}
+                                    ) : (
+                                        <div className="text-center text-muted-foreground text-xs italic py-4">TBD</div>
+                                    );
+                                })()}
+                            </div>
 
-                                    {roundMatchSlots.length === 0 && (
-                                        <div className="text-center text-muted-foreground text-xs italic py-4">
-                                            Matches TBD
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Third Place Playoff (shown in Final column) */}
-                                {thirdPlaceSlots.length > 0 && (
-                                    <div className="mt-4 flex flex-col gap-2">
+                            {/* Third Place playoff */}
+                            {(() => {
+                                const m = bracketSlots.find(m => m.isThirdPlace);
+                                return m ? (
+                                    <div className="mt-8 flex flex-col gap-2">
                                         <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest text-center">
-                                            🥉 3rd Place
+                                            🥉 3rd Place Playoff
                                         </div>
-                                        {thirdPlaceSlots.map(match => (
-                                            <BracketMatchCard
-                                                key={match.id}
-                                                match={match}
-                                                pick={picks[match.id]}
-                                                onPick={handlePick}
-                                                isThirdPlace
-                                            />
-                                        ))}
+                                        <BracketMatchCard
+                                            match={m}
+                                            pick={picks[m.id]}
+                                            onPick={handlePick}
+                                            isThirdPlace
+                                        />
                                     </div>
-                                )}
+                                ) : null;
+                            })()}
+                        </div>
+
+                        {/* 6. SF Right */}
+                        <BracketColumn
+                            title="Semi-final (Right)"
+                            matches={bracketSlots.filter(m => m.round === "Semi-final" && m.position === 1)}
+                            picks={picks}
+                            onPick={handlePick}
+                        />
+                        {/* 7. QF Right */}
+                        <BracketColumn
+                            title="Quarter-final (Right)"
+                            matches={bracketSlots.filter(m => m.round === "Quarter-final" && m.position >= 2)}
+                            picks={picks}
+                            onPick={handlePick}
+                        />
+                        {/* 8. R16 Right */}
+                        <BracketColumn
+                            title="Round of 16 (Right)"
+                            matches={bracketSlots.filter(m => m.round === "Round of 16" && m.position >= 4)}
+                            picks={picks}
+                            onPick={handlePick}
+                        />
+                        {/* 9. R32 Right */}
+                        <BracketColumn
+                            title="Round of 32 (Right)"
+                            matches={bracketSlots.filter(m => m.round === "Round of 32" && m.position >= 8)}
+                            picks={picks}
+                            onPick={handlePick}
+                        />
+                    </div>
+                ) : (() => {
+                    const splitRounds = ["Round of 32", "Round of 16", "Quarter-final"];
+                    const isSplit = splitRounds.includes(activeRound);
+                    const allRoundMatches = bracketSlots
+                        .filter(m => m.round === activeRound && !m.isThirdPlace)
+                        .sort((a, b) => a.position - b.position);
+                    const half = Math.ceil(allRoundMatches.length / 2);
+                    const leftMatches = allRoundMatches.slice(0, half);
+                    const rightMatches = allRoundMatches.slice(half);
+
+                    if (isSplit) {
+                        return (
+                            <div className="flex gap-6 justify-center items-start px-4">
+                                <BracketColumn
+                                    title={`${activeRound} (Left)`}
+                                    matches={leftMatches}
+                                    picks={picks}
+                                    onPick={handlePick}
+                                    widthClass="w-[280px]"
+                                />
+                                <BracketColumn
+                                    title={`${activeRound} (Right)`}
+                                    matches={rightMatches}
+                                    picks={picks}
+                                    onPick={handlePick}
+                                    widthClass="w-[280px]"
+                                />
                             </div>
                         );
-                    })}
-                </div>
+                    }
+
+                    return (
+                        // SF / Final — single centred column
+                        <div className="flex justify-center items-start px-4">
+                            <BracketColumn
+                                title={activeRound}
+                                matches={allRoundMatches}
+                                picks={picks}
+                                onPick={handlePick}
+                                widthClass="w-[320px]"
+                                thirdPlaceMatches={activeRound === "Final" ? bracketSlots.filter(m => m.isThirdPlace) : []}
+                            />
+                        </div>
+                    );
+                })()}
             </div>
 
             {/* Champion Banner */}
@@ -676,4 +788,61 @@ function collectDownstreamIds(startMatchId: string, slots: BracketMatch[]): stri
     }
 
     return result;
+}
+
+// ─── BracketColumn Component ───────────────────────────────────────────────────
+
+function BracketColumn({
+    title,
+    matches,
+    picks,
+    onPick,
+    widthClass = "w-[220px]",
+    thirdPlaceMatches = []
+}: {
+    title: string;
+    matches: BracketMatch[];
+    picks: BracketPicks;
+    onPick: (matchId: string, team: TeamSlot) => void;
+    widthClass?: string;
+    thirdPlaceMatches?: BracketMatch[];
+}) {
+    return (
+        <div className={`flex flex-col gap-3 ${widthClass}`}>
+            <div className="text-xs font-black py-2 px-3 rounded-xl text-center uppercase tracking-widest bg-secondary/60 border border-border/50 text-muted-foreground">
+                {title}
+            </div>
+            <div className={`flex flex-col flex-1 justify-around gap-2 py-2 min-h-[600px]`}>
+                {matches.map((match) => (
+                    <BracketMatchCard
+                        key={match.id}
+                        match={match}
+                        pick={picks[match.id]}
+                        onPick={onPick}
+                    />
+                ))}
+                {matches.length === 0 && (
+                    <div className="text-center text-muted-foreground text-xs italic py-4">
+                        Matches TBD
+                    </div>
+                )}
+            </div>
+            {thirdPlaceMatches.length > 0 && (
+                <div className="mt-4 flex flex-col gap-2">
+                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest text-center">
+                        🥉 3rd Place Playoff
+                    </div>
+                    {thirdPlaceMatches.map(match => (
+                        <BracketMatchCard
+                            key={match.id}
+                            match={match}
+                            pick={picks[match.id]}
+                            onPick={onPick}
+                            isThirdPlace
+                        />
+                    ))}
+                </div>
+            )}
+        </div>
+    );
 }
