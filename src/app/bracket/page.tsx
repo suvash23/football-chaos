@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { fetchMatches, TEAMS, type Match } from "@/lib/data";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2, Save, Trophy, Info, CheckCircle2, XCircle, Lock } from "lucide-react";
+import { Loader2, Save, Trophy, Info, CheckCircle2, XCircle, Lock, Printer } from "lucide-react";
 import { toast } from "sonner";
 import { Flag } from "@/components/flag";
 
@@ -151,6 +151,11 @@ export default function BracketBuilderPage() {
     const [picks, setPicks] = useState<BracketPicks>({});
     const [savedPicks, setSavedPicks] = useState<BracketPicks>({});
     const [activeRound, setActiveRound] = useState<KnockoutRound | "All">("All");
+    const printRef = useRef<HTMLDivElement>(null);
+
+    const handlePrint = () => {
+        window.print();
+    };
 
     // Load matches and saved bracket
     useEffect(() => {
@@ -314,6 +319,23 @@ export default function BracketBuilderPage() {
 
     return (
         <div className="container mx-auto px-4 py-8 max-w-full">
+            {/* Print styles injected inline */}
+            <style>{`
+                @media print {
+                    /* Hide everything but the bracket */
+                    nav, header, footer,
+                    .no-print { display: none !important; }
+                    body { background: white !important; color: black !important; }
+                    .print-bracket {
+                        width: 100% !important;
+                        overflow: visible !important;
+                        padding: 0 !important;
+                    }
+                    /* Force colour cards to print */
+                    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                    @page { size: A3 landscape; margin: 10mm; }
+                }
+            `}</style>
             {/* Header */}
             <div className="mb-6 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                 <div>
@@ -359,11 +381,21 @@ export default function BracketBuilderPage() {
                             Sign in to save your bracket
                         </div>
                     )}
+
+                    {/* Print / Download PDF — available to all users */}
+                    <Button
+                        onClick={handlePrint}
+                        variant="outline"
+                        className="font-bold gap-2 no-print"
+                    >
+                        <Printer className="w-4 h-4" />
+                        Print / Save PDF
+                    </Button>
                 </div>
             </div>
 
             {/* Info Banner */}
-            <div className="flex items-start gap-3 bg-blue-500/10 border border-blue-500/20 rounded-xl px-4 py-3 mb-6 text-sm text-blue-700 dark:text-blue-300">
+            <div className="no-print flex items-start gap-3 bg-blue-500/10 border border-blue-500/20 rounded-xl px-4 py-3 mb-6 text-sm text-blue-700 dark:text-blue-300">
                 <Info className="w-4 h-4 mt-0.5 shrink-0" />
                 <span>
                     Click a team to pick them as the winner. Their name will advance to the next round.
@@ -372,7 +404,7 @@ export default function BracketBuilderPage() {
             </div>
 
             {/* Round Tabs */}
-            <div className="flex gap-2 overflow-x-auto pb-3 mb-6 scrollbar-hide">
+            <div className="no-print flex gap-2 overflow-x-auto pb-3 mb-6 scrollbar-hide">
                 <button
                     onClick={() => setActiveRound("All")}
                     className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap border transition-all duration-200 ${activeRound === "All"
@@ -397,7 +429,7 @@ export default function BracketBuilderPage() {
             </div>
 
             {/* Bracket View */}
-            <div className="w-full overflow-x-auto pb-8">
+            <div ref={printRef} className="print-bracket w-full overflow-x-auto pb-8">
                 {activeRound === "All" ? (
                     // Split Bracket Layout (Left Side vs Right Side)
                     <div className="flex gap-6 min-w-max items-stretch px-4">
