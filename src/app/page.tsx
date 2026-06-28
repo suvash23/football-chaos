@@ -109,7 +109,7 @@ export default async function Home() {
           <Card className="lg:col-span-3 overflow-hidden border-border/50 bg-card/70 backdrop-blur-3xl shadow-2xl flex flex-col">
             <CardHeader className="text-center pb-2 border-b border-border/10">
               <CardTitle className="text-sm font-black uppercase tracking-[0.3em] text-primary italic flex items-center justify-center gap-2">
-                <Zap className="h-4 w-4 fill-primary animate-pulse" /> Tournament in Progress
+                <Zap className="h-4 w-4 fill-primary animate-pulse" /> Knockouts in Progress
               </CardTitle>
             </CardHeader>
             <CardContent className="py-12 flex-1 flex flex-col items-center justify-center gap-8 text-center px-4">
@@ -124,14 +124,14 @@ export default async function Home() {
               </div>
 
               <div className="flex flex-wrap items-center justify-center gap-4 w-full max-w-4xl px-6 pt-4">
-                <Link href="/fixtures" className="flex-1 min-w-[280px]">
+                <Link href="/bracket" className="flex-1 min-w-[280px]">
                   <Button size="lg" className="w-full rounded-2xl px-10 text-2xl font-black h-20 shadow-2xl hover:scale-[1.03] transition-all italic uppercase tracking-wider bg-yellow-400 hover:bg-yellow-300 text-black border-4 border-black group">
-                    Play Now <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                    Build Bracket <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-                <Link href="/groups" className="flex-1 min-w-[280px]">
+                <Link href="/fixtures" className="flex-1 min-w-[280px]">
                   <Button variant="outline" size="lg" className="w-full rounded-2xl px-10 text-2xl font-black h-20 backdrop-blur-md bg-muted/50 transition-all italic uppercase tracking-wider hover:bg-muted/80 border-2 border-border/80">
-                    Squad Stats
+                    View Fixtures
                   </Button>
                 </Link>
               </div>
