@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { fetchMatches, TEAMS, type Match } from "@/lib/data";
+import { fetchMatches, TEAMS, type Match, type Goal } from "@/lib/data";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import Image from "next/image";
@@ -40,6 +40,14 @@ interface BracketMatch {
     actualAwayScore: number | null;
     status: string;
     isThirdPlace: boolean;
+    goals1?: Goal[];
+    goals2?: Goal[];
+    scoreDetail?: {
+        ht?: [number, number];
+        ft?: [number, number];
+        et?: [number, number];
+        p?: [number, number];
+    };
 }
 
 type BracketPicks = Record<string, string>; // matchId → pickedTeamName
@@ -56,7 +64,14 @@ function getWinner(match: BracketMatch): string | null {
     if (match.actualHomeScore === null || match.actualAwayScore === null) return null;
     if (match.actualHomeScore > match.actualAwayScore) return match.home?.name ?? null;
     if (match.actualAwayScore > match.actualHomeScore) return match.away?.name ?? null;
-    return null; // Draw (shouldn't happen in KO)
+
+    // Penalties decider
+    if (match.scoreDetail?.p) {
+        const [hp, ap] = match.scoreDetail.p;
+        if (hp > ap) return match.home?.name ?? null;
+        if (ap > hp) return match.away?.name ?? null;
+    }
+    return null; // Draw
 }
 
 function pickStatus(
@@ -111,6 +126,9 @@ function buildBracketSlots(matches: Match[]): BracketMatch[] {
                 actualAwayScore: m.away_score,
                 status: m.status,
                 isThirdPlace: false,
+                goals1: m.goals1,
+                goals2: m.goals2,
+                scoreDetail: m.score_detail,
             });
         });
     });
@@ -128,6 +146,9 @@ function buildBracketSlots(matches: Match[]): BracketMatch[] {
             actualAwayScore: m.away_score,
             status: m.status,
             isThirdPlace: true,
+            goals1: m.goals1,
+            goals2: m.goals2,
+            scoreDetail: m.score_detail,
         });
     });
 
@@ -635,12 +656,12 @@ function BracketMatchCard({
                         isLoser={isFinished && actualWinner !== null && actualWinner !== match.home?.name}
                         isPicked={pick === match.home?.name}
                         status={pick === match.home?.name ? status : "none"}
-                        isFinished={isFinished}
                         isLocked={isFinished}
                         onClick={() => {
                             if (!match.home || isFinished) return;
                             onPick(match.id, match.home);
                         }}
+                        goals={match.goals1}
                     />
                     <TeamRow
                         team={match.away}
@@ -649,14 +670,35 @@ function BracketMatchCard({
                         isLoser={isFinished && actualWinner !== null && actualWinner !== match.away?.name}
                         isPicked={pick === match.away?.name}
                         status={pick === match.away?.name ? status : "none"}
-                        isFinished={isFinished}
                         isLocked={isFinished}
                         onClick={() => {
                             if (!match.away || isFinished) return;
                             onPick(match.id, match.away);
                         }}
+                        goals={match.goals2}
                     />
                 </div>
+
+                {/* Score details (HT, FT, ET, Penalties) */}
+                {(() => {
+                    const sd = match.scoreDetail;
+                    if (!sd) return null;
+                    const parts: string[] = [];
+                    if (sd.ht) parts.push(`HT ${sd.ht[0]}-${sd.ht[1]}`);
+                    if (sd.ft && (sd.et || sd.p)) parts.push(`FT ${sd.ft[0]}-${sd.ft[1]}`);
+                    if (sd.et) parts.push(`AET ${sd.et[0]}-${sd.et[1]}`);
+                    if (sd.p) parts.push(`PEN ${sd.p[0]}-${sd.p[1]}`);
+                    if (parts.length === 0) return null;
+                    return (
+                        <div className="mt-1.5 pt-1.5 border-t border-border/30 flex flex-wrap justify-center gap-1.5 text-[8px] font-bold text-muted-foreground uppercase tracking-widest">
+                            {parts.map((p, idx) => (
+                                <span key={idx} className="bg-muted px-1.5 py-0.5 rounded border border-border/10 dark:bg-zinc-800/80">
+                                    {p}
+                                </span>
+                            ))}
+                        </div>
+                    );
+                })()}
             </div>
         </Card>
     );
@@ -673,6 +715,7 @@ function TeamRow({
     status,
     isLocked,
     onClick,
+    goals,
 }: {
     team: TeamSlot | null;
     score: number | null;
@@ -680,9 +723,9 @@ function TeamRow({
     isWinner: boolean;
     isLoser: boolean;
     status: "correct" | "wrong" | "pending" | "none";
-    isFinished: boolean;
     isLocked: boolean;
     onClick: () => void;
+    goals?: Goal[];
 }) {
     if (!team) {
         return (
@@ -703,23 +746,34 @@ function TeamRow({
     else if (isLoser) rowColor = "opacity-50";
 
     return (
-        <div className={`${rowBase} ${clickable} ${rowColor}`} onClick={onClick} title={isLocked ? undefined : `Pick ${team.name}`}>
-            <div className="flex items-center gap-1.5 min-w-0">
-                <Flag emoji={team.flag} size={16} />
-                <span className={`text-[11px] font-semibold truncate max-w-[90px] ${isPicked ? "font-black" : ""}`}>
-                    {team.name}
-                </span>
-            </div>
-            <div className="flex items-center gap-1 shrink-0">
-                {score !== null && (
-                    <span className="font-black text-xs bg-secondary/60 px-1.5 py-0.5 rounded min-w-[20px] text-center">
-                        {score}
+        <div className={`${rowBase} ${clickable} ${rowColor} flex-col !items-stretch gap-0.5`} onClick={onClick} title={isLocked ? undefined : `Pick ${team.name}`}>
+            <div className="flex items-center justify-between min-w-0">
+                <div className="flex items-center gap-1.5 min-w-0">
+                    <Flag emoji={team.flag} size={16} />
+                    <span className={`text-[11px] font-semibold truncate max-w-[120px] ${isPicked ? "font-black" : ""}`}>
+                        {team.name}
                     </span>
-                )}
-                {isPicked && status === "correct" && <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />}
-                {isPicked && status === "wrong" && <XCircle className="w-3.5 h-3.5 text-red-500" />}
-                {isPicked && status === "pending" && <span className="w-3 h-3 rounded-full bg-primary/60 inline-block" />}
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                    {score !== null && (
+                        <span className="font-black text-xs bg-secondary/60 px-1.5 py-0.5 rounded min-w-[20px] text-center">
+                            {score}
+                        </span>
+                    )}
+                    {isPicked && status === "correct" && <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />}
+                    {isPicked && status === "wrong" && <XCircle className="w-3.5 h-3.5 text-red-500" />}
+                    {isPicked && status === "pending" && <span className="w-3 h-3 rounded-full bg-primary/60 inline-block" />}
+                </div>
             </div>
+            {goals && goals.length > 0 && (
+                <div className="flex flex-wrap gap-1 pl-5 pt-0.5 pb-0.5">
+                    {goals.map((g, i) => (
+                        <span key={i} className="text-[8px] text-muted-foreground/75 bg-muted/30 px-1.5 py-0.5 rounded flex items-center gap-0.5 scale-95 origin-left">
+                            ⚽ {g.name} {g.minute}&apos;{g.penalty ? '(P)' : ''}{g.owngoal ? '(OG)' : ''}
+                        </span>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }
