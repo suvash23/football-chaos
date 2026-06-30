@@ -79,7 +79,8 @@ export default async function Home() {
               "/heroes/legends-1.png",
               "/heroes/legends-2.png",
               "/heroes/legends-3.png",
-              "/heroes/legends-4.png"
+              "/heroes/legends-4.png",
+              "/heroes/legends-5.png"
             ];
             return heroes[Math.floor(Math.random() * heroes.length)];
           })()}
