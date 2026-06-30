@@ -382,20 +382,39 @@ export default function PredictionsPage() {
                                 {/* Centre */}
                                 <div className="flex-1 flex flex-col items-center gap-1 text-center z-10">
                                     {(isFinished || isLive) && match.home_score !== null ? (
-                                        <div className={`flex items-center gap-3 px-6 py-3 rounded-2xl text-4xl font-black italic tracking-tighter relative shadow-inner ${isLive
-                                            ? 'bg-green-600 text-white shadow-green-900/20'
-                                            : 'bg-secondary text-foreground border border-border/10'
-                                            }`}>
-                                            {isLive && (
-                                                <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4">
-                                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                                    <span className="relative inline-flex rounded-full h-4 w-4 bg-green-500 border-2 border-white"></span>
-                                                </span>
+                                        <>
+                                            <div className={`flex items-center gap-3 px-6 py-3 rounded-2xl text-4xl font-black italic tracking-tighter relative shadow-inner ${isLive
+                                                ? 'bg-green-600 text-white shadow-green-900/20'
+                                                : 'bg-secondary text-foreground border border-border/10'
+                                                }`}>
+                                                {isLive && (
+                                                    <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4">
+                                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                                        <span className="relative inline-flex rounded-full h-4 w-4 bg-green-500 border-2 border-white"></span>
+                                                    </span>
+                                                )}
+                                                <span>{match.home_score}</span>
+                                                <span className={`text-2xl ${isLive ? 'text-white/40' : 'text-muted-foreground/30'}`}>–</span>
+                                                <span>{match.away_score}</span>
+                                            </div>
+                                            {match.score_detail && (
+                                                <div className="flex flex-wrap justify-center gap-1 mt-2 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+                                                    {(() => {
+                                                        const sd = match.score_detail;
+                                                        const parts: string[] = [];
+                                                        if (sd.ht) parts.push(`HT ${sd.ht[0]}-${sd.ht[1]}`);
+                                                        if (sd.ft && (sd.et || sd.p)) parts.push(`FT ${sd.ft[0]}-${sd.ft[1]}`);
+                                                        if (sd.et) parts.push(`AET ${sd.et[0]}-${sd.et[1]}`);
+                                                        if (sd.p) parts.push(`PEN ${sd.p[0]}-${sd.p[1]}`);
+                                                        return parts.map((p, idx) => (
+                                                            <span key={idx} className="bg-muted px-1.5 py-0.5 rounded leading-none border border-border/10 dark:bg-zinc-800/80">
+                                                                {p}
+                                                            </span>
+                                                        ));
+                                                    })()}
+                                                </div>
                                             )}
-                                            <span>{match.home_score}</span>
-                                            <span className={`text-2xl ${isLive ? 'text-white/40' : 'text-muted-foreground/30'}`}>–</span>
-                                            <span>{match.away_score}</span>
-                                        </div>
+                                        </>
                                     ) : (
                                         <>
                                             <span className="text-[9px] font-black uppercase tracking-[0.35em] text-muted-foreground/50">Kick-Off</span>

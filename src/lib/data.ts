@@ -13,7 +13,12 @@ export type Goal = {
 export interface JsonMatch {
     team1: string;
     team2: string;
-    score?: { ft: [number, number] };
+    score?: {
+        ht?: [number, number];
+        ft?: [number, number];
+        et?: [number, number];
+        p?: [number, number];
+    };
     goals1?: Goal[];
     goals2?: Goal[];
 }
@@ -34,6 +39,12 @@ export type Match = {
     match_number?: number;
     goals1?: Goal[];
     goals2?: Goal[];
+    score_detail?: {
+        ht?: [number, number];
+        ft?: [number, number];
+        et?: [number, number];
+        p?: [number, number];
+    };
 };
 
 type TeamJson = { name: string; flag_icon: string;[key: string]: unknown };
@@ -117,6 +128,13 @@ export async function fetchMatches(force = false): Promise<Match[]> {
 
                     const isReversed = jsonMatch && jsonMatch.team1 !== m.home_team;
 
+                    const score_detail = jsonMatch?.score ? {
+                        ht: jsonMatch.score.ht ? (isReversed ? [jsonMatch.score.ht[1], jsonMatch.score.ht[0]] : jsonMatch.score.ht) as [number, number] : undefined,
+                        ft: jsonMatch.score.ft ? (isReversed ? [jsonMatch.score.ft[1], jsonMatch.score.ft[0]] : jsonMatch.score.ft) as [number, number] : undefined,
+                        et: jsonMatch.score.et ? (isReversed ? [jsonMatch.score.et[1], jsonMatch.score.et[0]] : jsonMatch.score.et) as [number, number] : undefined,
+                        p: jsonMatch.score.p ? (isReversed ? [jsonMatch.score.p[1], jsonMatch.score.p[0]] : jsonMatch.score.p) as [number, number] : undefined,
+                    } : undefined;
+
                     return {
                         id: m.id,
                         round: m.round,
@@ -133,6 +151,7 @@ export async function fetchMatches(force = false): Promise<Match[]> {
                         match_number: m.match_number ?? undefined,
                         goals1: isReversed ? jsonMatch?.goals2 : jsonMatch?.goals1,
                         goals2: isReversed ? jsonMatch?.goals1 : jsonMatch?.goals2,
+                        score_detail,
                     };
                 });
 
