@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Save, Trophy, Info, CheckCircle2, XCircle, Lock, Printer } from "lucide-react";
 import { toast } from "sonner";
 import { Flag } from "@/components/flag";
+import { format } from "date-fns";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -48,6 +49,7 @@ interface BracketMatch {
         et?: [number, number];
         p?: [number, number];
     };
+    kickoffTime?: string;
 }
 
 type BracketPicks = Record<string, string>; // matchId → pickedTeamName
@@ -129,6 +131,7 @@ function buildBracketSlots(matches: Match[]): BracketMatch[] {
                 goals1: m.goals1,
                 goals2: m.goals2,
                 scoreDetail: m.score_detail,
+                kickoffTime: m.kickoff_time,
             });
         });
     });
@@ -149,6 +152,7 @@ function buildBracketSlots(matches: Match[]): BracketMatch[] {
             goals1: m.goals1,
             goals2: m.goals2,
             scoreDetail: m.score_detail,
+            kickoffTime: m.kickoff_time,
         });
     });
 
@@ -637,13 +641,19 @@ function BracketMatchCard({
         <Card className="overflow-hidden border-border/50 bg-card/80 backdrop-blur shadow-md hover:shadow-xl transition-all duration-200 group">
             <div className="p-2">
                 {/* Match meta */}
-                <div className="text-[9px] text-muted-foreground font-semibold flex justify-between mb-1.5 pb-1.5 border-b border-border/50">
-                    <span className="uppercase tracking-wider">{isThirdPlace ? "3rd Place" : match.round}</span>
-                    {hasActiveScore && (
-                        <span className={`font-black ${match.status === "live" ? "text-green-500" : ""}`}>
-                            {match.status === "live" ? "🟢 LIVE" : ""}
-                            {match.status === "finished" ? "FINAL" : ""}
-                        </span>
+                <div className="text-[9px] text-muted-foreground font-semibold flex flex-col gap-0.5 mb-1.5 pb-1.5 border-b border-border/50">
+                    <div className="flex justify-between items-center w-full">
+                        <span className="uppercase tracking-wider font-bold">{isThirdPlace ? "3rd Place" : match.round}</span>
+                        {hasActiveScore && (
+                            <span className={`font-black ${match.status === "live" ? "text-green-500 animate-pulse" : ""}`}>
+                                {match.status === "live" ? "🟢 LIVE" : "FINAL"}
+                            </span>
+                        )}
+                    </div>
+                    {match.kickoffTime && (
+                        <div suppressHydrationWarning className="text-[8px] opacity-75 font-normal">
+                            {format(new Date(match.kickoffTime), "EEE MMM d, h:mm a")} <span className="opacity-60">Local</span>
+                        </div>
                     )}
                 </div>
 
