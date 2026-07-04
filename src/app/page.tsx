@@ -122,11 +122,11 @@ export default async function Home() {
             {/* Headline */}
             <div className="space-y-1">
               <h2 className="text-4xl md:text-7xl font-black uppercase italic tracking-tighter leading-none">
-                Round of 32 <span className="text-muted-foreground opacity-30">Is Here.</span><br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Survival of the Fittest. 🔥</span>
+                Round of 16 <span className="text-muted-foreground opacity-30">Is Here.</span><br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">The Elite Remain. ⚡</span>
               </h2>
               <p className="text-muted-foreground text-base md:text-lg font-bold uppercase tracking-widest opacity-80 max-w-3xl mx-auto pt-4">
-                32 teams remain. Every match is <span className="text-foreground italic underline decoration-primary decoration-4">sudden death</span> — one loss and you go home. No margin for error.
+                16 teams left standing. The noise gets louder, the stakes get higher — every ball, every minute, every tackle decides who makes <span className="text-foreground italic underline decoration-primary decoration-4">history</span>.
               </p>
             </div>
 
@@ -137,7 +137,7 @@ export default async function Home() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-widest">Knockouts Underway</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">Round of 16 Live</span>
               </div>
               <div className="flex items-center gap-3 bg-card/50 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-border/20">
                 <Zap className="h-4 w-4 text-yellow-400 fill-yellow-400" />
