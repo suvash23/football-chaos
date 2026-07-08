@@ -75,7 +75,7 @@ export default async function Home() {
         <Image
           src={(() => {
             const heroes = [
-              "/heroes/legends-2.png",
+              "/heroes/legends-3.png",
             ];
             return heroes[Math.floor(Math.random() * heroes.length)];
           })()}
