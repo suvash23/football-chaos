@@ -51,8 +51,8 @@ export default async function Home() {
       bg: "bg-green-500/10"
     },
     {
-      title: "World Cup Vault",
-      description: "Relive history. View interactive brackets and results from every tournament since 1930.",
+      title: "Tournament Vault",
+      description: "Relive history. View interactive brackets and results from Euros, Copa América, and World Cups.",
       icon: History,
       href: "/history",
       color: "text-yellow-400",

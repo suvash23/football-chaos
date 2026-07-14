@@ -1,0 +1,363 @@
+{
+ "name": "Copa América 2011",
+ "matches": [
+  {
+   "round": "Group A",
+   "date": "2011-07-01",
+   "team1": "Argentina",
+   "team2": "Bolivia",
+   "score": {
+    "ft": [
+     1,
+     1
+    ]
+   },
+   "group": "Group A"
+  },
+  {
+   "round": "Group A",
+   "date": "2011-07-02",
+   "team1": "Colombia",
+   "team2": "Costa Rica",
+   "score": {
+    "ft": [
+     1,
+     0
+    ]
+   },
+   "group": "Group A"
+  },
+  {
+   "round": "Group A",
+   "date": "2011-07-06",
+   "team1": "Argentina",
+   "team2": "Colombia",
+   "score": {
+    "ft": [
+     0,
+     0
+    ]
+   },
+   "group": "Group A"
+  },
+  {
+   "round": "Group A",
+   "date": "2011-07-07",
+   "team1": "Bolivia",
+   "team2": "Costa Rica",
+   "score": {
+    "ft": [
+     0,
+     2
+    ]
+   },
+   "group": "Group A"
+  },
+  {
+   "round": "Group A",
+   "date": "2011-07-10",
+   "team1": "Colombia",
+   "team2": "Bolivia",
+   "score": {
+    "ft": [
+     2,
+     0
+    ]
+   },
+   "group": "Group A"
+  },
+  {
+   "round": "Group A",
+   "date": "2011-07-11",
+   "team1": "Argentina",
+   "team2": "Costa Rica",
+   "score": {
+    "ft": [
+     3,
+     0
+    ]
+   },
+   "group": "Group A"
+  },
+  {
+   "round": "Group B",
+   "date": "2011-07-03",
+   "team1": "Brazil",
+   "team2": "Venezuela",
+   "score": {
+    "ft": [
+     0,
+     0
+    ]
+   },
+   "group": "Group B"
+  },
+  {
+   "round": "Group B",
+   "date": "2011-07-03",
+   "team1": "Paraguay",
+   "team2": "Ecuador",
+   "score": {
+    "ft": [
+     0,
+     0
+    ]
+   },
+   "group": "Group B"
+  },
+  {
+   "round": "Group B",
+   "date": "2011-07-09",
+   "team1": "Brazil",
+   "team2": "Paraguay",
+   "score": {
+    "ft": [
+     2,
+     2
+    ]
+   },
+   "group": "Group B"
+  },
+  {
+   "round": "Group B",
+   "date": "2011-07-09",
+   "team1": "Venezuela",
+   "team2": "Ecuador",
+   "score": {
+    "ft": [
+     1,
+     0
+    ]
+   },
+   "group": "Group B"
+  },
+  {
+   "round": "Group B",
+   "date": "2011-07-13",
+   "team1": "Paraguay",
+   "team2": "Venezuela",
+   "score": {
+    "ft": [
+     3,
+     3
+    ]
+   },
+   "group": "Group B"
+  },
+  {
+   "round": "Group B",
+   "date": "2011-07-13",
+   "team1": "Brazil",
+   "team2": "Ecuador",
+   "score": {
+    "ft": [
+     4,
+     2
+    ]
+   },
+   "group": "Group B"
+  },
+  {
+   "round": "Group C",
+   "date": "2011-07-04",
+   "team1": "Uruguay",
+   "team2": "Peru",
+   "score": {
+    "ft": [
+     1,
+     1
+    ]
+   },
+   "group": "Group C"
+  },
+  {
+   "round": "Group C",
+   "date": "2011-07-04",
+   "team1": "Chile",
+   "team2": "Mexico",
+   "score": {
+    "ft": [
+     2,
+     1
+    ]
+   },
+   "group": "Group C"
+  },
+  {
+   "round": "Group C",
+   "date": "2011-07-08",
+   "team1": "Uruguay",
+   "team2": "Chile",
+   "score": {
+    "ft": [
+     1,
+     1
+    ]
+   },
+   "group": "Group C"
+  },
+  {
+   "round": "Group C",
+   "date": "2011-07-08",
+   "team1": "Peru",
+   "team2": "Mexico",
+   "score": {
+    "ft": [
+     1,
+     0
+    ]
+   },
+   "group": "Group C"
+  },
+  {
+   "round": "Group C",
+   "date": "2011-07-12",
+   "team1": "Chile",
+   "team2": "Peru",
+   "score": {
+    "ft": [
+     1,
+     0
+    ]
+   },
+   "group": "Group C"
+  },
+  {
+   "round": "Group C",
+   "date": "2011-07-12",
+   "team1": "Uruguay",
+   "team2": "Mexico",
+   "score": {
+    "ft": [
+     1,
+     0
+    ]
+   },
+   "group": "Group C"
+  },
+  {
+   "round": "Quarter-finals",
+   "date": "2011-07-16",
+   "team1": "Colombia",
+   "team2": "Peru",
+   "score": {
+    "et": [
+     0,
+     2
+    ],
+    "ft": [
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "round": "Quarter-finals",
+   "date": "2011-07-16",
+   "team1": "Argentina",
+   "team2": "Uruguay",
+   "score": {
+    "p": [
+     4,
+     5
+    ],
+    "et": [
+     1,
+     1
+    ],
+    "ft": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "round": "Quarter-finals",
+   "date": "2011-07-17",
+   "team1": "Brazil",
+   "team2": "Paraguay",
+   "score": {
+    "p": [
+     0,
+     2
+    ],
+    "et": [
+     0,
+     0
+    ],
+    "ft": [
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "round": "Quarter-finals",
+   "date": "2011-07-17",
+   "team1": "Chile",
+   "team2": "Venezuela",
+   "score": {
+    "ft": [
+     1,
+     2
+    ]
+   }
+  },
+  {
+   "round": "Semi-finals",
+   "date": "2011-07-19",
+   "team1": "Peru",
+   "team2": "Uruguay",
+   "score": {
+    "ft": [
+     0,
+     2
+    ]
+   }
+  },
+  {
+   "round": "Semi-finals",
+   "date": "2011-07-20",
+   "team1": "Paraguay",
+   "team2": "Venezuela",
+   "score": {
+    "p": [
+     5,
+     3
+    ],
+    "et": [
+     0,
+     0
+    ],
+    "ft": [
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "round": "Third place play-off",
+   "date": "2011-07-23",
+   "team1": "Peru",
+   "team2": "Venezuela",
+   "score": {
+    "ft": [
+     4,
+     1
+    ]
+   }
+  },
+  {
+   "round": "Final",
+   "date": "2011-07-24",
+   "team1": "Uruguay",
+   "team2": "Paraguay",
+   "score": {
+    "ft": [
+     3,
+     0
+    ]
+   }
+  }
+ ]
+}
