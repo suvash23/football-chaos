@@ -1,0 +1,747 @@
+{
+ "name": "Copa América 2021",
+ "matches": [
+  {
+   "round": "Group A",
+   "date": "2021-06-14",
+   "team1": "Argentina",
+   "team2": "Chile",
+   "score": {
+    "ft": [
+     1,
+     1
+    ]
+   },
+   "group": "Group A",
+   "ground": "Estádio Olímpico Nilton Santos, Rio de Janeiro",
+   "goals1": [
+    {
+     "name": "Messi",
+     "minute": 33
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Vargas",
+     "minute": 57
+    }
+   ]
+  },
+  {
+   "round": "Group A",
+   "date": "2021-06-14",
+   "team1": "Paraguay",
+   "team2": "Bolivia",
+   "score": {
+    "ft": [
+     3,
+     1
+    ]
+   },
+   "group": "Group A",
+   "ground": "Estádio Olímpico Pedro Ludovico, Goiânia",
+   "goals1": [
+    {
+     "name": "Kaku",
+     "minute": 62
+    },
+    {
+     "name": "Á. Romero",
+     "minute": 65
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Saavedra",
+     "minute": 10,
+     "penalty": true
+    }
+   ]
+  },
+  {
+   "round": "Group A",
+   "date": "2021-06-18",
+   "team1": "Chile",
+   "team2": "Bolivia",
+   "score": {
+    "ft": [
+     1,
+     0
+    ]
+   },
+   "group": "Group A",
+   "ground": "Arena Pantanal, Cuiabá",
+   "goals1": [
+    {
+     "name": "Brereton",
+     "minute": 10
+    }
+   ]
+  },
+  {
+   "round": "Group A",
+   "date": "2021-06-18",
+   "team1": "Argentina",
+   "team2": "Uruguay",
+   "score": {
+    "ft": [
+     1,
+     0
+    ]
+   },
+   "group": "Group A",
+   "ground": "Estádio Nacional Mané Garrincha, Brasília",
+   "goals1": [
+    {
+     "name": "Rodríguez",
+     "minute": 13
+    }
+   ]
+  },
+  {
+   "round": "Group A",
+   "date": "2021-06-21",
+   "team1": "Uruguay",
+   "team2": "Chile",
+   "score": {
+    "ft": [
+     1,
+     1
+    ]
+   },
+   "group": "Group A",
+   "ground": "Arena Pantanal, Cuiabá",
+   "goals1": [
+    {
+     "name": "Suárez",
+     "minute": 66
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Vargas",
+     "minute": 26
+    }
+   ]
+  },
+  {
+   "round": "Group A",
+   "date": "2021-06-21",
+   "team1": "Argentina",
+   "team2": "Paraguay",
+   "score": {
+    "ft": [
+     1,
+     0
+    ]
+   },
+   "group": "Group A",
+   "ground": "Estádio Nacional Mané Garrincha, Brasília",
+   "goals1": [
+    {
+     "name": "Gómez",
+     "minute": 10
+    }
+   ]
+  },
+  {
+   "round": "Group A",
+   "date": "2021-06-24",
+   "team1": "Bolivia",
+   "team2": "Uruguay",
+   "score": {
+    "ft": [
+     0,
+     2
+    ]
+   },
+   "group": "Group A",
+   "ground": "Arena Pantanal, Cuiabá",
+   "goals1": [
+    {
+     "name": "Quinteros",
+     "minute": 40,
+     "owngoal": true
+    },
+    {
+     "name": "Cavani",
+     "minute": 79
+    }
+   ]
+  },
+  {
+   "round": "Group A",
+   "date": "2021-06-24",
+   "team1": "Chile",
+   "team2": "Paraguay",
+   "score": {
+    "ft": [
+     0,
+     2
+    ]
+   },
+   "group": "Group A",
+   "ground": "Estádio Nacional Mané Garrincha, Brasília",
+   "goals1": [
+    {
+     "name": "Samudio",
+     "minute": 33
+    },
+    {
+     "name": "Almirón",
+     "minute": 58,
+     "penalty": true
+    }
+   ]
+  },
+  {
+   "round": "Group A",
+   "date": "2021-06-28",
+   "team1": "Uruguay",
+   "team2": "Paraguay",
+   "score": {
+    "ft": [
+     1,
+     0
+    ]
+   },
+   "group": "Group A",
+   "ground": "Estádio Olímpico Nilton Santos, Rio de Janeiro",
+   "goals1": [
+    {
+     "name": "Cavani",
+     "minute": 21,
+     "penalty": true
+    }
+   ]
+  },
+  {
+   "round": "Group A",
+   "date": "2021-06-28",
+   "team1": "Bolivia",
+   "team2": "Argentina",
+   "score": {
+    "ft": [
+     1,
+     4
+    ]
+   },
+   "group": "Group A",
+   "ground": "Arena Pantanal, Cuiabá",
+   "goals1": [
+    {
+     "name": "Saavedra",
+     "minute": 60
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Gómez",
+     "minute": 6
+    },
+    {
+     "name": "Messi",
+     "minute": 33,
+     "penalty": true
+    },
+    {
+     "name": "La. Martínez",
+     "minute": 65
+    }
+   ]
+  },
+  {
+   "round": "Group B",
+   "date": "2021-06-13",
+   "team1": "Brazil",
+   "team2": "Venezuela",
+   "score": {
+    "ft": [
+     3,
+     0
+    ]
+   },
+   "group": "Group B",
+   "ground": "Estádio Nacional Mané Garrincha, Brasília",
+   "goals1": [
+    {
+     "name": "Marquinhos",
+     "minute": 23
+    },
+    {
+     "name": "Neymar",
+     "minute": 64,
+     "penalty": true
+    },
+    {
+     "name": "Gabriel Barbosa",
+     "minute": 89
+    }
+   ]
+  },
+  {
+   "round": "Group B",
+   "date": "2021-06-13",
+   "team1": "Colombia",
+   "team2": "Ecuador",
+   "score": {
+    "ft": [
+     1,
+     0
+    ]
+   },
+   "group": "Group B",
+   "ground": "Arena Pantanal, Cuiabá",
+   "goals1": [
+    {
+     "name": "Cardona",
+     "minute": 42
+    }
+   ]
+  },
+  {
+   "round": "Group B",
+   "date": "2021-06-17",
+   "team1": "Colombia",
+   "team2": "Venezuela",
+   "score": {
+    "ft": [
+     0,
+     0
+    ]
+   },
+   "group": "Group B",
+   "ground": "Estádio Olímpico Pedro Ludovico, Goiânia"
+  },
+  {
+   "round": "Group B",
+   "date": "2021-06-17",
+   "team1": "Brazil",
+   "team2": "Peru",
+   "score": {
+    "ft": [
+     4,
+     0
+    ]
+   },
+   "group": "Group B",
+   "ground": "Estádio Olímpico Nilton Santos, Rio de Janeiro",
+   "goals1": [
+    {
+     "name": "Alex Sandro",
+     "minute": 12
+    },
+    {
+     "name": "Neymar",
+     "minute": 68
+    },
+    {
+     "name": "Ribeiro",
+     "minute": 89
+    },
+    {
+     "name": "Richarlison",
+     "minute": 90
+    }
+   ]
+  },
+  {
+   "round": "Group B",
+   "date": "2021-06-20",
+   "team1": "Venezuela",
+   "team2": "Ecuador",
+   "score": {
+    "ft": [
+     2,
+     2
+    ]
+   },
+   "group": "Group B",
+   "ground": "Estádio Olímpico Nilton Santos, Rio de Janeiro",
+   "goals1": [
+    {
+     "name": "Castillo",
+     "minute": 51
+    },
+    {
+     "name": "Hernández",
+     "minute": 90
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Ay. Preciado",
+     "minute": 39
+    },
+    {
+     "name": "Plata",
+     "minute": 71
+    }
+   ]
+  },
+  {
+   "round": "Group B",
+   "date": "2021-06-20",
+   "team1": "Colombia",
+   "team2": "Peru",
+   "score": {
+    "ft": [
+     1,
+     2
+    ]
+   },
+   "group": "Group B",
+   "ground": "Estádio Olímpico Pedro Ludovico, Goiânia",
+   "goals1": [
+    {
+     "name": "Borja",
+     "minute": 53,
+     "penalty": true
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Peña",
+     "minute": 17
+    },
+    {
+     "name": "Mina",
+     "minute": 64,
+     "owngoal": true
+    }
+   ]
+  },
+  {
+   "round": "Group B",
+   "date": "2021-06-23",
+   "team1": "Ecuador",
+   "team2": "Peru",
+   "score": {
+    "ft": [
+     2,
+     2
+    ]
+   },
+   "group": "Group B",
+   "ground": "Estádio Olímpico Pedro Ludovico, Goiânia",
+   "goals1": [
+    {
+     "name": "Tapia",
+     "minute": 23,
+     "owngoal": true
+    },
+    {
+     "name": "Ay. Preciado",
+     "minute": 45
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Lapadula",
+     "minute": 49
+    },
+    {
+     "name": "Carrillo",
+     "minute": 54
+    }
+   ]
+  },
+  {
+   "round": "Group B",
+   "date": "2021-06-23",
+   "team1": "Brazil",
+   "team2": "Colombia",
+   "score": {
+    "ft": [
+     2,
+     1
+    ]
+   },
+   "group": "Group B",
+   "ground": "Estádio Olímpico Nilton Santos, Rio de Janeiro",
+   "goals1": [
+    {
+     "name": "Firmino",
+     "minute": 78
+    },
+    {
+     "name": "Casemiro",
+     "minute": 90
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Díaz",
+     "minute": 10
+    }
+   ]
+  },
+  {
+   "round": "Group B",
+   "date": "2021-06-27",
+   "team1": "Brazil",
+   "team2": "Ecuador",
+   "score": {
+    "ft": [
+     1,
+     1
+    ]
+   },
+   "group": "Group B",
+   "ground": "Estádio Olímpico Pedro Ludovico, Goiânia",
+   "goals1": [
+    {
+     "name": "Militão",
+     "minute": 37
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Mena",
+     "minute": 53
+    }
+   ]
+  },
+  {
+   "round": "Group B",
+   "date": "2021-06-27",
+   "team1": "Venezuela",
+   "team2": "Peru",
+   "score": {
+    "ft": [
+     0,
+     1
+    ]
+   },
+   "group": "Group B",
+   "ground": "Estádio Nacional Mané Garrincha, Brasília",
+   "goals1": [
+    {
+     "name": "Carrillo",
+     "minute": 48
+    }
+   ]
+  },
+  {
+   "round": "Quarter-finals",
+   "date": "2021-07-02",
+   "team1": "Peru",
+   "team2": "Paraguay",
+   "score": {
+    "p": [
+     4,
+     3
+    ],
+    "et": [
+     3,
+     3
+    ],
+    "ft": [
+     3,
+     3
+    ]
+   },
+   "ground": "Estádio Olímpico Pedro Ludovico, Goiânia",
+   "goals1": [
+    {
+     "name": "Gómez",
+     "minute": 21,
+     "owngoal": true
+    },
+    {
+     "name": "Lapadula",
+     "minute": 40
+    },
+    {
+     "name": "Yotún",
+     "minute": 80
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Gómez",
+     "minute": 11
+    },
+    {
+     "name": "Alonso",
+     "minute": 54
+    },
+    {
+     "name": "Ávalos",
+     "minute": 90
+    }
+   ]
+  },
+  {
+   "round": "Quarter-finals",
+   "date": "2021-07-02",
+   "team1": "Brazil",
+   "team2": "Chile",
+   "score": {
+    "ft": [
+     1,
+     0
+    ]
+   },
+   "ground": "Estádio Olímpico Nilton Santos, Rio de Janeiro",
+   "goals1": [
+    {
+     "name": "Paquetá",
+     "minute": 46
+    }
+   ]
+  },
+  {
+   "round": "Quarter-finals",
+   "date": "2021-07-03",
+   "team1": "Uruguay",
+   "team2": "Colombia",
+   "score": {
+    "p": [
+     2,
+     4
+    ],
+    "et": [
+     0,
+     0
+    ],
+    "ft": [
+     0,
+     0
+    ]
+   },
+   "ground": "Estádio Nacional Mané Garrincha, Brasília"
+  },
+  {
+   "round": "Quarter-finals",
+   "date": "2021-07-03",
+   "team1": "Argentina",
+   "team2": "Ecuador",
+   "score": {
+    "ft": [
+     3,
+     0
+    ]
+   },
+   "ground": "Estádio Olímpico Pedro Ludovico, Goiânia",
+   "goals1": [
+    {
+     "name": "De Paul",
+     "minute": 40
+    },
+    {
+     "name": "La. Martínez",
+     "minute": 84
+    },
+    {
+     "name": "Messi",
+     "minute": 90
+    }
+   ]
+  },
+  {
+   "round": "Semi-finals",
+   "date": "2021-07-05",
+   "team1": "Brazil",
+   "team2": "Peru",
+   "score": {
+    "ft": [
+     1,
+     0
+    ]
+   },
+   "ground": "Estádio Olímpico Nilton Santos, Rio de Janeiro",
+   "goals1": [
+    {
+     "name": "Paquetá",
+     "minute": 35
+    }
+   ]
+  },
+  {
+   "round": "Semi-finals",
+   "date": "2021-07-06",
+   "team1": "Argentina",
+   "team2": "Colombia",
+   "score": {
+    "p": [
+     3,
+     2
+    ],
+    "et": [
+     1,
+     1
+    ],
+    "ft": [
+     1,
+     1
+    ]
+   },
+   "ground": "Estádio Nacional Mané Garrincha, Brasília",
+   "goals1": [
+    {
+     "name": "La. Martínez",
+     "minute": 7
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Díaz",
+     "minute": 61
+    }
+   ]
+  },
+  {
+   "round": "Third place play-off",
+   "date": "2021-07-09",
+   "team1": "Colombia",
+   "team2": "Peru",
+   "score": {
+    "ft": [
+     3,
+     2
+    ]
+   },
+   "ground": "Estádio Nacional Mané Garrincha, Brasília",
+   "goals1": [
+    {
+     "name": "Cuadrado",
+     "minute": 49
+    },
+    {
+     "name": "Díaz",
+     "minute": 66
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Yotún",
+     "minute": 45
+    },
+    {
+     "name": "Lapadula",
+     "minute": 82
+    }
+   ]
+  },
+  {
+   "round": "Final",
+   "date": "2021-07-10",
+   "team1": "Argentina",
+   "team2": "Brazil",
+   "score": {
+    "ft": [
+     1,
+     0
+    ]
+   },
+   "ground": "Estádio do Maracanã, Rio de Janeiro",
+   "goals1": [
+    {
+     "name": "Di María",
+     "minute": 22
+    }
+   ]
+  }
+ ]
+}

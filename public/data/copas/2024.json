@@ -1,0 +1,838 @@
+{
+ "name": "Copa América 2024",
+ "matches": [
+  {
+   "round": "Group A",
+   "date": "2024-06-20",
+   "team1": "Argentina",
+   "team2": "Canada",
+   "score": {
+    "ft": [
+     2,
+     0
+    ]
+   },
+   "group": "Group A",
+   "ground": "Mercedes-Benz Stadium, Atlanta, Georgia",
+   "goals1": [
+    {
+     "name": "Álvarez",
+     "minute": 49
+    },
+    {
+     "name": "La. Martínez",
+     "minute": 88
+    }
+   ]
+  },
+  {
+   "round": "Group A",
+   "date": "2024-06-21",
+   "team1": "Peru",
+   "team2": "Chile",
+   "score": {
+    "ft": [
+     0,
+     0
+    ]
+   },
+   "group": "Group A",
+   "ground": "AT&T Stadium, Arlington, Texas"
+  },
+  {
+   "round": "Group A",
+   "date": "2024-06-25",
+   "team1": "Peru",
+   "team2": "Canada",
+   "score": {
+    "ft": [
+     0,
+     1
+    ]
+   },
+   "group": "Group A",
+   "ground": "Children's Mercy Park, Kansas City, Kansas",
+   "goals1": [
+    {
+     "name": "David",
+     "minute": 74
+    }
+   ]
+  },
+  {
+   "round": "Group A",
+   "date": "2024-06-25",
+   "team1": "Chile",
+   "team2": "Argentina",
+   "score": {
+    "ft": [
+     0,
+     1
+    ]
+   },
+   "group": "Group A",
+   "ground": "MetLife Stadium, East Rutherford, New Jersey",
+   "goals1": [
+    {
+     "name": "La. Martínez",
+     "minute": 88
+    }
+   ]
+  },
+  {
+   "round": "Group A",
+   "date": "2024-06-29",
+   "team1": "Argentina",
+   "team2": "Peru",
+   "score": {
+    "ft": [
+     2,
+     0
+    ]
+   },
+   "group": "Group A",
+   "ground": "Hard Rock Stadium, Miami Gardens, Florida",
+   "goals1": [
+    {
+     "name": "La. Martínez",
+     "minute": 47
+    }
+   ]
+  },
+  {
+   "round": "Group A",
+   "date": "2024-06-29",
+   "team1": "Canada",
+   "team2": "Chile",
+   "score": {
+    "ft": [
+     0,
+     0
+    ]
+   },
+   "group": "Group A",
+   "ground": "Inter&Co Stadium, Orlando, Florida"
+  },
+  {
+   "round": "Group B",
+   "date": "2024-06-22",
+   "team1": "Ecuador",
+   "team2": "Venezuela",
+   "score": {
+    "ft": [
+     1,
+     2
+    ]
+   },
+   "group": "Group B",
+   "ground": "Levi's Stadium, Santa Clara, California",
+   "goals1": [
+    {
+     "name": "Sarmiento",
+     "minute": 40
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Cádiz",
+     "minute": 64
+    },
+    {
+     "name": "Bello",
+     "minute": 74
+    }
+   ]
+  },
+  {
+   "round": "Group B",
+   "date": "2024-06-22",
+   "team1": "Mexico",
+   "team2": "Jamaica",
+   "score": {
+    "ft": [
+     1,
+     0
+    ]
+   },
+   "group": "Group B",
+   "ground": "NRG Stadium, Houston, Texas",
+   "goals1": [
+    {
+     "name": "Arteaga",
+     "minute": 69
+    }
+   ]
+  },
+  {
+   "round": "Group B",
+   "date": "2024-06-26",
+   "team1": "Ecuador",
+   "team2": "Jamaica",
+   "score": {
+    "ft": [
+     3,
+     1
+    ]
+   },
+   "group": "Group B",
+   "ground": "Allegiant Stadium, Las Vegas, Nevada",
+   "goals1": [
+    {
+     "name": "Palmer",
+     "minute": 13,
+     "owngoal": true
+    },
+    {
+     "name": "Páez",
+     "minute": 45,
+     "penalty": true
+    },
+    {
+     "name": "Minda",
+     "minute": 90
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Antonio",
+     "minute": 54
+    }
+   ]
+  },
+  {
+   "round": "Group B",
+   "date": "2024-06-26",
+   "team1": "Venezuela",
+   "team2": "Mexico",
+   "score": {
+    "ft": [
+     1,
+     0
+    ]
+   },
+   "group": "Group B",
+   "ground": "SoFi Stadium, Inglewood, California",
+   "goals1": [
+    {
+     "name": "Rondón",
+     "minute": 57,
+     "penalty": true
+    }
+   ]
+  },
+  {
+   "round": "Group B",
+   "date": "2024-06-30",
+   "team1": "Mexico",
+   "team2": "Ecuador",
+   "score": {
+    "ft": [
+     0,
+     0
+    ]
+   },
+   "group": "Group B",
+   "ground": "State Farm Stadium, Glendale, Arizona"
+  },
+  {
+   "round": "Group B",
+   "date": "2024-06-30",
+   "team1": "Jamaica",
+   "team2": "Venezuela",
+   "score": {
+    "ft": [
+     0,
+     3
+    ]
+   },
+   "group": "Group B",
+   "ground": "Q2 Stadium, Austin, Texas",
+   "goals1": [
+    {
+     "name": "Bello",
+     "minute": 49
+    },
+    {
+     "name": "Rondón",
+     "minute": 56
+    },
+    {
+     "name": "Ramírez",
+     "minute": 85
+    }
+   ]
+  },
+  {
+   "round": "Group C",
+   "date": "2024-06-23",
+   "team1": "United States",
+   "team2": "Bolivia",
+   "score": {
+    "ft": [
+     2,
+     0
+    ]
+   },
+   "group": "Group C",
+   "ground": "AT&T Stadium, Arlington, Texas",
+   "goals1": [
+    {
+     "name": "Pulisic",
+     "minute": 3
+    },
+    {
+     "name": "Balogun",
+     "minute": 44
+    }
+   ]
+  },
+  {
+   "round": "Group C",
+   "date": "2024-06-23",
+   "team1": "Uruguay",
+   "team2": "Panama",
+   "score": {
+    "ft": [
+     3,
+     1
+    ]
+   },
+   "group": "Group C",
+   "ground": "Hard Rock Stadium, Miami Gardens, Florida",
+   "goals1": [
+    {
+     "name": "M. Araújo",
+     "minute": 16
+    },
+    {
+     "name": "Núñez",
+     "minute": 85
+    },
+    {
+     "name": "Viña",
+     "minute": 90
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Murillo",
+     "minute": 90
+    }
+   ]
+  },
+  {
+   "round": "Group C",
+   "date": "2024-06-27",
+   "team1": "Panama",
+   "team2": "United States",
+   "score": {
+    "ft": [
+     2,
+     1
+    ]
+   },
+   "group": "Group C",
+   "ground": "Mercedes-Benz Stadium, Atlanta, Georgia",
+   "goals1": [
+    {
+     "name": "Blackman",
+     "minute": 26
+    },
+    {
+     "name": "Fajardo",
+     "minute": 83
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Balogun",
+     "minute": 22
+    }
+   ]
+  },
+  {
+   "round": "Group C",
+   "date": "2024-06-27",
+   "team1": "Uruguay",
+   "team2": "Bolivia",
+   "score": {
+    "ft": [
+     5,
+     0
+    ]
+   },
+   "group": "Group C",
+   "ground": "MetLife Stadium, East Rutherford, New Jersey",
+   "goals1": [
+    {
+     "name": "Pellistri",
+     "minute": 8
+    },
+    {
+     "name": "Núñez",
+     "minute": 21
+    },
+    {
+     "name": "M. Araújo",
+     "minute": 77
+    },
+    {
+     "name": "Valverde",
+     "minute": 81
+    },
+    {
+     "name": "Bentancur",
+     "minute": 89
+    }
+   ]
+  },
+  {
+   "round": "Group C",
+   "date": "2024-07-01",
+   "team1": "United States",
+   "team2": "Uruguay",
+   "score": {
+    "ft": [
+     0,
+     1
+    ]
+   },
+   "group": "Group C",
+   "ground": "Arrowhead Stadium, Kansas City, Missouri",
+   "goals1": [
+    {
+     "name": "M. Olivera",
+     "minute": 66
+    }
+   ]
+  },
+  {
+   "round": "Group C",
+   "date": "2024-07-01",
+   "team1": "Bolivia",
+   "team2": "Panama",
+   "score": {
+    "ft": [
+     1,
+     3
+    ]
+   },
+   "group": "Group C",
+   "ground": "Inter&Co Stadium, Orlando, Florida",
+   "goals1": [
+    {
+     "name": "Miranda",
+     "minute": 69
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Fajardo",
+     "minute": 22
+    },
+    {
+     "name": "Guerrero",
+     "minute": 79
+    },
+    {
+     "name": "Yanis",
+     "minute": 90
+    }
+   ]
+  },
+  {
+   "round": "Group D",
+   "date": "2024-06-24",
+   "team1": "Colombia",
+   "team2": "Paraguay",
+   "score": {
+    "ft": [
+     2,
+     1
+    ]
+   },
+   "group": "Group D",
+   "ground": "NRG Stadium, Houston, Texas",
+   "goals1": [
+    {
+     "name": "Muñoz",
+     "minute": 32
+    },
+    {
+     "name": "Lerma",
+     "minute": 42
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Enciso",
+     "minute": 69
+    }
+   ]
+  },
+  {
+   "round": "Group D",
+   "date": "2024-06-24",
+   "team1": "Brazil",
+   "team2": "Costa Rica",
+   "score": {
+    "ft": [
+     0,
+     0
+    ]
+   },
+   "group": "Group D",
+   "ground": "SoFi Stadium, Inglewood, California"
+  },
+  {
+   "round": "Group D",
+   "date": "2024-06-28",
+   "team1": "Colombia",
+   "team2": "Costa Rica",
+   "score": {
+    "ft": [
+     3,
+     0
+    ]
+   },
+   "group": "Group D",
+   "ground": "State Farm Stadium, Glendale, Arizona",
+   "goals1": [
+    {
+     "name": "Díaz",
+     "minute": 31,
+     "penalty": true
+    },
+    {
+     "name": "Sánchez",
+     "minute": 59
+    },
+    {
+     "name": "Córdoba",
+     "minute": 62
+    }
+   ]
+  },
+  {
+   "round": "Group D",
+   "date": "2024-06-28",
+   "team1": "Paraguay",
+   "team2": "Brazil",
+   "score": {
+    "ft": [
+     1,
+     4
+    ]
+   },
+   "group": "Group D",
+   "ground": "Allegiant Stadium, Las Vegas, Nevada",
+   "goals1": [
+    {
+     "name": "Alderete",
+     "minute": 48
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Vinícius",
+     "minute": 35
+    },
+    {
+     "name": "Sávio",
+     "minute": 43
+    },
+    {
+     "name": "Paquetá",
+     "minute": 65,
+     "penalty": true
+    }
+   ]
+  },
+  {
+   "round": "Group D",
+   "date": "2024-07-02",
+   "team1": "Brazil",
+   "team2": "Colombia",
+   "score": {
+    "ft": [
+     1,
+     1
+    ]
+   },
+   "group": "Group D",
+   "ground": "Levi's Stadium, Santa Clara, California",
+   "goals1": [
+    {
+     "name": "Raphinha",
+     "minute": 12
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Muñoz",
+     "minute": 45
+    }
+   ]
+  },
+  {
+   "round": "Group D",
+   "date": "2024-07-02",
+   "team1": "Costa Rica",
+   "team2": "Paraguay",
+   "score": {
+    "ft": [
+     2,
+     1
+    ]
+   },
+   "group": "Group D",
+   "ground": "Q2 Stadium, Austin, Texas",
+   "goals1": [
+    {
+     "name": "Calvo",
+     "minute": 3
+    },
+    {
+     "name": "Alcócer",
+     "minute": 7
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Sosa",
+     "minute": 55
+    }
+   ]
+  },
+  {
+   "round": "Quarter-finals",
+   "date": "2024-07-04",
+   "team1": "Argentina",
+   "team2": "Ecuador",
+   "score": {
+    "p": [
+     4,
+     2
+    ],
+    "et": [
+     1,
+     1
+    ],
+    "ft": [
+     1,
+     1
+    ]
+   },
+   "ground": "NRG Stadium, Houston, Texas",
+   "goals1": [
+    {
+     "name": "Li. Martínez",
+     "minute": 35
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Rodríguez",
+     "minute": 90
+    }
+   ]
+  },
+  {
+   "round": "Quarter-finals",
+   "date": "2024-07-05",
+   "team1": "Venezuela",
+   "team2": "Canada",
+   "score": {
+    "p": [
+     3,
+     4
+    ],
+    "et": [
+     1,
+     1
+    ],
+    "ft": [
+     1,
+     1
+    ]
+   },
+   "ground": "AT&T Stadium, Arlington, Texas",
+   "goals1": [
+    {
+     "name": "Rondón",
+     "minute": 65
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Shaffelburg",
+     "minute": 13
+    }
+   ]
+  },
+  {
+   "round": "Quarter-finals",
+   "date": "2024-07-06",
+   "team1": "Colombia",
+   "team2": "Panama",
+   "score": {
+    "ft": [
+     5,
+     0
+    ]
+   },
+   "ground": "Allegiant Stadium, Las Vegas, Nevada",
+   "goals1": [
+    {
+     "name": "Córdoba",
+     "minute": 8
+    },
+    {
+     "name": "Rodríguez",
+     "minute": 15,
+     "penalty": true
+    },
+    {
+     "name": "Díaz",
+     "minute": 41
+    },
+    {
+     "name": "Ríos",
+     "minute": 70
+    },
+    {
+     "name": "Borja",
+     "minute": 90,
+     "penalty": true
+    }
+   ]
+  },
+  {
+   "round": "Quarter-finals",
+   "date": "2024-07-06",
+   "team1": "Uruguay",
+   "team2": "Brazil",
+   "score": {
+    "p": [
+     4,
+     2
+    ],
+    "et": [
+     0,
+     0
+    ],
+    "ft": [
+     0,
+     0
+    ]
+   },
+   "ground": "State Farm Stadium, Glendale, Arizona"
+  },
+  {
+   "round": "Semi-finals",
+   "date": "2024-07-09",
+   "team1": "Argentina",
+   "team2": "Canada",
+   "score": {
+    "ft": [
+     2,
+     0
+    ]
+   },
+   "ground": "MetLife Stadium, East Rutherford, New Jersey",
+   "goals1": [
+    {
+     "name": "Álvarez",
+     "minute": 22
+    },
+    {
+     "name": "Messi",
+     "minute": 51
+    }
+   ]
+  },
+  {
+   "round": "Semi-finals",
+   "date": "2024-07-10",
+   "team1": "Uruguay",
+   "team2": "Colombia",
+   "score": {
+    "ft": [
+     0,
+     1
+    ]
+   },
+   "ground": "Bank of America Stadium, Charlotte, North Carolina",
+   "goals1": [
+    {
+     "name": "Lerma",
+     "minute": 39
+    }
+   ]
+  },
+  {
+   "round": "Third place play-off",
+   "date": "2024-07-13",
+   "team1": "Canada",
+   "team2": "Uruguay",
+   "score": {
+    "p": [
+     3,
+     4
+    ],
+    "et": [
+     2,
+     2
+    ],
+    "ft": [
+     2,
+     2
+    ]
+   },
+   "ground": "Bank of America Stadium, Charlotte, North Carolina",
+   "goals1": [
+    {
+     "name": "Koné",
+     "minute": 22
+    },
+    {
+     "name": "David",
+     "minute": 80
+    }
+   ],
+   "goals2": [
+    {
+     "name": "Bentancur",
+     "minute": 8
+    },
+    {
+     "name": "Suárez",
+     "minute": 90
+    }
+   ]
+  },
+  {
+   "round": "Final",
+   "date": "2024-07-14",
+   "team1": "Argentina",
+   "team2": "Colombia",
+   "score": {
+    "et": [
+     1,
+     0
+    ],
+    "ft": [
+     0,
+     0
+    ]
+   },
+   "ground": "Hard Rock Stadium, Miami Gardens, Florida",
+   "goals1": [
+    {
+     "name": "La. Martínez",
+     "minute": 112
+    }
+   ]
+  }
+ ]
+}

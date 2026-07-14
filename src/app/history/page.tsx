@@ -34,7 +34,9 @@ type WorldCupData = {
     matches: Match[];
 };
 
-const YEARS = ["2022", "2018", "2014", "2010", "2006", "2002", "1998", "1994", "1990", "1986", "1982", "1978", "1974", "1970", "1966", "1962", "1958", "1954", "1950", "1938", "1934", "1930"];
+const WORLD_CUP_YEARS = ["2022", "2018", "2014", "2010", "2006", "2002", "1998", "1994", "1990", "1986", "1982", "1978", "1974", "1970", "1966", "1962", "1958", "1954", "1950", "1938", "1934", "1930"];
+const EURO_CUP_YEARS = ["2028", "2024", "2020"];
+const COPA_YEARS = ["2024", "2021", "2011"];
 
 const getFlag = (teamName: string) => {
     const historicalFlags: Record<string, string> = {
@@ -59,7 +61,9 @@ const getFlag = (teamName: string) => {
         "Bosnia and Herzegovina": "🇧🇦", "Bosnia-Herzegovina": "🇧🇦", "Iran": "🇮🇷", "IR Iran": "🇮🇷",
         "Saudi Arabia": "🇸🇦", "Argentina": "🇦🇷", "Brazil": "🇧🇷", "Uruguay": "🇺🇾", "Colombia": "🇨🇴",
         "Tunisia": "🇹🇳", "Australia": "🇦🇺", "Paraguay": "🇵🇾", "USA": "🇺🇸", "United States": "🇺🇸",
-        "England": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Mexico": "🇲🇽", "Canada": "🇨🇦", "Congo DR": "🇨🇩"
+        "England": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Mexico": "🇲🇽", "Canada": "🇨🇦", "Congo DR": "🇨🇩",
+        "Finland": "🇫🇮", "North Macedonia": "🇲🇰", "Albania": "🇦🇱", "Georgia": "🇬🇪",
+        "Panama": "🇵🇦"
     };
     if (historicalFlags[teamName]) return historicalFlags[teamName];
     const team = (teamsMetaRaw as { name: string; name_normalised?: string; flag_icon: string }[])
@@ -80,6 +84,7 @@ const MatchBadge = ({ team, score, isWinner }: { team: string, score: number | s
 );
 
 export default function HistoryPage() {
+    const [tournament, setTournament] = useState<"worldcup" | "euro" | "copa">("worldcup");
     const [year, setYear] = useState("2022");
     const [data, setData] = useState<WorldCupData | null>(null);
     const [loading, setLoading] = useState(false);
@@ -87,7 +92,8 @@ export default function HistoryPage() {
 
     useEffect(() => {
         setLoading(true);
-        fetch(`/data/worldcups/${year}.json`)
+        const folder = tournament === "worldcup" ? "worldcups" : tournament === "euro" ? "eurocups" : "copas";
+        fetch(`/data/${folder}/${year}.json`)
             .then(r => r.json())
             .then(d => {
                 setData(d);
@@ -98,11 +104,11 @@ export default function HistoryPage() {
                 console.error(e);
                 setLoading(false);
             });
-    }, [year]);
+    }, [tournament, year]);
 
     if (!data && !loading) return null;
 
-    const groupMatches = data?.matches?.filter(m => m.round.includes("Matchday") || m.round.includes("Group") || m.round.includes("Round 1"));
+    const groupMatches = data?.matches?.filter(m => m.round.includes("Matchday") || m.round.startsWith("Group ") || m.round.includes("Round 1"));
     const ro16 = data?.matches?.filter(m => m.round.includes("Round of 16") || m.round.includes("Eighth"));
     const quarter = data?.matches?.filter(m => m.round.includes("Quarter"));
     const semi = data?.matches?.filter(m => m.round.includes("Semi"));
@@ -201,9 +207,37 @@ export default function HistoryPage() {
 
     return (
         <div className="container mx-auto px-4 py-8 max-w-7xl flex-1 flex flex-col items-center overflow-hidden">
-            <h1 className="text-4xl md:text-5xl font-black italic uppercase tracking-tight mb-8 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent text-center">
-                World Cup History
+            <h1 className="text-4xl md:text-5xl font-black italic uppercase tracking-tight mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent text-center">
+                History Vault
             </h1>
+
+            {/* Tournament Selector Tabs */}
+            <div className="w-full max-w-xl mb-6 bg-secondary/35 p-1.5 rounded-2xl border border-primary/25 flex gap-2">
+                <Button
+                    variant={tournament === "worldcup" ? "default" : "ghost"}
+                    onClick={() => { setTournament("worldcup"); setYear("2022"); }}
+                    className={`flex-1 font-black uppercase tracking-wider text-xs h-11 rounded-xl transition-all ${tournament === "worldcup" ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"}`}
+                >
+                    <Trophy className="w-4 h-4 mr-1.5" />
+                    World Cup
+                </Button>
+                <Button
+                    variant={tournament === "euro" ? "default" : "ghost"}
+                    onClick={() => { setTournament("euro"); setYear("2024"); }}
+                    className={`flex-1 font-black uppercase tracking-wider text-xs h-11 rounded-xl transition-all ${tournament === "euro" ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"}`}
+                >
+                    <Trophy className="w-4 h-4 mr-1.5" />
+                    Euro Cup
+                </Button>
+                <Button
+                    variant={tournament === "copa" ? "default" : "ghost"}
+                    onClick={() => { setTournament("copa"); setYear("2024"); }}
+                    className={`flex-1 font-black uppercase tracking-wider text-xs h-11 rounded-xl transition-all ${tournament === "copa" ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"}`}
+                >
+                    <Trophy className="w-4 h-4 mr-1.5" />
+                    Copa América
+                </Button>
+            </div>
 
             <div className="w-full max-w-sm mb-6">
                 <Select value={year} onValueChange={(v) => { if (v) setYear(v); }}>
@@ -211,8 +245,10 @@ export default function HistoryPage() {
                         <SelectValue placeholder="Select Year" />
                     </SelectTrigger>
                     <SelectContent>
-                        {YEARS.map(y => (
-                            <SelectItem key={y} value={y} className="text-lg font-bold">{y} World Cup</SelectItem>
+                        {(tournament === "worldcup" ? WORLD_CUP_YEARS : tournament === "euro" ? EURO_CUP_YEARS : COPA_YEARS).map(y => (
+                            <SelectItem key={y} value={y} className="text-lg font-bold">
+                                {y} {tournament === "worldcup" ? "World Cup" : tournament === "euro" ? "Euro Cup" : "Copa América"}
+                            </SelectItem>
                         ))}
                     </SelectContent>
                 </Select>
