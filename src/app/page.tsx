@@ -73,13 +73,8 @@ export default async function Home() {
       {/* Hero Section - Purely for the legends now */}
       <section className="relative w-full min-h-[700px] flex flex-col items-center justify-start overflow-hidden pt-12">
         <Image
-          src={(() => {
-            const heroes = [
-              "/heroes/legends-3.png",
-            ];
-            return heroes[Math.floor(Math.random() * heroes.length)];
-          })()}
-          alt="World Cup Legends"
+          src="/heroes/spain-argentina.png"
+          alt="World Cup Final Spain vs Argentina"
           fill
           className="object-cover object-center brightness-[1.1] contrast-[1.05]"
           priority
@@ -118,11 +113,11 @@ export default async function Home() {
             {/* Headline */}
             <div className="space-y-1">
               <h2 className="text-4xl md:text-7xl font-black uppercase italic tracking-tighter leading-none">
-                Semi-Finals <span className="text-muted-foreground opacity-30">Are Here.</span><br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Only 4 Remain. ⚡</span>
+                The Final <span className="text-muted-foreground opacity-30">Is Set.</span><br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Spain vs Argentina 🏆</span>
               </h2>
               <p className="text-muted-foreground text-base md:text-lg font-bold uppercase tracking-widest opacity-80 max-w-3xl mx-auto pt-4">
-                4 teams. 2 epic matchups. One giant step away from the ultimate final — who will seize the glory and make <span className="text-foreground italic underline decoration-primary decoration-4">history</span>?
+                Two football powerhouses collide in East Rutherford for ultimate glory. One match to decide who rules the world. Predict the score and make <span className="text-foreground italic underline decoration-primary decoration-4">history</span>!
               </p>
             </div>
 
@@ -133,11 +128,11 @@ export default async function Home() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-widest">Semi-Finals Live</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">Grand Final Live</span>
               </div>
               <div className="flex items-center gap-3 bg-card/50 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-border/20">
                 <Zap className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-                <span className="text-[10px] font-black uppercase tracking-widest">No Second Chances</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">The Ultimate Battle</span>
               </div>
             </div>
 
