@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy, ClipboardList, MonitorPlay, MessageSquareText, ArrowRight, Globe, History, Zap } from "lucide-react";
+import { Trophy, ClipboardList, MonitorPlay, MessageSquareText, ArrowRight, Globe, History, Zap, Award, Flame, Shield } from "lucide-react";
 import Image from "next/image";
 import { fetchMatches, fetchTopScorers } from "@/lib/data";
 import { UpcomingMatchesCarousel } from "@/components/upcoming-matches-carousel";
@@ -18,6 +18,7 @@ export default async function Home() {
   const topScorers = await fetchTopScorers();
 
   const features = [
+    /* Hidden post-tournament — can re-enable for future tournaments
     {
       title: "Match Predictions",
       description: "Guess the score and predict chaotic moments (e.g. 'Manager loses mind') to win points.",
@@ -26,6 +27,7 @@ export default async function Home() {
       color: "text-blue-400",
       bg: "bg-blue-500/10"
     },
+    */
     {
       title: "Tournament Groups",
       description: "View all 48 teams competing for ultimate glory. Check official squad lists and player stats.",
@@ -34,6 +36,7 @@ export default async function Home() {
       color: "text-emerald-400",
       bg: "bg-emerald-500/10"
     },
+    /* Hidden post-tournament — can re-enable for future tournaments
     {
       title: "VAR Simulator",
       description: "Draw random offside lines to ruin matches. Experience the true chaos of modern officiating.",
@@ -50,6 +53,7 @@ export default async function Home() {
       color: "text-green-400",
       bg: "bg-green-500/10"
     },
+    */
     {
       title: "Tournament Vault",
       description: "Relive history. View interactive brackets and results from Euros, Copa América, and World Cups.",
@@ -70,11 +74,11 @@ export default async function Home() {
 
   return (
     <div className="flex-1 flex flex-col">
-      {/* Hero Section - Purely for the legends now */}
+      {/* Hero Section - Spain Champions 2026 */}
       <section className="relative w-full min-h-[700px] flex flex-col items-center justify-start overflow-hidden pt-12">
         <Image
-          src="/heroes/spain-argentina.png"
-          alt="World Cup Final Spain vs Argentina"
+          src="/heroes/spain-squad-five.png"
+          alt="Spain World Cup Champions 2026 - Yamal, Nico Williams, Rodri, Ferran Torres, Cucurella"
           fill
           className="object-cover object-center brightness-[1.1] contrast-[1.05]"
           priority
@@ -85,7 +89,7 @@ export default async function Home() {
             Football <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Chaos</span>
           </h1>
           <p className="text-sm md:text-xl text-white font-black uppercase tracking-[0.5em] italic drop-shadow-lg">
-            Predict every moment
+            Spain are the champions
           </p>
         </div>
 
@@ -93,7 +97,7 @@ export default async function Home() {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-100 h-1/2 mt-auto" />
       </section>
 
-      {/* Knockouts Hero Section — merged status + CTAs */}
+      {/* Knockouts Hero Section — Spain Championship Celebration */}
       <section className="container mx-auto px-4 -mt-32 relative z-40">
         <div className="relative overflow-hidden rounded-[2.5rem] bg-card/70 backdrop-blur-3xl border border-border/50 shadow-2xl p-8 md:p-14 text-center">
           {/* Decorative blobs */}
@@ -105,7 +109,7 @@ export default async function Home() {
             <div className="flex items-center gap-3">
               <span className="h-px w-8 md:w-16 bg-primary/40" />
               <span className="flex items-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary italic">
-                <Zap className="h-3 w-3 fill-primary animate-pulse" /> Knockouts in Progress
+                <Trophy className="h-3 w-3 fill-primary animate-bounce text-yellow-400" /> Tournament Concluded
               </span>
               <span className="h-px w-8 md:w-16 bg-primary/40" />
             </div>
@@ -113,26 +117,23 @@ export default async function Home() {
             {/* Headline */}
             <div className="space-y-1">
               <h2 className="text-4xl md:text-7xl font-black uppercase italic tracking-tighter leading-none">
-                The Final <span className="text-muted-foreground opacity-30">Is Set.</span><br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Spain vs Argentina 🏆</span>
+                Spain Are <span className="text-muted-foreground opacity-30">The Champions.</span><br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Viva España! 🇪🇸🏆</span>
               </h2>
               <p className="text-muted-foreground text-base md:text-lg font-bold uppercase tracking-widest opacity-80 max-w-3xl mx-auto pt-4">
-                Two football powerhouses collide in East Rutherford for ultimate glory. One match to decide who rules the world. Predict the score and make <span className="text-foreground italic underline decoration-primary decoration-4">history</span>!
+                Spain defeated Argentina 1-0 after extra time (Ferran Torres 106&apos;) at MetLife Stadium to win their second FIFA World Cup! Check the final bracket standings and review prediction scores.
               </p>
             </div>
 
             {/* Status Badges */}
             <div className="flex flex-wrap items-center justify-center gap-4">
               <div className="flex items-center gap-3 bg-card/50 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-border/20">
-                <div className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                </div>
-                <span className="text-[10px] font-black uppercase tracking-widest">Grand Final Live</span>
+                <div className="h-2 w-2 rounded-full bg-yellow-400 shadow-[0_0_8px_#facc15]" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-yellow-400">Spain: 2026 World Champion</span>
               </div>
               <div className="flex items-center gap-3 bg-card/50 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-border/20">
-                <Zap className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-                <span className="text-[10px] font-black uppercase tracking-widest">The Ultimate Battle</span>
+                <Zap className="h-4 w-4 text-primary fill-primary" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Tournament Locked</span>
               </div>
             </div>
 
@@ -140,12 +141,12 @@ export default async function Home() {
             <div className="flex flex-wrap items-center justify-center gap-4 w-full max-w-4xl px-6">
               <Link href="/bracket" className="flex-1 min-w-[260px]">
                 <Button size="lg" className="w-full rounded-2xl px-10 text-2xl font-black h-20 shadow-2xl hover:scale-[1.03] transition-all italic uppercase tracking-wider bg-yellow-400 hover:bg-yellow-300 text-black border-4 border-black group">
-                  Build Bracket <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                  Check Bracket <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-              <Link href="/fixtures" className="flex-1 min-w-[260px]">
+              <Link href="/history" className="flex-1 min-w-[260px]">
                 <Button variant="outline" size="lg" className="w-full rounded-2xl px-10 text-2xl font-black h-20 backdrop-blur-md bg-muted/50 transition-all italic uppercase tracking-wider hover:bg-muted/80 border-2 border-border/80">
-                  View Fixtures
+                  History Vault
                 </Button>
               </Link>
             </div>
@@ -153,9 +154,9 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Upcoming Matches Full Width Section */}
+      {/* Upcoming Matches Full Width Section - Hiding / Commenting out for post-tournament state */}
+      {/*
       <section className="w-full bg-muted/30 border-y border-border/50 py-16 mb-16 mt-16 relative overflow-hidden">
-        {/* Subtle background flair */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl" />
 
@@ -173,6 +174,73 @@ export default async function Home() {
           </div>
 
           <UpcomingMatchesCarousel matches={upcoming} />
+        </div>
+      </section>
+      */}
+
+      {/* Individual Awards Section */}
+      <section className="container mx-auto px-4 py-24 relative overflow-hidden">
+        {/* Subtle decorative background glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-yellow-500/5 rounded-full blur-[120px] pointer-events-none" />
+
+        <div className="flex flex-col items-center justify-center text-center space-y-4 mb-20 px-4">
+          <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-none">
+            Tournament <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Awards</span>
+          </h2>
+          <p className="text-muted-foreground font-bold text-sm uppercase tracking-[0.2em] opacity-70">World Cup 2026 Honor Roll</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto relative z-10">
+          {/* Golden Ball Card */}
+          <Card className="relative overflow-hidden border-yellow-500/20 bg-yellow-500/5 backdrop-blur-xl shadow-xl p-8 rounded-[2.5rem] flex flex-col items-center text-center transition-all duration-300 hover:scale-[1.03] hover:shadow-yellow-500/5 group border border-border/10">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-yellow-500/10 rounded-full blur-2xl" />
+            <div className="h-16 w-16 bg-yellow-500/15 border border-yellow-500/30 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-yellow-500/5">
+              <Award className="h-8 w-8 text-yellow-400 fill-yellow-400 group-hover:scale-110 transition-transform duration-300" />
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-yellow-500/80 mb-2">Golden Ball (Best Player)</span>
+            <div className="flex items-center gap-2 mb-1">
+              <Flag emoji="🇪🇸" size={24} />
+              <h3 className="text-2xl font-black uppercase italic tracking-tight text-foreground">Rodri</h3>
+            </div>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">Spain | Midfielder</p>
+            <p className="text-sm text-muted-foreground font-medium max-w-xs leading-relaxed">
+              The engine room of the Champions. Dominated every masterclass display in midfield and guided La Roja to global dominance.
+            </p>
+          </Card>
+
+          {/* Golden Boot Card */}
+          <Card className="relative overflow-hidden border-orange-500/20 bg-orange-500/5 backdrop-blur-xl shadow-xl p-8 rounded-[2.5rem] flex flex-col items-center text-center transition-all duration-300 hover:scale-[1.03] hover:shadow-orange-500/5 group border border-border/10">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-orange-500/10 rounded-full blur-2xl" />
+            <div className="h-16 w-16 bg-orange-500/15 border border-orange-500/30 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/5">
+              <Flame className="h-8 w-8 text-orange-400 fill-orange-400 group-hover:scale-110 transition-transform duration-300" />
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-orange-500/80 mb-2">Golden Boot (Top Scorer)</span>
+            <div className="flex items-center gap-2 mb-1">
+              <Flag emoji="🇫🇷" size={24} />
+              <h3 className="text-2xl font-black uppercase italic tracking-tight text-foreground">Kylian Mbappé</h3>
+            </div>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">France | Forward</p>
+            <p className="text-sm text-muted-foreground font-medium max-w-xs leading-relaxed">
+              A devastating, lightning-fast display of clinical finishing. Netted <span className="text-orange-400 font-bold border-b border-orange-400/20">10 goals</span> to capture the scoring charts.
+            </p>
+          </Card>
+
+          {/* Golden Glove Card */}
+          <Card className="relative overflow-hidden border-blue-500/20 bg-blue-500/5 backdrop-blur-xl shadow-xl p-8 rounded-[2.5rem] flex flex-col items-center text-center transition-all duration-300 hover:scale-[1.03] hover:shadow-blue-500/5 group border border-border/10">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl" />
+            <div className="h-16 w-16 bg-blue-500/15 border border-blue-500/30 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-blue-500/5">
+              <Shield className="h-8 w-8 text-blue-400 fill-blue-400 group-hover:scale-110 transition-transform duration-300" />
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-blue-500/80 mb-2">Golden Glove (Best GK)</span>
+            <div className="flex items-center gap-2 mb-1">
+              <Flag emoji="🇪🇸" size={24} />
+              <h3 className="text-2xl font-black uppercase italic tracking-tight text-foreground">Unai Simón</h3>
+            </div>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">Spain | Goalkeeper</p>
+            <p className="text-sm text-muted-foreground font-medium max-w-xs leading-relaxed">
+              An impenetrable wall. Kept <span className="text-blue-400 font-bold border-b border-blue-400/20">7 clean sheets</span> during the tournament, culminating in a pristine shutout in the Final.
+            </p>
+          </Card>
         </div>
       </section>
 

@@ -121,7 +121,7 @@ export async function fetchMatches(force = false): Promise<Match[]> {
 
 
                     // Try to find goal info in our local JSON
-                    const jsonMatch = (worldCup2026Raw.matches as JsonMatch[]).find(jm =>
+                    const jsonMatch = (worldCup2026Raw.matches as unknown as JsonMatch[]).find(jm =>
                         (jm.team1 === m.home_team && jm.team2 === m.away_team) ||
                         (jm.team1 === m.away_team && jm.team2 === m.home_team)
                     );
@@ -203,7 +203,7 @@ export type Scorer = {
 };
 
 export async function fetchTopScorers(): Promise<Scorer[]> {
-    const matches = (worldCup2026Raw.matches as JsonMatch[]);
+    const matches = (worldCup2026Raw.matches as unknown as JsonMatch[]);
     const scorerMap: Record<string, { goals: number, team: string, flag: string }> = {};
 
     matches.forEach(m => {
@@ -258,11 +258,11 @@ export const WORLD_CUP_WINNERS: Record<string, WorldCupRecord> = {
     "Brazil": { winners: 5, runnersUp: 2, yearsWon: [1958, 1962, 1970, 1994, 2002], yearsRunnerUp: [1950, 1998] },
     "Germany": { winners: 4, runnersUp: 4, yearsWon: [1954, 1974, 1990, 2014], yearsRunnerUp: [1966, 1982, 1986, 2002] },
     "Italy": { winners: 4, runnersUp: 2, yearsWon: [1934, 1938, 1982, 2006], yearsRunnerUp: [1970, 1994] },
-    "Argentina": { winners: 3, runnersUp: 3, yearsWon: [1978, 1986, 2022], yearsRunnerUp: [1930, 1990, 2014] },
+    "Argentina": { winners: 3, runnersUp: 4, yearsWon: [1978, 1986, 2022], yearsRunnerUp: [1930, 1990, 2014, 2026] },
     "France": { winners: 2, runnersUp: 2, yearsWon: [1998, 2018], yearsRunnerUp: [2006, 2022] },
     "Uruguay": { winners: 2, runnersUp: 0, yearsWon: [1930, 1950], yearsRunnerUp: [] },
     "England": { winners: 1, runnersUp: 0, yearsWon: [1966], yearsRunnerUp: [] },
-    "Spain": { winners: 1, runnersUp: 0, yearsWon: [2010], yearsRunnerUp: [] },
+    "Spain": { winners: 2, runnersUp: 0, yearsWon: [2010, 2026], yearsRunnerUp: [] },
 };
 
 export const EXCUSE_TEMPLATES = [
