@@ -34,7 +34,7 @@ type WorldCupData = {
     matches: Match[];
 };
 
-const WORLD_CUP_YEARS = ["2022", "2018", "2014", "2010", "2006", "2002", "1998", "1994", "1990", "1986", "1982", "1978", "1974", "1970", "1966", "1962", "1958", "1954", "1950", "1938", "1934", "1930"];
+const WORLD_CUP_YEARS = ["2026", "2022", "2018", "2014", "2010", "2006", "2002", "1998", "1994", "1990", "1986", "1982", "1978", "1974", "1970", "1966", "1962", "1958", "1954", "1950", "1938", "1934", "1930"];
 const EURO_CUP_YEARS = ["2028", "2024", "2020"];
 const COPA_YEARS = ["2024", "2021", "2011"];
 
@@ -85,7 +85,7 @@ const MatchBadge = ({ team, score, isWinner }: { team: string, score: number | s
 
 export default function HistoryPage() {
     const [tournament, setTournament] = useState<"worldcup" | "euro" | "copa">("worldcup");
-    const [year, setYear] = useState("2022");
+    const [year, setYear] = useState("2026");
     const [data, setData] = useState<WorldCupData | null>(null);
     const [loading, setLoading] = useState(false);
     const [selectedGroup, setSelectedGroup] = useState<string>("All");
@@ -109,6 +109,7 @@ export default function HistoryPage() {
     if (!data && !loading) return null;
 
     const groupMatches = data?.matches?.filter(m => m.round.includes("Matchday") || m.round.startsWith("Group ") || m.round.includes("Round 1"));
+    const ro32 = data?.matches?.filter(m => m.round.includes("Round of 32"));
     const ro16 = data?.matches?.filter(m => m.round.includes("Round of 16") || m.round.includes("Eighth"));
     const quarter = data?.matches?.filter(m => m.round.includes("Quarter"));
     const semi = data?.matches?.filter(m => m.round.includes("Semi"));
@@ -215,7 +216,7 @@ export default function HistoryPage() {
             <div className="w-full max-w-xl mb-6 bg-secondary/35 p-1.5 rounded-2xl border border-primary/25 flex gap-2">
                 <Button
                     variant={tournament === "worldcup" ? "default" : "ghost"}
-                    onClick={() => { setTournament("worldcup"); setYear("2022"); }}
+                    onClick={() => { setTournament("worldcup"); setYear("2026"); }}
                     className={`flex-1 font-black uppercase tracking-wider text-xs h-11 rounded-xl transition-all ${tournament === "worldcup" ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"}`}
                 >
                     <Trophy className="w-4 h-4 mr-1.5" />
@@ -268,11 +269,21 @@ export default function HistoryPage() {
                         </TabsList>
 
                         <TabsContent value="knockout" className="w-full">
-                            {(!ro16?.length && !quarter?.length && !semi?.length) ? (
+                            {(!ro32?.length && !ro16?.length && !quarter?.length && !semi?.length) ? (
                                 <div className="text-center text-muted-foreground py-12 text-xl font-bold">No standard knockout format found for {year}.</div>
                             ) : (
                                 <ScrollArea className="w-full pb-8">
                                     <div className="flex gap-6 min-w-max px-2 md:px-4 items-stretch">
+                                        {/* Round of 32 */}
+                                        {ro32 && ro32.length > 0 && (
+                                            <div className="flex flex-col w-[260px] shrink-0 gap-4">
+                                                <h2 className="text-sm font-bold py-1.5 px-3 rounded-lg text-center uppercase tracking-widest sticky top-0 z-10 backdrop-blur border border-border/50 bg-secondary/50">Round of 32</h2>
+                                                <div className="flex flex-col justify-around flex-1 gap-3">
+                                                    {ro32.map((m, i) => renderMatchKnockout(m, i))}
+                                                </div>
+                                            </div>
+                                        )}
+
                                         {/* Round of 16 */}
                                         {ro16 && ro16.length > 0 && (
                                             <div className="flex flex-col w-[260px] shrink-0 gap-4">

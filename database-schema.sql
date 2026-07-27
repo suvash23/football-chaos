@@ -32,7 +32,8 @@ CREATE TABLE matches (
   status TEXT DEFAULT 'upcoming', -- 'upcoming', 'live', 'finished'
   home_score INTEGER,
   away_score INTEGER,
-  actual_chaotic_event TEXT
+  actual_chaotic_event TEXT,
+  tournament TEXT NOT NULL DEFAULT 'wc2026' -- e.g. 'wc2026', 'copa2026', 'euro2028'
 );
 
 -- Predictions Table
@@ -44,6 +45,7 @@ CREATE TABLE predictions (
   predicted_away_score INTEGER NOT NULL,
   funny_prediction TEXT,
   points_awarded INTEGER DEFAULT 0,
+  tournament TEXT NOT NULL DEFAULT 'wc2026', -- mirrors the match's tournament
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
   UNIQUE(user_id, match_id)
 );

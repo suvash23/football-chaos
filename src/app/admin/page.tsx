@@ -24,6 +24,7 @@ type DbMatch = {
     away_score: number | null;
     group_name: string | null;
     round: string;
+    tournament: string;
     actual_chaotic_event: string | null;
 };
 
@@ -63,7 +64,7 @@ export default function AdminPage() {
         setIsLoading(true);
         const { data, error } = await supabase
             .from("matches")
-            .select("id, home_team, away_team, kickoff_time, status, home_score, away_score, group_name, round, actual_chaotic_event")
+            .select("id, home_team, away_team, kickoff_time, status, home_score, away_score, group_name, round, tournament, actual_chaotic_event")
             .order("kickoff_time", { ascending: true });
 
         if (error) {
@@ -254,6 +255,7 @@ export default function AdminPage() {
                                         </span>
                                         <span className="text-[10px] font-bold text-muted-foreground uppercase">{match.round}</span>
                                         {match.group_name && <span className="text-[10px] text-muted-foreground">• {match.group_name}</span>}
+                                        <span className="text-[10px] text-muted-foreground/60 font-mono">• {match.tournament}</span>
                                     </div>
                                     <div className="font-bold text-base leading-tight flex items-center gap-2 mb-1">
                                         <Flag emoji={TEAMS.find(t => t.name === match.home_team)?.flag_icon || "🏳️"} size={18} />
